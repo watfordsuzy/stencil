@@ -228,5 +228,6 @@ FakesAssemblies/
 /Source/WE-browsers.xml
 /Generation/Output
 
-# Connection Strings for local configuration
+# Local Configuration Files
+localAppSettings.config
 localConnectionStrings.config
