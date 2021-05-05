@@ -4,7 +4,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -226,3 +227,6 @@ FakesAssemblies/
 *.opt
 /Source/WE-browsers.xml
 /Generation/Output
+
+# Connection Strings for local configuration
+localConnectionStrings.config
