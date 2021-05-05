@@ -42,7 +42,10 @@ namespace CodeGenerator
                 translator.Error += (sender, e) => StandardOutput.WriteLine($"[ERROR] {e.Message}");
                 translator.Progress += (sender, e) => StandardOutput.WriteLine($"[INFO] {e.Progress:0.0} % complete."); ;
 
+                StandardOutput.WriteLine($"[INFO] Reading options from {args[0]}");
                 controller.LoadOptions(args[0]);
+
+                StandardOutput.WriteLine($"[INFO] Generating files");
                 controller.GenerateFiles();
 
                 Environment.ExitCode = 0;

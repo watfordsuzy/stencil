@@ -231,3 +231,6 @@ FakesAssemblies/
 # Local Configuration Files
 localAppSettings.config
 localConnectionStrings.config
+
+# Local launch settings
+launchSettings.json
