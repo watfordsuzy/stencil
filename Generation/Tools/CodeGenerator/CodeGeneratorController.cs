@@ -33,15 +33,35 @@ namespace CodeGenerator
             _translator.DataFile = options.DataFile;
             _translator.OutputFolder = options.OutputFolder;
 
+            string baseDirectory = Path.GetDirectoryName(path);
             foreach (string selectedFile in options.SelectedFiles)
             {
-                _translator.Templates.Add(new Template(selectedFile, selectedFile, isSelected: true));
+                _translator.Templates.Add(
+                    new Template(
+                        selectedFile, 
+                        GetRootedPath(baseDirectory, selectedFile), 
+                        isSelected: true));
             }
 
             foreach (string unSelectedFile in options.UnSelectedFiles)
             {
-                _translator.Templates.Add(new Template(unSelectedFile, unSelectedFile, isSelected: false));
+                _translator.Templates.Add(
+                    new Template(
+                        unSelectedFile,
+                        GetRootedPath(baseDirectory, unSelectedFile),
+                        isSelected: false));
             }
+        }
+
+        private static string GetRootedPath(string baseDirectory, string path)
+        {
+            string rootedPath = path;
+            if (!Path.IsPathRooted(rootedPath))
+            {
+                rootedPath = Path.Combine(baseDirectory, rootedPath);
+            }
+
+            return Path.GetFullPath(rootedPath);
         }
 
         public void GenerateFiles()

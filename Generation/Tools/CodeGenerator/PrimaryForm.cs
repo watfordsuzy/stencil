@@ -270,11 +270,11 @@ namespace CodeGenerator
                 {
                     if (template.IsSelected)
                     {
-                        options.SelectedFiles.Add(template.Location);
+                        options.SelectedFiles.Add(template.Name);
                     }
                     else
                     {
-                        options.UnSelectedFiles.Add(template.Location);
+                        options.UnSelectedFiles.Add(template.Name);
                     }
                 }
                 Utility.SerializeToXml(options, new FileInfo(PREFERENCES_FILE));
