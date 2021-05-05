@@ -12,6 +12,7 @@ using Stencil.Common.Configuration;
 using Stencil.Common.Integration;
 using Stencil.Domain;
 using Stencil.Primary;
+using Stencil.Primary.Daemons;
 using Stencil.Primary.Health;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ using System.Web;
 
 namespace Stencil.Plugins.Amazon.Daemons
 {
-    public class AmazonEncodingDaemon : ChokeableClass, IDaemonTask
+    public class AmazonEncodingDaemon : NonReentrantDaemon
     {
         #region Constructor
 
@@ -45,7 +46,6 @@ namespace Stencil.Plugins.Amazon.Daemons
 
         #region Protected Properties
 
-        protected static bool _executing;
         //property for 5 min 
         protected string EnvironmentName
         {
@@ -147,30 +147,18 @@ namespace Stencil.Plugins.Amazon.Daemons
 
         #region IDaemonTask Members
 
-        public DaemonSynchronizationPolicy SynchronizationPolicy
+        public override DaemonSynchronizationPolicy SynchronizationPolicy
         {
             get { return DaemonSynchronizationPolicy.SingleAppDomain; }
         }
-        public string DaemonName
+        public override string DaemonName
         {
             get { return DAEMON_NAME; }
         }
-        public void Execute(IFoundation iFoundation)
-        {
-            if (_executing) { return; } // safety
 
-            base.ExecuteMethod("Execute", delegate ()
-            {
-                try
-                {
-                    _executing = true;
-                    this.PerformProcessVideos();
-                }
-                finally
-                {
-                    _executing = false;
-                }
-            });
+        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        {
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), PerformProcessVideos);
         }
 
         #endregion

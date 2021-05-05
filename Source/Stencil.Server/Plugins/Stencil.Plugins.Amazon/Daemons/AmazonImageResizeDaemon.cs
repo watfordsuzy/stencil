@@ -14,6 +14,7 @@ using Stencil.Domain;
 using Stencil.Plugins.Amazon.Externals;
 using Stencil.Plugins.Amazon.Integration;
 using Stencil.Primary;
+using Stencil.Primary.Daemons;
 using Stencil.Primary.Health;
 using Stencil.Primary.Integration;
 using System;
@@ -28,7 +29,7 @@ using System.Web;
 
 namespace Stencil.Plugins.Amazon.Daemons
 {
-    public class AmazonImageResizeDaemon : ChokeableClass, IDaemonTask, IProcessImage
+    public class AmazonImageResizeDaemon : NonReentrantDaemon, IProcessImage
     {
         #region Constructor
 
@@ -128,30 +129,19 @@ namespace Stencil.Plugins.Amazon.Daemons
 
         #region IDaemonTask Members
 
-        public DaemonSynchronizationPolicy SynchronizationPolicy
+        public override DaemonSynchronizationPolicy SynchronizationPolicy
         {
             get { return DaemonSynchronizationPolicy.SingleAppDomain; }
         }
-        public string DaemonName
+
+        public override string DaemonName
         {
             get { return DAEMON_NAME; }
         }
-        public void Execute(IFoundation iFoundation)
-        {
-            if (_executing) { return; } // safety
 
-            base.ExecuteMethod("Execute", delegate ()
-            {
-                try
-                {
-                    _executing = true;
-                    this.PerformProcessPhotos();
-                }
-                finally
-                {
-                    _executing = false;
-                }
-            });
+        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        {
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), PerformProcessPhotos);
         }
 
         #endregion

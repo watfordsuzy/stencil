@@ -11,10 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Stencil.Common.Configuration;
 using Stencil.Common;
+using Stencil.Primary.Daemons;
 
 namespace Stencil.Primary.Health.Daemons
 {
-    public class HealthReportDaemon : ChokeableClass, IDaemonTask
+    public class HealthReportDaemon : NonReentrantDaemon
     {
         public HealthReportDaemon(IFoundation iFoundation)
             : base(iFoundation)
@@ -27,36 +28,20 @@ namespace Stencil.Primary.Health.Daemons
 
         protected static bool _executing;
 
-        public string DaemonName
+        public override string DaemonName
         {
             get
             {
                 return DAEMON_NAME;
             }
-            protected set
-            {
-            }
         }
 
-        public void Execute(Codeable.Foundation.Common.IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation)
         {
-            base.ExecuteMethod("Execute", delegate()
-            {
-                if (_executing) { return; } // safety
-
-                try
-                {
-                    _executing = true;
-                    this.PersistHealth();
-                }
-                finally
-                {
-                    _executing = false;
-                }
-            });
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), PersistHealth);
         }
 
-        public DaemonSynchronizationPolicy SynchronizationPolicy
+        public override DaemonSynchronizationPolicy SynchronizationPolicy
         {
             get { return DaemonSynchronizationPolicy.SingleAppDomain; }
         }

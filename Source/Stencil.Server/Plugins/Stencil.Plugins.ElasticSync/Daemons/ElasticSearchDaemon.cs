@@ -4,17 +4,19 @@ using Codeable.Foundation.Common.Daemons;
 using Codeable.Foundation.Core.Caching;
 using Codeable.Foundation.Core.System;
 using Codeable.Foundation.Core.Unity;
+using Stencil.Primary.Daemons;
 using Stencil.Primary.Health;
 using Stencil.Primary.Synchronization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace Stencil.Plugins.ElasticSync.Daemons
 {
-    public class ElasticSearchDaemon : ChokeableClass, IDaemonTask
+    public class ElasticSearchDaemon : NonReentrantDaemon
     {
         #region Constructor
 
@@ -37,38 +39,27 @@ namespace Stencil.Plugins.ElasticSync.Daemons
 
         #region Properties
 
-        protected static bool _executing;
         public string AgentName { get; set; }
 
         #endregion
 
         #region IDaemonTask Members
 
-        public DaemonSynchronizationPolicy SynchronizationPolicy
+        public override DaemonSynchronizationPolicy SynchronizationPolicy
         {
             get { return DaemonSynchronizationPolicy.SingleAppDomain; }
         }
-        public string DaemonName
+
+        public override string DaemonName
         {
             get { return string.Format(DAEMON_NAME_FORMAT, this.AgentName); }
         }
 
-
-        public void Execute(IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation)
         {
-            if (_executing) { return; } // safety
-
-            base.ExecuteMethod("Execute", delegate ()
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate ()
             {
-                try
-                {
-                    _executing = true;
-                    this.PerformProcessSync(string.Empty);
-                }
-                finally
-                {
-                    _executing = false;
-                }
+                this.PerformProcessSync(string.Empty);
             });
         }
 
