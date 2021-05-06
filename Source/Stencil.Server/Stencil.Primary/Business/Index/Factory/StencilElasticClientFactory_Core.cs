@@ -80,6 +80,99 @@ namespace Stencil.Primary.Business.Index
                     )
                 )
             ));
+            indexer.Mappings(mp => mp.Map<sdk.Product>(DocumentNames.Product, p => p
+                .AutoMap()
+                .Properties(props => props
+                    .String(s => s
+                        .Name(n => n.product_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(s => s
+                        .Name(n => n.product_owner_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(m => m
+                        .Name(t => t.product_name)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.product_name)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.product_name.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    )
+                )
+            ));
+            indexer.Mappings(mp => mp.Map<sdk.Platform>(DocumentNames.Platform, p => p
+                .AutoMap()
+                .Properties(props => props
+                    .String(s => s
+                        .Name(n => n.platform_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(m => m
+                        .Name(t => t.platform_name)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.platform_name)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.platform_name.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
+                        .Name(t => t.bitness)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.bitness)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.bitness.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    )
+                )
+            ));
+            indexer.Mappings(mp => mp.Map<sdk.ProductVersion>(DocumentNames.ProductVersion, p => p
+                .AutoMap()
+                .Properties(props => props
+                    .String(s => s
+                        .Name(n => n.product_version_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(s => s
+                        .Name(n => n.product_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(m => m
+                        .Name(t => t.version)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.version)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.version.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
+                        .Name(t => t.release_date_utc)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.release_date_utc)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.release_date_utc.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
+                        .Name(t => t.end_of_life_date_utc)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.end_of_life_date_utc)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.end_of_life_date_utc.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    )
+                )
+            ));
             
         }
     }

@@ -54,6 +54,12 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<GlobalSetting, dbGlobalSetting>();
             am.Mapper.CreateMap<dbAccount, Account>();
             am.Mapper.CreateMap<Account, dbAccount>();
+            am.Mapper.CreateMap<dbProduct, Product>();
+            am.Mapper.CreateMap<Product, dbProduct>();
+            am.Mapper.CreateMap<dbPlatform, Platform>();
+            am.Mapper.CreateMap<Platform, dbPlatform>();
+            am.Mapper.CreateMap<dbProductVersion, ProductVersion>();
+            am.Mapper.CreateMap<ProductVersion, dbProductVersion>();
             am.Mapper.CreateMap<dbAsset, Asset>();
             am.Mapper.CreateMap<Asset, dbAsset>();
             
@@ -64,12 +70,23 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<SDK.Models.AssetType, Domain.AssetType>().ConvertUsing(x => (Domain.AssetType)(int)x);
             am.Mapper.CreateMap<Domain.Dependency, SDK.Models.Dependency>().ConvertUsing(x => (SDK.Models.Dependency)(int)x);
             am.Mapper.CreateMap<SDK.Models.Dependency, Domain.Dependency>().ConvertUsing(x => (Domain.Dependency)(int)x);
+            am.Mapper.CreateMap<Domain.Bitness, SDK.Models.Bitness>().ConvertUsing(x => (SDK.Models.Bitness)(int)x);
+            am.Mapper.CreateMap<SDK.Models.Bitness, Domain.Bitness>().ConvertUsing(x => (Domain.Bitness)(int)x);
             
             am.Mapper.CreateMap<Domain.GlobalSetting, SDK.Models.GlobalSetting>();
             am.Mapper.CreateMap<SDK.Models.GlobalSetting, Domain.GlobalSetting>();
             
             am.Mapper.CreateMap<Domain.Account, SDK.Models.Account>();
             am.Mapper.CreateMap<SDK.Models.Account, Domain.Account>();
+            
+            am.Mapper.CreateMap<Domain.Product, SDK.Models.Product>();
+            am.Mapper.CreateMap<SDK.Models.Product, Domain.Product>();
+            
+            am.Mapper.CreateMap<Domain.Platform, SDK.Models.Platform>();
+            am.Mapper.CreateMap<SDK.Models.Platform, Domain.Platform>();
+            
+            am.Mapper.CreateMap<Domain.ProductVersion, SDK.Models.ProductVersion>();
+            am.Mapper.CreateMap<SDK.Models.ProductVersion, Domain.ProductVersion>();
             
             am.Mapper.CreateMap<Domain.Asset, SDK.Models.Asset>();
             am.Mapper.CreateMap<SDK.Models.Asset, Domain.Asset>();

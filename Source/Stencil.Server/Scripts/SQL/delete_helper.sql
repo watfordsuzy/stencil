@@ -12,6 +12,16 @@
 
 GO
 
+ALTER TABLE [dbo].[ProductVersion] DROP  [FK_ProductVersion_Product_product_id]
+
+GO
+
+GO
+
+ALTER TABLE [dbo].[Product] DROP  [FK_Product_Account_product_owner_id]
+
+GO
+
 GO
 
 GO
@@ -37,6 +47,15 @@ GO
 DROP TABLE [dbo].[Asset]
 GO
 
+DROP TABLE [dbo].[ProductVersion]
+GO
+
+DROP TABLE [dbo].[Platform]
+GO
+
+DROP TABLE [dbo].[Product]
+GO
+
 DROP TABLE [dbo].[Account]
 GO
 
@@ -58,6 +77,51 @@ DROP PROCEDURE [dbo].[spAccount_HydrateSyncUpdate]
 GO
 
 DROP PROCEDURE [dbo].[spAccount_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProduct_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spPlatform_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProductVersion_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncGetInvalid]
 GO
 
 

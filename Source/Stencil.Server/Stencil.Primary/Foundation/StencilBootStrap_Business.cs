@@ -29,15 +29,24 @@ namespace Stencil.Primary.Foundation
         {
             foundation.Container.RegisterType<IGlobalSettingBusiness, GlobalSettingBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAccountBusiness, AccountBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductBusiness, ProductBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformBusiness, PlatformBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionBusiness, ProductVersionBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAssetBusiness, AssetBusiness>(new HttpRequestLifetimeManager());
             
             
             //Indexes
             foundation.Container.RegisterType<IAccountIndex, AccountIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductIndex, ProductIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformIndex, PlatformIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionIndex, ProductVersionIndex>(new HttpRequestLifetimeManager());
             
             
             //Synchronizers
             foundation.Container.RegisterType<IAccountSynchronizer, AccountSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductSynchronizer, ProductSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformSynchronizer, PlatformSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionSynchronizer, ProductVersionSynchronizer>(new HttpRequestLifetimeManager());
             
         }
     }

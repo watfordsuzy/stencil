@@ -86,6 +86,105 @@ namespace Stencil.Primary
         
         
         
+        public static dbProduct ToDbModel(this Product entity, dbProduct destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbProduct(); }
+                return am.Mapper.Map<Product, dbProduct>(entity, destination);
+            }
+            return null;
+        }
+        public static Product ToDomainModel(this dbProduct entity, Product destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Product(); }
+                return am.Mapper.Map<dbProduct, Product>(entity, destination);
+            }
+            return null;
+        }
+        public static List<Product> ToDomainModel(this IEnumerable<dbProduct> entities)
+        {
+            List<Product> result = new List<Product>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
+        public static dbPlatform ToDbModel(this Platform entity, dbPlatform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbPlatform(); }
+                return am.Mapper.Map<Platform, dbPlatform>(entity, destination);
+            }
+            return null;
+        }
+        public static Platform ToDomainModel(this dbPlatform entity, Platform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Platform(); }
+                return am.Mapper.Map<dbPlatform, Platform>(entity, destination);
+            }
+            return null;
+        }
+        public static List<Platform> ToDomainModel(this IEnumerable<dbPlatform> entities)
+        {
+            List<Platform> result = new List<Platform>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
+        public static dbProductVersion ToDbModel(this ProductVersion entity, dbProductVersion destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbProductVersion(); }
+                return am.Mapper.Map<ProductVersion, dbProductVersion>(entity, destination);
+            }
+            return null;
+        }
+        public static ProductVersion ToDomainModel(this dbProductVersion entity, ProductVersion destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new ProductVersion(); }
+                return am.Mapper.Map<dbProductVersion, ProductVersion>(entity, destination);
+            }
+            return null;
+        }
+        public static List<ProductVersion> ToDomainModel(this IEnumerable<dbProductVersion> entities)
+        {
+            List<ProductVersion> result = new List<ProductVersion>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbAsset ToDbModel(this Asset entity, dbAsset destination = null)
         {
             if (entity != null)

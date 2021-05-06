@@ -54,6 +54,54 @@ namespace Stencil.Primary.Business.Integration
                 
             });
         }
+        public virtual void ProductInvalidated(Dependency affectedDependencies, Guid product_id)
+        {
+            base.ExecuteMethod("ProductInvalidated", delegate ()
+            {
+                DependencyWorker<Product>.EnqueueRequest(this.IFoundation, affectedDependencies, product_id, this.ProcessProductInvalidation);
+            });
+        }
+        protected virtual void ProcessProductInvalidation(Dependency dependencies, Guid product_id)
+        {
+            base.ExecuteMethod("ProcessProductInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void PlatformInvalidated(Dependency affectedDependencies, Guid platform_id)
+        {
+            base.ExecuteMethod("PlatformInvalidated", delegate ()
+            {
+                DependencyWorker<Platform>.EnqueueRequest(this.IFoundation, affectedDependencies, platform_id, this.ProcessPlatformInvalidation);
+            });
+        }
+        protected virtual void ProcessPlatformInvalidation(Dependency dependencies, Guid platform_id)
+        {
+            base.ExecuteMethod("ProcessPlatformInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void ProductVersionInvalidated(Dependency affectedDependencies, Guid product_version_id)
+        {
+            base.ExecuteMethod("ProductVersionInvalidated", delegate ()
+            {
+                DependencyWorker<ProductVersion>.EnqueueRequest(this.IFoundation, affectedDependencies, product_version_id, this.ProcessProductVersionInvalidation);
+            });
+        }
+        protected virtual void ProcessProductVersionInvalidation(Dependency dependencies, Guid product_version_id)
+        {
+            base.ExecuteMethod("ProcessProductVersionInvalidation", delegate ()
+            {
+                ProductVersion item = this.API.Direct.ProductVersions.GetById(product_version_id);
+                if (item != null)
+                {
+                    this.API.Direct.Products.Invalidate(item.product_id, "ProductVersion changed");
+                }
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
         public virtual void AssetInvalidated(Dependency affectedDependencies, Guid asset_id)
         {
             base.ExecuteMethod("AssetInvalidated", delegate ()

@@ -29,6 +29,18 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<IAccountBusiness>(); }
         }
+        public IProductBusiness Products
+        {
+            get { return this.IFoundation.Resolve<IProductBusiness>(); }
+        }
+        public IPlatformBusiness Platforms
+        {
+            get { return this.IFoundation.Resolve<IPlatformBusiness>(); }
+        }
+        public IProductVersionBusiness ProductVersions
+        {
+            get { return this.IFoundation.Resolve<IProductVersionBusiness>(); }
+        }
         public IAssetBusiness Assets
         {
             get { return this.IFoundation.Resolve<IAssetBusiness>(); }

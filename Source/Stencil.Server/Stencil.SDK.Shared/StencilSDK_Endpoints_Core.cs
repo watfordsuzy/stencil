@@ -18,6 +18,9 @@ namespace Stencil.SDK
         // members for web ease
         public GlobalSettingEndpoint GlobalSetting;
         public AccountEndpoint Account;
+        public ProductEndpoint Product;
+        public PlatformEndpoint Platform;
+        public ProductVersionEndpoint ProductVersion;
         public AssetEndpoint Asset;
         
 
@@ -25,6 +28,9 @@ namespace Stencil.SDK
         {
             this.GlobalSetting = new GlobalSettingEndpoint(this);
             this.Account = new AccountEndpoint(this);
+            this.Product = new ProductEndpoint(this);
+            this.Platform = new PlatformEndpoint(this);
+            this.ProductVersion = new ProductVersionEndpoint(this);
             this.Asset = new AssetEndpoint(this);
             
         }   

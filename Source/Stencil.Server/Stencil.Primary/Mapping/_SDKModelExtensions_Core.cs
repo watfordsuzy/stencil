@@ -91,6 +91,111 @@ namespace Stencil.Primary
         
         
         
+        public static Product ToDomainModel(this SDK.Models.Product entity, Product destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.Product(); }
+                Product result = am.Mapper.Map<SDK.Models.Product, Product>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.Product ToSDKModel(this Product entity, SDK.Models.Product destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.Product(); }
+                SDK.Models.Product result = am.Mapper.Map<Product, SDK.Models.Product>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.Product> ToSDKModel(this IEnumerable<Product> entities)
+        {
+            List<SDK.Models.Product> result = new List<SDK.Models.Product>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
+        public static Platform ToDomainModel(this SDK.Models.Platform entity, Platform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.Platform(); }
+                Platform result = am.Mapper.Map<SDK.Models.Platform, Platform>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.Platform ToSDKModel(this Platform entity, SDK.Models.Platform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.Platform(); }
+                SDK.Models.Platform result = am.Mapper.Map<Platform, SDK.Models.Platform>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.Platform> ToSDKModel(this IEnumerable<Platform> entities)
+        {
+            List<SDK.Models.Platform> result = new List<SDK.Models.Platform>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
+        public static ProductVersion ToDomainModel(this SDK.Models.ProductVersion entity, ProductVersion destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.ProductVersion(); }
+                ProductVersion result = am.Mapper.Map<SDK.Models.ProductVersion, ProductVersion>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.ProductVersion ToSDKModel(this ProductVersion entity, SDK.Models.ProductVersion destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.ProductVersion(); }
+                SDK.Models.ProductVersion result = am.Mapper.Map<ProductVersion, SDK.Models.ProductVersion>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.ProductVersion> ToSDKModel(this IEnumerable<ProductVersion> entities)
+        {
+            List<SDK.Models.ProductVersion> result = new List<SDK.Models.ProductVersion>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static Asset ToDomainModel(this SDK.Models.Asset entity, Asset destination = null)
         {
             if (entity != null)
