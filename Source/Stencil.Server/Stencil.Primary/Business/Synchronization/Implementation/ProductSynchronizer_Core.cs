@@ -119,6 +119,8 @@ namespace Stencil.Primary.Synchronization.Implementation
         protected void HydrateSDKModelComputed(Product domainModel, sdk.Product sdkModel)
         {
             
+            sdkModel.version_count = this.API.Index.ProductVersions.GetCountProductID(sdkModel.product_id);
+            
         }
         partial void HydrateSDKModel(Product domainModel, sdk.Product sdkModel);
     }

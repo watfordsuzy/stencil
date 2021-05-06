@@ -204,6 +204,7 @@ GO
 CREATE PROCEDURE [dbo].[spIndex_InvalidateAggregates]
 AS
 
+	UPDATE [dbo].[Product] SET [sync_success_utc] = NULL
 
 GO
 
@@ -211,6 +212,7 @@ GO
 CREATE PROCEDURE [dbo].[spIndexHydrate_InvalidateAggregates]
 AS
 
+	UPDATE [dbo].[Product] SET [sync_hydrate_utc] = NULL
 
 GO
 

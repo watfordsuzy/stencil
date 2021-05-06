@@ -24,6 +24,11 @@ namespace Stencil.SDK.Models
         public virtual Guid product_owner_id { get; set; }
         public virtual string product_description { get; set; }
         
+        //<IndexOnly>
+        
+        public int version_count { get; set; }
+        
+        //</IndexOnly>
 	}
 }
 
