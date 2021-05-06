@@ -45,7 +45,7 @@
     <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Version">version</field>
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="Release Date">release_date_utc</field>
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="End of Life Date">end_of_life_date_utc</field>
-    <indexfield type="string" isNullable="false" sortable="true" friendlyName="ProductName" computedFrom="Product" computedField="product_name" computedBy="Extra">product_name</indexfield>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="ProductName" computedFrom="Product" computedReferenceField="product_id" computedField="product_name" computedBy="Extra">product_name</indexfield>
   </item>
   <!--<item name="ProductVersionPlatform" friendlyName="Product Version Platform" useIndex="true" indexPriority="60">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product Verison Platform ID">product_version_platform_id</field>

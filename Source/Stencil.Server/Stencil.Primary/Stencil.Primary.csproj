@@ -132,6 +132,12 @@
       <DependentUpon>GlobalSettingBusiness.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Direct\Implementation\InterceptArgs.cs" />
+    <Compile Include="Business\Direct\Implementation\PlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductVersionBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductVersionBusiness_Crud.cs" />
     <Compile Include="Business\Direct\_DirectExtensions.cs" />
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />
     <Compile Include="Business\Index\Factory\IStencilElasticClientFactory.cs" />
@@ -150,7 +156,13 @@
     </Compile>
     <Compile Include="Business\Index\Implementation\IndexerBase.cs" />
     <Compile Include="Business\Index\Implementation\IndexerBaseHealth.cs" />
+    <Compile Include="Business\Index\Implementation\PlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\ProductIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\ProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\IndexResult.cs" />
+    <Compile Include="Business\Index\IPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\IProductIndex_Core.cs" />
+    <Compile Include="Business\Index\IProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\_IndexExtensions.cs" />
     <Compile Include="Business\Integration\DependencyCoordinator_Core.cs">
       <DependentUpon>DependencyCoordinator.cs</DependentUpon>
@@ -161,7 +173,13 @@
     <Compile Include="Business\Synchronization\Availability.cs" />
     <Compile Include="Business\Synchronization\IAccountSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\AccountSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\PlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\ProductSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\ProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\SynchronizerBase.cs" />
+    <Compile Include="Business\Synchronization\IPlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IProductSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\ISynchronizer.cs" />
     <Compile Include="Daemons\Agents.cs" />
     <Compile Include="Daemons\NonReentrantDaemon.cs" />

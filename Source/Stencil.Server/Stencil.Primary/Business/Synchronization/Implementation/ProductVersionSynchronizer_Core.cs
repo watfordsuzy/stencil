@@ -119,14 +119,14 @@ namespace Stencil.Primary.Synchronization.Implementation
         protected void HydrateSDKModelComputed(ProductVersion domainModel, sdk.ProductVersion sdkModel)
         {
             
-            sdk.Product referenceProduct = this.API.Index.Products.GetById(sdkModel.);
+            sdk.Product referenceProduct = this.API.Index.Products.GetById(sdkModel.product_id);
             if(referenceProduct != null)
             {
                 sdkModel.product_name = referenceProduct.product_name;
             }
             else
             {
-                Product referenceDomainProduct = this.API.Direct.Products.GetById(sdkModel.);
+                Product referenceDomainProduct = this.API.Direct.Products.GetById(sdkModel.product_id);
                 if(referenceDomainProduct != null)
                 {
                     sdkModel.product_name = referenceDomainProduct.product_name;
