@@ -60,6 +60,8 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<Platform, dbPlatform>();
             am.Mapper.CreateMap<dbProductVersion, ProductVersion>();
             am.Mapper.CreateMap<ProductVersion, dbProductVersion>();
+            am.Mapper.CreateMap<dbTicket, Ticket>();
+            am.Mapper.CreateMap<Ticket, dbTicket>();
             am.Mapper.CreateMap<dbAsset, Asset>();
             am.Mapper.CreateMap<Asset, dbAsset>();
             
@@ -72,6 +74,10 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<SDK.Models.Dependency, Domain.Dependency>().ConvertUsing(x => (Domain.Dependency)(int)x);
             am.Mapper.CreateMap<Domain.Bitness, SDK.Models.Bitness>().ConvertUsing(x => (SDK.Models.Bitness)(int)x);
             am.Mapper.CreateMap<SDK.Models.Bitness, Domain.Bitness>().ConvertUsing(x => (Domain.Bitness)(int)x);
+            am.Mapper.CreateMap<Domain.TicketType, SDK.Models.TicketType>().ConvertUsing(x => (SDK.Models.TicketType)(int)x);
+            am.Mapper.CreateMap<SDK.Models.TicketType, Domain.TicketType>().ConvertUsing(x => (Domain.TicketType)(int)x);
+            am.Mapper.CreateMap<Domain.TicketStatus, SDK.Models.TicketStatus>().ConvertUsing(x => (SDK.Models.TicketStatus)(int)x);
+            am.Mapper.CreateMap<SDK.Models.TicketStatus, Domain.TicketStatus>().ConvertUsing(x => (Domain.TicketStatus)(int)x);
             
             am.Mapper.CreateMap<Domain.GlobalSetting, SDK.Models.GlobalSetting>();
             am.Mapper.CreateMap<SDK.Models.GlobalSetting, Domain.GlobalSetting>();
@@ -87,6 +93,9 @@ namespace Stencil.Primary.Mapping
             
             am.Mapper.CreateMap<Domain.ProductVersion, SDK.Models.ProductVersion>();
             am.Mapper.CreateMap<SDK.Models.ProductVersion, Domain.ProductVersion>();
+            
+            am.Mapper.CreateMap<Domain.Ticket, SDK.Models.Ticket>();
+            am.Mapper.CreateMap<SDK.Models.Ticket, Domain.Ticket>();
             
             am.Mapper.CreateMap<Domain.Asset, SDK.Models.Asset>();
             am.Mapper.CreateMap<SDK.Models.Asset, Domain.Asset>();

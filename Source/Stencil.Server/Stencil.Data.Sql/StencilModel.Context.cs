@@ -33,6 +33,7 @@ namespace Stencil.Data.Sql
         public virtual DbSet<dbPlatform> dbPlatforms { get; set; }
         public virtual DbSet<dbProduct> dbProducts { get; set; }
         public virtual DbSet<dbProductVersion> dbProductVersions { get; set; }
+        public virtual DbSet<dbTicket> dbTickets { get; set; }
     
         public virtual ObjectResult<Nullable<System.Guid>> spAccount_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
         {
@@ -334,6 +335,74 @@ namespace Stencil.Data.Sql
                 new ObjectParameter("sync_log", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProductVersion_SyncUpdate", product_version_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spTicket_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spTicket_HydrateSyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spTicket_HydrateSyncUpdate(Nullable<System.Guid> ticket_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_hydrate_utc, string sync_log)
+        {
+            var ticket_idParameter = ticket_id.HasValue ?
+                new ObjectParameter("ticket_id", ticket_id) :
+                new ObjectParameter("ticket_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_hydrate_utcParameter = sync_hydrate_utc.HasValue ?
+                new ObjectParameter("sync_hydrate_utc", sync_hydrate_utc) :
+                new ObjectParameter("sync_hydrate_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spTicket_HydrateSyncUpdate", ticket_idParameter, sync_successParameter, sync_hydrate_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spTicket_SyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spTicket_SyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spTicket_SyncUpdate(Nullable<System.Guid> ticket_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_success_utc, string sync_log)
+        {
+            var ticket_idParameter = ticket_id.HasValue ?
+                new ObjectParameter("ticket_id", ticket_id) :
+                new ObjectParameter("ticket_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_success_utcParameter = sync_success_utc.HasValue ?
+                new ObjectParameter("sync_success_utc", sync_success_utc) :
+                new ObjectParameter("sync_success_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spTicket_SyncUpdate", ticket_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
         }
     }
 }

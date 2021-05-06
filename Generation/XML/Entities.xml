@@ -51,11 +51,19 @@
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product Verison Platform ID">product_version_platform_id</field>
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="ProductVersion" foreignKeyField="product_version_id" friendlyName="Product Verison ID">product_version_id</field>
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Platform" foreignKeyField="platform_id" friendlyName="Platform ID">platform_id</field>
-  </item>
-  <item name="Ticket" friendlyName="Ticket" uiDisplayField="ticket_description" useIndex="true" indexPriority="40">
-    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Ticket ID">ticket_id</field>
-    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Reporter ID" foreignKey="Account" foreignKeyField="account_id">reporter_id</field>
   </item>-->
+  <!-- Tickets are filed against Products by users and assigned to Product Version Platforms by Product owners (or their delegate)-->
+  <item name="Ticket" friendlyName="Ticket" uiDisplayField="ticket_description" useIndex="true" indexPriority="50">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Ticket ID">ticket_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="ReportedByID" foreignKey="Account" foreignKeyField="account_id">reported_by_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="true" friendlyName="AssignedToID" foreignKey="Account" foreignKeyField="account_id">assigned_to_id</field>
+    <field type="TicketType" dbType="int" isNullable="false" friendlyName="Ticket Type">ticket_type</field>
+    <field type="TicketStatus" dbType="int" isNullable="false" friendlyName="Ticket Status">ticket_status</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="false" sortable="true" friendlyName="Opened Date">opened_on_utc</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="Closed Date">closed_on_utc</field>
+    <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Title">ticket_title</field>
+    <field type="string" dbType="nvarchar(max)" isNullable="false" searchable="true" friendlyName="Description">ticket_description</field>
+  </item>
   <item name="Asset" friendlyName="Asset" uiDisplayField="asset_id" trackUpdates="true">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Asset ID">asset_id</field>
     <field type="AssetType" dbType="int" isNullable="false" friendlyName="Asset Type">type</field>
@@ -98,5 +106,16 @@
     <field value="32">ThirtyTwo</field>
     <field value="36">ThirtySix</field>
     <field value="64">SixtyFour</field>
+  </enum>
+  <enum name="TicketType">
+    <field value="0">Bug</field>
+    <field value="1">Feature</field>
+    <field value="2">TechDebt</field>
+    <field value="3">Spike</field>
+  </enum>
+  <enum name="TicketStatus">
+    <field value="0">Open</field>
+    <field value="1">InProgress</field>
+    <field value="2">Closed</field>
   </enum>
 </items>

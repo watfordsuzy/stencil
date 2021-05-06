@@ -183,6 +183,51 @@ namespace Stencil.Primary.Business.Index
                     )
                 )
             ));
+            indexer.Mappings(mp => mp.Map<sdk.Ticket>(DocumentNames.Ticket, p => p
+                .AutoMap()
+                .Properties(props => props
+                    .String(s => s
+                        .Name(n => n.ticket_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(s => s
+                        .Name(n => n.reported_by_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(s => s
+                        .Name(n => n.assigned_to_id)
+                        .Index(FieldIndexOption.NotAnalyzed)
+                    ).String(m => m
+                        .Name(t => t.opened_on_utc)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.opened_on_utc)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.opened_on_utc.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
+                        .Name(t => t.closed_on_utc)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.closed_on_utc)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.closed_on_utc.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
+                        .Name(t => t.ticket_title)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.ticket_title)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.ticket_title.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    )
+                )
+            ));
             
         }
     }

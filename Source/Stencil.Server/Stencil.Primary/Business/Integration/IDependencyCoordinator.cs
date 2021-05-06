@@ -22,6 +22,7 @@ namespace Stencil.Primary.Business.Integration
         void ProductInvalidated(Dependency affectedDependencies, Guid product_id);
         void PlatformInvalidated(Dependency affectedDependencies, Guid platform_id);
         void ProductVersionInvalidated(Dependency affectedDependencies, Guid product_version_id);
+        void TicketInvalidated(Dependency affectedDependencies, Guid ticket_id);
         void AssetInvalidated(Dependency affectedDependencies, Guid asset_id);
         
     }

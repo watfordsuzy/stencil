@@ -39,6 +39,10 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<IProductVersionIndex>(); }
         }
+        public ITicketIndex Tickets
+        {
+            get { return this.IFoundation.Resolve<ITicketIndex>(); }
+        }
         
     }
 }

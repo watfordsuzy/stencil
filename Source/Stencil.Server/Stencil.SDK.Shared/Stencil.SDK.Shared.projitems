@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\PlatformEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\TicketEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\EndpointBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\ServerEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\EndpointException.cs" />
@@ -41,6 +42,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\AccountInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\UpdateRequiredInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SDKModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Ticket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TicketStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TicketType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PagingInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SDKUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security\HashedTimeSignatureGenerator.cs" />

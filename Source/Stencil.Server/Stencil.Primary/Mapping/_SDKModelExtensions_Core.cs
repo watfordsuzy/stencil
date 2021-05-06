@@ -196,6 +196,41 @@ namespace Stencil.Primary
         
         
         
+        public static Ticket ToDomainModel(this SDK.Models.Ticket entity, Ticket destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.Ticket(); }
+                Ticket result = am.Mapper.Map<SDK.Models.Ticket, Ticket>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.Ticket ToSDKModel(this Ticket entity, SDK.Models.Ticket destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.Ticket(); }
+                SDK.Models.Ticket result = am.Mapper.Map<Ticket, SDK.Models.Ticket>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.Ticket> ToSDKModel(this IEnumerable<Ticket> entities)
+        {
+            List<SDK.Models.Ticket> result = new List<SDK.Models.Ticket>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static Asset ToDomainModel(this SDK.Models.Asset entity, Asset destination = null)
         {
             if (entity != null)

@@ -21,6 +21,7 @@ namespace Stencil.SDK
         public ProductEndpoint Product;
         public PlatformEndpoint Platform;
         public ProductVersionEndpoint ProductVersion;
+        public TicketEndpoint Ticket;
         public AssetEndpoint Asset;
         
 
@@ -31,6 +32,7 @@ namespace Stencil.SDK
             this.Product = new ProductEndpoint(this);
             this.Platform = new PlatformEndpoint(this);
             this.ProductVersion = new ProductVersionEndpoint(this);
+            this.Ticket = new TicketEndpoint(this);
             this.Asset = new AssetEndpoint(this);
             
         }   

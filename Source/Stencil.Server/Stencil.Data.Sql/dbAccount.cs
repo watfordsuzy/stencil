@@ -18,6 +18,8 @@ namespace Stencil.Data.Sql
         public dbAccount()
         {
             this.Products = new HashSet<dbProduct>();
+            this.AssignedTickets = new HashSet<dbTicket>();
+            this.ReportedTickets = new HashSet<dbTicket>();
         }
     
         public System.Guid account_id { get; set; }
@@ -49,5 +51,9 @@ namespace Stencil.Data.Sql
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dbProduct> Products { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dbTicket> AssignedTickets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dbTicket> ReportedTickets { get; set; }
     }
 }

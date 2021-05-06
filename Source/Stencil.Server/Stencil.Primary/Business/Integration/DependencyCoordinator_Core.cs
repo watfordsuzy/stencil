@@ -102,6 +102,20 @@ namespace Stencil.Primary.Business.Integration
                 this.API.Integration.Synchronization.AgitateSyncDaemon();
             });
         }
+        public virtual void TicketInvalidated(Dependency affectedDependencies, Guid ticket_id)
+        {
+            base.ExecuteMethod("TicketInvalidated", delegate ()
+            {
+                DependencyWorker<Ticket>.EnqueueRequest(this.IFoundation, affectedDependencies, ticket_id, this.ProcessTicketInvalidation);
+            });
+        }
+        protected virtual void ProcessTicketInvalidation(Dependency dependencies, Guid ticket_id)
+        {
+            base.ExecuteMethod("ProcessTicketInvalidation", delegate ()
+            {
+                
+            });
+        }
         public virtual void AssetInvalidated(Dependency affectedDependencies, Guid asset_id)
         {
             base.ExecuteMethod("AssetInvalidated", delegate ()

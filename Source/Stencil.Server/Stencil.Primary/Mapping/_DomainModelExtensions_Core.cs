@@ -185,6 +185,39 @@ namespace Stencil.Primary
         
         
         
+        public static dbTicket ToDbModel(this Ticket entity, dbTicket destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbTicket(); }
+                return am.Mapper.Map<Ticket, dbTicket>(entity, destination);
+            }
+            return null;
+        }
+        public static Ticket ToDomainModel(this dbTicket entity, Ticket destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Ticket(); }
+                return am.Mapper.Map<dbTicket, Ticket>(entity, destination);
+            }
+            return null;
+        }
+        public static List<Ticket> ToDomainModel(this IEnumerable<dbTicket> entities)
+        {
+            List<Ticket> result = new List<Ticket>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbAsset ToDbModel(this Asset entity, dbAsset destination = null)
         {
             if (entity != null)

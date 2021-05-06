@@ -13,6 +13,9 @@
         <EntityTypeShape EntityType="Stencil.Data.Sql.dbProductVersion" Width="1.5" PointX="5.25" PointY="10.875" />
         <AssociationConnector Association="Stencil.Data.Sql.FK_Product_Account_product_owner_id" />
         <AssociationConnector Association="Stencil.Data.Sql.FK_ProductVersion_Product_product_id" />
+        <EntityTypeShape EntityType="Stencil.Data.Sql.dbTicket" Width="1.5" PointX="3" PointY="15.625" />
+        <AssociationConnector Association="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id" />
+        <AssociationConnector Association="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

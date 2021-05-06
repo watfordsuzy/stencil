@@ -131,6 +131,29 @@
           <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
           <Property Name="sync_log" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Ticket">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="reported_by_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="assigned_to_id" Type="uniqueidentifier" />
+          <Property Name="ticket_type" Type="int" Nullable="false" />
+          <Property Name="ticket_status" Type="int" Nullable="false" />
+          <Property Name="opened_on_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="closed_on_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="ticket_title" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="ticket_description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
         <Association Name="FK_Product_Account_product_owner_id">
           <End Role="Account" Type="Self.Account" Multiplicity="1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -152,6 +175,30 @@
             </Principal>
             <Dependent Role="ProductVersion">
               <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Account_assigned_to_id">
+          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="assigned_to_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Account_reported_by_id">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="reported_by_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -241,6 +288,26 @@
           <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
           <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="spTicket_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spTicket_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ticket_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spTicket_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spTicket_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ticket_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="StencilDataSqlStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
@@ -248,6 +315,7 @@
           <EntitySet Name="Platform" EntityType="Self.Platform" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductVersion" EntityType="Self.ProductVersion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Product_Account_product_owner_id" Association="Self.FK_Product_Account_product_owner_id">
             <End Role="Account" EntitySet="Account" />
             <End Role="Product" EntitySet="Product" />
@@ -255,6 +323,14 @@
           <AssociationSet Name="FK_ProductVersion_Product_product_id" Association="Self.FK_ProductVersion_Product_product_id">
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductVersion" EntitySet="ProductVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Account_assigned_to_id" Association="Self.FK_Ticket_Account_assigned_to_id">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Account_reported_by_id" Association="Self.FK_Ticket_Account_reported_by_id">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Ticket" EntitySet="Ticket" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -362,6 +438,35 @@
             <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
             <Parameter Name="sync_log" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="dbTickets" EntityType="Stencil.Data.Sql.dbTicket" />
+          <AssociationSet Name="FK_Ticket_Account_assigned_to_id" Association="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id">
+            <End Role="dbAccount" EntitySet="dbAccounts" />
+            <End Role="Ticket" EntitySet="dbTickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ticket_Account_reported_by_id" Association="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id">
+            <End Role="dbAccount" EntitySet="dbAccounts" />
+            <End Role="Ticket" EntitySet="dbTickets" />
+          </AssociationSet>
+          <FunctionImport Name="spTicket_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicket_HydrateSyncUpdate">
+            <Parameter Name="ticket_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicket_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicket_SyncUpdate">
+            <Parameter Name="ticket_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="dbAccount">
           <Key>
@@ -394,6 +499,8 @@
           <Property Name="push_google" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="push_microsoft" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Products" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="dbAccount" ToRole="Product" />
+          <NavigationProperty Name="AssignedTickets" Relationship="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id" FromRole="dbAccount" ToRole="Ticket" />
+          <NavigationProperty Name="ReportedTickets" Relationship="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id" FromRole="dbAccount" ToRole="Ticket" />
         </EntityType>
         <EntityType Name="dbGlobalSetting">
           <Key>
@@ -522,6 +629,55 @@
             </Principal>
             <Dependent Role="ProductVersion">
               <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="dbTicket">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="Guid" Nullable="false" />
+          <Property Name="reported_by_id" Type="Guid" Nullable="false" />
+          <Property Name="assigned_to_id" Type="Guid" />
+          <Property Name="ticket_type" Type="Int32" Nullable="false" />
+          <Property Name="ticket_status" Type="Int32" Nullable="false" />
+          <Property Name="opened_on_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="closed_on_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="ticket_title" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ticket_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AssignedTo" Relationship="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id" FromRole="Ticket" ToRole="dbAccount" />
+          <NavigationProperty Name="ReportedBy" Relationship="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id" FromRole="Ticket" ToRole="dbAccount" />
+        </EntityType>
+        <Association Name="FK_Ticket_Account_assigned_to_id">
+          <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="0..1" />
+          <End Type="Stencil.Data.Sql.dbTicket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="assigned_to_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ticket_Account_reported_by_id">
+          <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbTicket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="reported_by_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -699,6 +855,34 @@
           <FunctionImportMapping FunctionImportName="spProductVersion_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersion_HydrateSyncUpdate" />
           <FunctionImportMapping FunctionImportName="spProductVersion_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProductVersion_SyncGetInvalid" />
           <FunctionImportMapping FunctionImportName="spProductVersion_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersion_SyncUpdate" />
+          <EntitySetMapping Name="dbTickets">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbTicket">
+              <MappingFragment StoreEntitySet="Ticket">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="ticket_description" ColumnName="ticket_description" />
+                <ScalarProperty Name="ticket_title" ColumnName="ticket_title" />
+                <ScalarProperty Name="closed_on_utc" ColumnName="closed_on_utc" />
+                <ScalarProperty Name="opened_on_utc" ColumnName="opened_on_utc" />
+                <ScalarProperty Name="ticket_status" ColumnName="ticket_status" />
+                <ScalarProperty Name="ticket_type" ColumnName="ticket_type" />
+                <ScalarProperty Name="assigned_to_id" ColumnName="assigned_to_id" />
+                <ScalarProperty Name="reported_by_id" ColumnName="reported_by_id" />
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spTicket_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spTicket_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spTicket_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicket_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spTicket_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spTicket_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spTicket_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicket_SyncUpdate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
