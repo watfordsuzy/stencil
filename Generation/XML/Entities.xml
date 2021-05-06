@@ -24,6 +24,38 @@
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="Last Login">last_login_utc</field>
     <field type="string" dbType="nvarchar(250)" isNullable="true" sortable="true" friendlyName="Last Login Platform">last_login_platform</field>
   </item>
+  <!-- Products have a Product Owner (Account) -->
+  <item name="Product" friendlyName="Product" uiDisplayField="product_name" useIndex="true" indexPriority="20">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product ID">product_id</field>
+    <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Name">product_name</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Account" foreignKeyField="account_id" friendlyName="ProductOwnerID">product_owner_id</field>
+    <field type="string" dbType="nvarchar(max)" isNullable="true" searchable="true" sortable="false" friendlyName="Description">product_description</field>
+    <indexfield type="int" isNullable="false" friendlyName="VersionCount" computedFrom="ProductVersion" computedField="product_id" computedBy="Count">version_count</indexfield>
+  </item>
+  <!-- Product Versions run on Platforms -->
+  <item name="Platform" friendlyName="Platform" uiDisplayField="platform_name" useIndex="true" indexPriority="30">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Platform ID">platform_id</field>
+    <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Name">platform_name</field>
+    <field type="Bitness" dbType="int" isNullable="false" sortable="true" friendlyName="Bitness">bitness</field>
+  </item>
+  <!-- Products have Product Versions -->
+  <item name="ProductVersion" friendlyName="Product Version" uiDisplayField="version" useIndex="true" indexPriority="40">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product Verison ID">product_version_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Product" foreignKeyField="product_id" iInvalidateforeignKey="true" friendlyName="ProductID">product_id</field>
+    <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Version">version</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="Release Date">release_date_utc</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="End of Life Date">end_of_life_date_utc</field>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="ProductName" computedFrom="Product" computedField="product_name" computedBy="Extra">product_name</indexfield>
+  </item>
+  <!--<item name="ProductVersionPlatform" friendlyName="Product Version Platform" useIndex="true" indexPriority="60">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product Verison Platform ID">product_version_platform_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="ProductVersion" foreignKeyField="product_version_id" friendlyName="Product Verison ID">product_version_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Platform" foreignKeyField="platform_id" friendlyName="Platform ID">platform_id</field>
+  </item>
+  <item name="Ticket" friendlyName="Ticket" uiDisplayField="ticket_description" useIndex="true" indexPriority="40">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Ticket ID">ticket_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Reporter ID" foreignKey="Account" foreignKeyField="account_id">reporter_id</field>
+  </item>-->
   <item name="Asset" friendlyName="Asset" uiDisplayField="asset_id" trackUpdates="true">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Asset ID">asset_id</field>
     <field type="AssetType" dbType="int" isNullable="false" friendlyName="Asset Type">type</field>
@@ -58,5 +90,13 @@
   </enum>
   <enum name="Dependency">
     <field value="0">None</field>
+  </enum>
+  <enum name="Bitness">
+    <field value="8">Eight</field>
+    <field value="12">Twelve</field>
+    <field value="16">Sixteen</field>
+    <field value="32">ThirtyTwo</field>
+    <field value="36">ThirtySix</field>
+    <field value="64">SixtyFour</field>
   </enum>
 </items>
