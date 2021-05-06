@@ -141,6 +141,16 @@ namespace Stencil.Primary.Business.Index
                         .Name(n => n.product_id)
                         .Index(FieldIndexOption.NotAnalyzed)
                     ).String(m => m
+                        .Name(t => t.product_name)
+                        .Fields(f => f
+                                .String(s => s.Name(n => n.product_name)
+                                .Index(FieldIndexOption.Analyzed))
+                                .String(s => s
+                                    .Name(n => n.product_name.Suffix("sort"))
+                                    .Analyzer("case_insensitive"))
+                                
+                        )
+                    ).String(m => m
                         .Name(t => t.version)
                         .Fields(f => f
                                 .String(s => s.Name(n => n.version)

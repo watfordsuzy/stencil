@@ -25,6 +25,11 @@ namespace Stencil.SDK.Models
         public virtual DateTime? release_date_utc { get; set; }
         public virtual DateTime? end_of_life_date_utc { get; set; }
         
+        //<IndexOnly>
+        
+        public string product_name { get; set; }
+        
+        //</IndexOnly>
 	}
 }
 
