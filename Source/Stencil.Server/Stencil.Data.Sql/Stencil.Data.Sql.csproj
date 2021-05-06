@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="localConnectionStrings.config" />
     <None Include="packages.config" />
     <None Include="StencilModel.edmx.diagram">
       <DependentUpon>StencilModel.edmx</DependentUpon>
