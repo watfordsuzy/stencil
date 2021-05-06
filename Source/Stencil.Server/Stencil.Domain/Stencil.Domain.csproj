@@ -72,8 +72,12 @@
     <Compile Include="DomainModel.cs" />
     <Compile Include="Domain\Asset.cs" />
     <Compile Include="Domain\AssetType.cs" />
+    <Compile Include="Domain\Bitness.cs" />
     <Compile Include="Domain\Dependency.cs" />
     <Compile Include="Domain\GlobalSetting.cs" />
+    <Compile Include="Domain\Platform.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\ProductVersion.cs" />
     <Compile Include="Domain\WellKnownEntitlements.cs" />
     <Compile Include="_DomainExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

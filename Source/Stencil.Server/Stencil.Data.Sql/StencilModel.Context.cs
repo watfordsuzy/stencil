@@ -30,6 +30,9 @@ namespace Stencil.Data.Sql
         public virtual DbSet<dbAccount> dbAccounts { get; set; }
         public virtual DbSet<dbGlobalSetting> dbGlobalSettings { get; set; }
         public virtual DbSet<dbAsset> dbAssets { get; set; }
+        public virtual DbSet<dbPlatform> dbPlatforms { get; set; }
+        public virtual DbSet<dbProduct> dbProducts { get; set; }
+        public virtual DbSet<dbProductVersion> dbProductVersions { get; set; }
     
         public virtual ObjectResult<Nullable<System.Guid>> spAccount_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
         {
@@ -127,6 +130,210 @@ namespace Stencil.Data.Sql
         public virtual ObjectResult<spIndexHydrate_Status_Result> spIndexHydrate_Status()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spIndexHydrate_Status_Result>("spIndexHydrate_Status");
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spPlatform_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spPlatform_HydrateSyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spPlatform_HydrateSyncUpdate(Nullable<System.Guid> platform_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_hydrate_utc, string sync_log)
+        {
+            var platform_idParameter = platform_id.HasValue ?
+                new ObjectParameter("platform_id", platform_id) :
+                new ObjectParameter("platform_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_hydrate_utcParameter = sync_hydrate_utc.HasValue ?
+                new ObjectParameter("sync_hydrate_utc", sync_hydrate_utc) :
+                new ObjectParameter("sync_hydrate_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spPlatform_HydrateSyncUpdate", platform_idParameter, sync_successParameter, sync_hydrate_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spPlatform_SyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spPlatform_SyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spPlatform_SyncUpdate(Nullable<System.Guid> platform_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_success_utc, string sync_log)
+        {
+            var platform_idParameter = platform_id.HasValue ?
+                new ObjectParameter("platform_id", platform_id) :
+                new ObjectParameter("platform_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_success_utcParameter = sync_success_utc.HasValue ?
+                new ObjectParameter("sync_success_utc", sync_success_utc) :
+                new ObjectParameter("sync_success_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spPlatform_SyncUpdate", platform_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spProduct_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spProduct_HydrateSyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spProduct_HydrateSyncUpdate(Nullable<System.Guid> product_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_hydrate_utc, string sync_log)
+        {
+            var product_idParameter = product_id.HasValue ?
+                new ObjectParameter("product_id", product_id) :
+                new ObjectParameter("product_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_hydrate_utcParameter = sync_hydrate_utc.HasValue ?
+                new ObjectParameter("sync_hydrate_utc", sync_hydrate_utc) :
+                new ObjectParameter("sync_hydrate_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProduct_HydrateSyncUpdate", product_idParameter, sync_successParameter, sync_hydrate_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spProduct_SyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spProduct_SyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spProduct_SyncUpdate(Nullable<System.Guid> product_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_success_utc, string sync_log)
+        {
+            var product_idParameter = product_id.HasValue ?
+                new ObjectParameter("product_id", product_id) :
+                new ObjectParameter("product_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_success_utcParameter = sync_success_utc.HasValue ?
+                new ObjectParameter("sync_success_utc", sync_success_utc) :
+                new ObjectParameter("sync_success_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProduct_SyncUpdate", product_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spProductVersion_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spProductVersion_HydrateSyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spProductVersion_HydrateSyncUpdate(Nullable<System.Guid> product_version_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_hydrate_utc, string sync_log)
+        {
+            var product_version_idParameter = product_version_id.HasValue ?
+                new ObjectParameter("product_version_id", product_version_id) :
+                new ObjectParameter("product_version_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_hydrate_utcParameter = sync_hydrate_utc.HasValue ?
+                new ObjectParameter("sync_hydrate_utc", sync_hydrate_utc) :
+                new ObjectParameter("sync_hydrate_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProductVersion_HydrateSyncUpdate", product_version_idParameter, sync_successParameter, sync_hydrate_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spProductVersion_SyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spProductVersion_SyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spProductVersion_SyncUpdate(Nullable<System.Guid> product_version_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_success_utc, string sync_log)
+        {
+            var product_version_idParameter = product_version_id.HasValue ?
+                new ObjectParameter("product_version_id", product_version_id) :
+                new ObjectParameter("product_version_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_success_utcParameter = sync_success_utc.HasValue ?
+                new ObjectParameter("sync_success_utc", sync_success_utc) :
+                new ObjectParameter("sync_success_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProductVersion_SyncUpdate", product_version_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
         }
     }
 }

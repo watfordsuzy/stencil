@@ -15,6 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\AccountEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\AssetEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\GlobalSettingEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\PlatformEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\EndpointBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\ServerEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\EndpointException.cs" />
@@ -25,8 +28,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Asset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AssetType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Bitness.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EndpointConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\IItemID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Platform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Product.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ProductVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\AuthLoginInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\PasswordResetInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\PushTokenInput.cs" />

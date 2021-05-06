@@ -77,6 +77,84 @@
           <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="value" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Platform">
+          <Key>
+            <PropertyRef Name="platform_id" />
+          </Key>
+          <Property Name="platform_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="platform_name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="bitness" Type="int" Nullable="false" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="product_owner_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_description" Type="nvarchar(max)" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ProductVersion">
+          <Key>
+            <PropertyRef Name="product_version_id" />
+          </Key>
+          <Property Name="product_version_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="version" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="release_date_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="end_of_life_date_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_Product_Account_product_owner_id">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="product_owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductVersion_Product_product_id">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductVersion" Type="Self.ProductVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="ProductVersion">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="spAccount_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
           <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
@@ -103,10 +181,81 @@
         <Function Name="spIndexHydrate_InvalidateAggregates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="spIndexHydrate_InvalidateAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="spIndexHydrate_Status" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spPlatform_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spPlatform_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="platform_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spPlatform_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spPlatform_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="platform_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spProduct_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProduct_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spProduct_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProduct_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spProductVersion_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProductVersion_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_version_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spProductVersion_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProductVersion_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_version_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="StencilDataSqlStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GlobalSetting" EntityType="Self.GlobalSetting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Platform" EntityType="Self.Platform" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductVersion" EntityType="Self.ProductVersion" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Product_Account_product_owner_id" Association="Self.FK_Product_Account_product_owner_id">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductVersion_Product_product_id" Association="Self.FK_ProductVersion_Product_product_id">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductVersion" EntitySet="ProductVersion" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -142,6 +291,77 @@
           <FunctionImport Name="spIndexHydrate_InvalidateAll" />
           <FunctionImport Name="spIndexHydrate_Status" ReturnType="Collection(Stencil.Data.Sql.spIndexHydrate_Status_Result)" />
           <EntitySet Name="dbAssets" EntityType="Stencil.Data.Sql.dbAsset" />
+          <EntitySet Name="dbPlatforms" EntityType="Stencil.Data.Sql.dbPlatform" />
+          <EntitySet Name="dbProducts" EntityType="Stencil.Data.Sql.dbProduct" />
+          <EntitySet Name="dbProductVersions" EntityType="Stencil.Data.Sql.dbProductVersion" />
+          <AssociationSet Name="FK_Product_Account_product_owner_id" Association="Stencil.Data.Sql.FK_Product_Account_product_owner_id">
+            <End Role="dbAccount" EntitySet="dbAccounts" />
+            <End Role="Product" EntitySet="dbProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductVersion_Product_product_id" Association="Stencil.Data.Sql.FK_ProductVersion_Product_product_id">
+            <End Role="Product" EntitySet="dbProducts" />
+            <End Role="ProductVersion" EntitySet="dbProductVersions" />
+          </AssociationSet>
+          <FunctionImport Name="spPlatform_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spPlatform_HydrateSyncUpdate">
+            <Parameter Name="platform_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spPlatform_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spPlatform_SyncUpdate">
+            <Parameter Name="platform_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProduct_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProduct_HydrateSyncUpdate">
+            <Parameter Name="product_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProduct_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProduct_SyncUpdate">
+            <Parameter Name="product_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersion_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersion_HydrateSyncUpdate">
+            <Parameter Name="product_version_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersion_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersion_SyncUpdate">
+            <Parameter Name="product_version_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="dbAccount">
           <Key>
@@ -173,6 +393,7 @@
           <Property Name="push_ios" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="push_google" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="push_microsoft" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="dbAccount" ToRole="Product" />
         </EntityType>
         <EntityType Name="dbGlobalSetting">
           <Key>
@@ -223,6 +444,87 @@
           <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
           <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
         </EntityType>
+        <EntityType Name="dbPlatform">
+          <Key>
+            <PropertyRef Name="platform_id" />
+          </Key>
+          <Property Name="platform_id" Type="Guid" Nullable="false" />
+          <Property Name="platform_name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="bitness" Type="Int32" Nullable="false" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="dbProduct">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="Guid" Nullable="false" />
+          <Property Name="product_name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="product_owner_id" Type="Guid" Nullable="false" />
+          <Property Name="product_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Account" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="Product" ToRole="dbAccount" />
+          <NavigationProperty Name="ProductVersions" Relationship="Stencil.Data.Sql.FK_ProductVersion_Product_product_id" FromRole="Product" ToRole="ProductVersion" />
+        </EntityType>
+        <EntityType Name="dbProductVersion">
+          <Key>
+            <PropertyRef Name="product_version_id" />
+          </Key>
+          <Property Name="product_version_id" Type="Guid" Nullable="false" />
+          <Property Name="product_id" Type="Guid" Nullable="false" />
+          <Property Name="version" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="release_date_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="end_of_life_date_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Stencil.Data.Sql.FK_ProductVersion_Product_product_id" FromRole="ProductVersion" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Product_Account_product_owner_id">
+          <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbProduct" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="product_owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductVersion_Product_product_id">
+          <End Type="Stencil.Data.Sql.dbProduct" Role="Product" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbProductVersion" Role="ProductVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="ProductVersion">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -328,6 +630,75 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="dbPlatforms">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbPlatform">
+              <MappingFragment StoreEntitySet="Platform">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="bitness" ColumnName="bitness" />
+                <ScalarProperty Name="platform_name" ColumnName="platform_name" />
+                <ScalarProperty Name="platform_id" ColumnName="platform_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dbProducts">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbProduct">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="product_description" ColumnName="product_description" />
+                <ScalarProperty Name="product_owner_id" ColumnName="product_owner_id" />
+                <ScalarProperty Name="product_name" ColumnName="product_name" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dbProductVersions">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbProductVersion">
+              <MappingFragment StoreEntitySet="ProductVersion">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="end_of_life_date_utc" ColumnName="end_of_life_date_utc" />
+                <ScalarProperty Name="release_date_utc" ColumnName="release_date_utc" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="product_version_id" ColumnName="product_version_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spPlatform_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spPlatform_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spPlatform_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spPlatform_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spPlatform_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spPlatform_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spPlatform_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spPlatform_SyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spProduct_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProduct_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProduct_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProduct_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spProduct_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProduct_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProduct_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProduct_SyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spProductVersion_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProductVersion_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProductVersion_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersion_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spProductVersion_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProductVersion_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProductVersion_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersion_SyncUpdate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -88,6 +88,15 @@
     <Compile Include="dbGlobalSetting.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbPlatform.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbProduct.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbProductVersion.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\DatabaseExtensions.cs" />
     <Compile Include="IStencilContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

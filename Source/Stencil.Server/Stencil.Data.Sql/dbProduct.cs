@@ -12,26 +12,18 @@ namespace Stencil.Data.Sql
     using System;
     using System.Collections.Generic;
     
-    public partial class dbAccount
+    public partial class dbProduct
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dbAccount()
+        public dbProduct()
         {
-            this.Products = new HashSet<dbProduct>();
+            this.ProductVersions = new HashSet<dbProductVersion>();
         }
     
-        public System.Guid account_id { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public string password_salt { get; set; }
-        public bool disabled { get; set; }
-        public string api_key { get; set; }
-        public string api_secret { get; set; }
-        public string first_name { get; set; }
-        public string last_name { get; set; }
-        public string entitlements { get; set; }
-        public Nullable<System.DateTimeOffset> last_login_utc { get; set; }
-        public string last_login_platform { get; set; }
+        public System.Guid product_id { get; set; }
+        public string product_name { get; set; }
+        public System.Guid product_owner_id { get; set; }
+        public string product_description { get; set; }
         public System.DateTimeOffset created_utc { get; set; }
         public System.DateTimeOffset updated_utc { get; set; }
         public Nullable<System.DateTimeOffset> deleted_utc { get; set; }
@@ -41,13 +33,9 @@ namespace Stencil.Data.Sql
         public Nullable<System.DateTimeOffset> sync_attempt_utc { get; set; }
         public string sync_agent { get; set; }
         public string sync_log { get; set; }
-        public string password_reset_token { get; set; }
-        public Nullable<System.DateTimeOffset> password_reset_utc { get; set; }
-        public string push_ios { get; set; }
-        public string push_google { get; set; }
-        public string push_microsoft { get; set; }
     
+        public virtual dbAccount Account { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dbProduct> Products { get; set; }
+        public virtual ICollection<dbProductVersion> ProductVersions { get; set; }
     }
 }
