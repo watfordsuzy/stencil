@@ -795,60 +795,63 @@ namespace <xsl:value-of select="items/@projectName"/>.Primary.Business.Index
     {
         partial void MapIndexModels(CreateIndexDescriptor indexer)
         {
-            <xsl:for-each select="items/item[@useIndex='true']">indexer.Mappings(mp => mp.Map&lt;sdk.<xsl:value-of select="@name"/>&gt;(DocumentNames.<xsl:value-of select="@name"/>, p => p
-                .AutoMap()<xsl:if test="string-length(@indexParent) > 0">
-                .Parent(DocumentNames.<xsl:value-of select="@indexParent"/>)</xsl:if>
-                .Properties(props => props
-                    <xsl:for-each select="field[@type='Guid' or @notAnalyzed='true']">.String(s => s
-                        .Name(n => n.<xsl:value-of select="text()"/>)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    )</xsl:for-each>
-                    <xsl:for-each select="indexfield[@type='Guid' or @notAnalyzed='true']">.String(s => s
-                        .Name(n => n.<xsl:value-of select="text()"/>)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    )</xsl:for-each>
-                    <xsl:for-each select="indexfield[@sortable='true' or @indexExact='true']">.String(m => m
-                        .Name(t => t.<xsl:value-of select="text()"/>)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.<xsl:value-of select="text()"/>)
-                                .Index(FieldIndexOption.Analyzed))<xsl:if test="@sortable='true'">
-                                .String(s => s
-                                    .Name(n => n.<xsl:value-of select="text()"/>.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))</xsl:if><xsl:if test="@indexExact='true'">
-                                .String(s => s
-                                    .Name(n => n.<xsl:value-of select="text()"/>.Suffix("exact"))
-                                    .Index(FieldIndexOption.NotAnalyzed))</xsl:if>
-                                
-                        )
-                    )</xsl:for-each>
-                    <xsl:for-each select="field[@sortable='true' or @indexExact='true']">.String(m => m
-                        .Name(t => t.<xsl:value-of select="text()"/>)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.<xsl:value-of select="text()"/>)
-                                .Index(FieldIndexOption.Analyzed))<xsl:if test="@sortable='true'">
-                                .String(s => s
-                                    .Name(n => n.<xsl:value-of select="text()"/>.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))</xsl:if><xsl:if test="@indexExact='true'">
-                                .String(s => s
-                                    .Name(n => n.<xsl:value-of select="text()"/>.Suffix("exact"))
-                                    .Index(FieldIndexOption.NotAnalyzed))</xsl:if>
-                                
-                        )
-                    )</xsl:for-each>
-                    <xsl:for-each select="indexfield[string-length(@nestedObject)>0]"><xsl:variable name="nestedObject"><xsl:value-of select="@nestedObject"/></xsl:variable>.Nested&lt;<xsl:value-of select="$nestedObject"/>&gt;(m => m
-                        .Name("<xsl:value-of select="text()"/>")
-                        .AutoMap()
-                        .Properties(nprops => nprops
-                            <xsl:for-each select="../../item[@name=$nestedObject]/field[@type='Guid' or @notAnalyzed='true']">.String(s => s
-                                .Name(n => n.<xsl:value-of select="text()"/>)
-                                .Index(FieldIndexOption.NotAnalyzed)
-                            )</xsl:for-each>
-                        )
+            indexer.Mappings(mp => mp
+            <xsl:for-each select="items/item[@useIndex='true']">
+                .Map&lt;sdk.<xsl:value-of select="@name"/>&gt;(DocumentNames.<xsl:value-of select="@name"/>, p => p
+                    .AutoMap()<xsl:if test="string-length(@indexParent) > 0">
+                    .Parent(DocumentNames.<xsl:value-of select="@indexParent"/>)</xsl:if>
+                    .Properties(props => props
+                        <xsl:for-each select="field[@type='Guid' or @notAnalyzed='true']">.String(s => s
+                            .Name(n => n.<xsl:value-of select="text()"/>)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        )</xsl:for-each>
+                        <xsl:for-each select="indexfield[@type='Guid' or @notAnalyzed='true']">.String(s => s
+                            .Name(n => n.<xsl:value-of select="text()"/>)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        )</xsl:for-each>
+                        <xsl:for-each select="indexfield[@sortable='true' or @indexExact='true']">.String(m => m
+                            .Name(t => t.<xsl:value-of select="text()"/>)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.<xsl:value-of select="text()"/>)
+                                    .Index(FieldIndexOption.Analyzed))<xsl:if test="@sortable='true'">
+                                    .String(s => s
+                                        .Name(n => n.<xsl:value-of select="text()"/>.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))</xsl:if><xsl:if test="@indexExact='true'">
+                                    .String(s => s
+                                        .Name(n => n.<xsl:value-of select="text()"/>.Suffix("exact"))
+                                        .Index(FieldIndexOption.NotAnalyzed))</xsl:if>
+                                    
+                            )
+                        )</xsl:for-each>
+                        <xsl:for-each select="field[@sortable='true' or @indexExact='true']">.String(m => m
+                            .Name(t => t.<xsl:value-of select="text()"/>)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.<xsl:value-of select="text()"/>)
+                                    .Index(FieldIndexOption.Analyzed))<xsl:if test="@sortable='true'">
+                                    .String(s => s
+                                        .Name(n => n.<xsl:value-of select="text()"/>.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))</xsl:if><xsl:if test="@indexExact='true'">
+                                    .String(s => s
+                                        .Name(n => n.<xsl:value-of select="text()"/>.Suffix("exact"))
+                                        .Index(FieldIndexOption.NotAnalyzed))</xsl:if>
+                                    
+                            )
+                        )</xsl:for-each>
+                        <xsl:for-each select="indexfield[string-length(@nestedObject)>0]"><xsl:variable name="nestedObject"><xsl:value-of select="@nestedObject"/></xsl:variable>.Nested&lt;<xsl:value-of select="$nestedObject"/>&gt;(m => m
+                            .Name("<xsl:value-of select="text()"/>")
+                            .AutoMap()
+                            .Properties(nprops => nprops
+                                <xsl:for-each select="../../item[@name=$nestedObject]/field[@type='Guid' or @notAnalyzed='true']">.String(s => s
+                                    .Name(n => n.<xsl:value-of select="text()"/>)
+                                    .Index(FieldIndexOption.NotAnalyzed)
+                                )</xsl:for-each>
+                            )
 
-                    )</xsl:for-each>
+                        )</xsl:for-each>
+                    )
                 )
-            ));
             </xsl:for-each>
+            );
         }
     }
 }
