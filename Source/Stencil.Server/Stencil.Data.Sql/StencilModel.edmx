@@ -131,6 +131,23 @@
           <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
           <Property Name="sync_log" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="ProductVersionPlatform">
+          <Key>
+            <PropertyRef Name="product_version_platform_id" />
+          </Key>
+          <Property Name="product_version_platform_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_version_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="platform_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Ticket">
           <Key>
             <PropertyRef Name="ticket_id" />
@@ -175,6 +192,30 @@
             </Principal>
             <Dependent Role="ProductVersion">
               <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductVersionPlatform_Platform_platform_id">
+          <End Role="Platform" Type="Self.Platform" Multiplicity="1" />
+          <End Role="ProductVersionPlatform" Type="Self.ProductVersionPlatform" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Platform">
+              <PropertyRef Name="platform_id" />
+            </Principal>
+            <Dependent Role="ProductVersionPlatform">
+              <PropertyRef Name="platform_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductVersionPlatform_ProductVersion_product_version_id">
+          <End Role="ProductVersion" Type="Self.ProductVersion" Multiplicity="1" />
+          <End Role="ProductVersionPlatform" Type="Self.ProductVersionPlatform" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductVersion">
+              <PropertyRef Name="product_version_id" />
+            </Principal>
+            <Dependent Role="ProductVersionPlatform">
+              <PropertyRef Name="product_version_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -288,6 +329,26 @@
           <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
           <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="spProductVersionPlatform_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProductVersionPlatform_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_version_platform_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spProductVersionPlatform_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spProductVersionPlatform_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_version_platform_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <Function Name="spTicket_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
           <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
@@ -315,6 +376,7 @@
           <EntitySet Name="Platform" EntityType="Self.Platform" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductVersion" EntityType="Self.ProductVersion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductVersionPlatform" EntityType="Self.ProductVersionPlatform" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Product_Account_product_owner_id" Association="Self.FK_Product_Account_product_owner_id">
             <End Role="Account" EntitySet="Account" />
@@ -323,6 +385,14 @@
           <AssociationSet Name="FK_ProductVersion_Product_product_id" Association="Self.FK_ProductVersion_Product_product_id">
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductVersion" EntitySet="ProductVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductVersionPlatform_Platform_platform_id" Association="Self.FK_ProductVersionPlatform_Platform_platform_id">
+            <End Role="Platform" EntitySet="Platform" />
+            <End Role="ProductVersionPlatform" EntitySet="ProductVersionPlatform" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductVersionPlatform_ProductVersion_product_version_id" Association="Self.FK_ProductVersionPlatform_ProductVersion_product_version_id">
+            <End Role="ProductVersion" EntitySet="ProductVersion" />
+            <End Role="ProductVersionPlatform" EntitySet="ProductVersionPlatform" />
           </AssociationSet>
           <AssociationSet Name="FK_Ticket_Account_assigned_to_id" Association="Self.FK_Ticket_Account_assigned_to_id">
             <End Role="Account" EntitySet="Account" />
@@ -467,6 +537,35 @@
             <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
             <Parameter Name="sync_log" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="dbProductVersionPlatforms" EntityType="Stencil.Data.Sql.dbProductVersionPlatform" />
+          <AssociationSet Name="FK_ProductVersionPlatform_Platform_platform_id" Association="Stencil.Data.Sql.FK_ProductVersionPlatform_Platform_platform_id">
+            <End Role="dbPlatform" EntitySet="dbPlatforms" />
+            <End Role="ProductVersionPlatform" EntitySet="dbProductVersionPlatforms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductVersionPlatform_ProductVersion_product_version_id" Association="Stencil.Data.Sql.FK_ProductVersionPlatform_ProductVersion_product_version_id">
+            <End Role="dbProductVersion" EntitySet="dbProductVersions" />
+            <End Role="ProductVersionPlatform" EntitySet="dbProductVersionPlatforms" />
+          </AssociationSet>
+          <FunctionImport Name="spProductVersionPlatform_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersionPlatform_HydrateSyncUpdate">
+            <Parameter Name="product_version_platform_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersionPlatform_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spProductVersionPlatform_SyncUpdate">
+            <Parameter Name="product_version_platform_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="dbAccount">
           <Key>
@@ -567,6 +666,7 @@
           <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
           <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProductVersionPlatforms" Relationship="Stencil.Data.Sql.FK_ProductVersionPlatform_Platform_platform_id" FromRole="dbPlatform" ToRole="ProductVersionPlatform" />
         </EntityType>
         <EntityType Name="dbProduct">
           <Key>
@@ -607,6 +707,7 @@
           <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Product" Relationship="Stencil.Data.Sql.FK_ProductVersion_Product_product_id" FromRole="ProductVersion" ToRole="Product" />
+          <NavigationProperty Name="ProductVersionPlatforms" Relationship="Stencil.Data.Sql.FK_ProductVersionPlatform_ProductVersion_product_version_id" FromRole="dbProductVersion" ToRole="ProductVersionPlatform" />
         </EntityType>
         <Association Name="FK_Product_Account_product_owner_id">
           <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="1" />
@@ -678,6 +779,49 @@
             </Principal>
             <Dependent Role="Ticket">
               <PropertyRef Name="reported_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="dbProductVersionPlatform">
+          <Key>
+            <PropertyRef Name="product_version_platform_id" />
+          </Key>
+          <Property Name="product_version_platform_id" Type="Guid" Nullable="false" />
+          <Property Name="product_version_id" Type="Guid" Nullable="false" />
+          <Property Name="platform_id" Type="Guid" Nullable="false" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Platform" Relationship="Stencil.Data.Sql.FK_ProductVersionPlatform_Platform_platform_id" FromRole="ProductVersionPlatform" ToRole="dbPlatform" />
+          <NavigationProperty Name="ProductVersion" Relationship="Stencil.Data.Sql.FK_ProductVersionPlatform_ProductVersion_product_version_id" FromRole="ProductVersionPlatform" ToRole="dbProductVersion" />
+        </EntityType>
+        <Association Name="FK_ProductVersionPlatform_Platform_platform_id">
+          <End Type="Stencil.Data.Sql.dbPlatform" Role="dbPlatform" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbProductVersionPlatform" Role="ProductVersionPlatform" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbPlatform">
+              <PropertyRef Name="platform_id" />
+            </Principal>
+            <Dependent Role="ProductVersionPlatform">
+              <PropertyRef Name="platform_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductVersionPlatform_ProductVersion_product_version_id">
+          <End Type="Stencil.Data.Sql.dbProductVersion" Role="dbProductVersion" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbProductVersionPlatform" Role="ProductVersionPlatform" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbProductVersion">
+              <PropertyRef Name="product_version_id" />
+            </Principal>
+            <Dependent Role="ProductVersionPlatform">
+              <PropertyRef Name="product_version_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -883,6 +1027,28 @@
           <FunctionImportMapping FunctionImportName="spTicket_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicket_HydrateSyncUpdate" />
           <FunctionImportMapping FunctionImportName="spTicket_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spTicket_SyncGetInvalid" />
           <FunctionImportMapping FunctionImportName="spTicket_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicket_SyncUpdate" />
+          <EntitySetMapping Name="dbProductVersionPlatforms">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbProductVersionPlatform">
+              <MappingFragment StoreEntitySet="ProductVersionPlatform">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="platform_id" ColumnName="platform_id" />
+                <ScalarProperty Name="product_version_id" ColumnName="product_version_id" />
+                <ScalarProperty Name="product_version_platform_id" ColumnName="product_version_platform_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spProductVersionPlatform_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProductVersionPlatform_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProductVersionPlatform_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersionPlatform_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spProductVersionPlatform_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spProductVersionPlatform_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spProductVersionPlatform_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spProductVersionPlatform_SyncUpdate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

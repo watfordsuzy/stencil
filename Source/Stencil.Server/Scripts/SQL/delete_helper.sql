@@ -18,6 +18,12 @@ ALTER TABLE [dbo].[Ticket] DROP  [FK_Ticket_Account_assigned_to_id]
 
 GO
 
+ALTER TABLE [dbo].[ProductVersionPlatform] DROP  [FK_ProductVersionPlatform_ProductVersion_product_version_id]
+
+ALTER TABLE [dbo].[ProductVersionPlatform] DROP  [FK_ProductVersionPlatform_Platform_platform_id]
+
+GO
+
 ALTER TABLE [dbo].[ProductVersion] DROP  [FK_ProductVersion_Product_product_id]
 
 GO
@@ -54,6 +60,9 @@ DROP TABLE [dbo].[Asset]
 GO
 
 DROP TABLE [dbo].[Ticket]
+GO
+
+DROP TABLE [dbo].[ProductVersionPlatform]
 GO
 
 DROP TABLE [dbo].[ProductVersion]
@@ -131,6 +140,21 @@ DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncUpdate]
 GO
 
 DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncGetInvalid]
 GO
 
 

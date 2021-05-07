@@ -196,6 +196,41 @@ namespace Stencil.Primary
         
         
         
+        public static ProductVersionPlatform ToDomainModel(this SDK.Models.ProductVersionPlatform entity, ProductVersionPlatform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.ProductVersionPlatform(); }
+                ProductVersionPlatform result = am.Mapper.Map<SDK.Models.ProductVersionPlatform, ProductVersionPlatform>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.ProductVersionPlatform ToSDKModel(this ProductVersionPlatform entity, SDK.Models.ProductVersionPlatform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.ProductVersionPlatform(); }
+                SDK.Models.ProductVersionPlatform result = am.Mapper.Map<ProductVersionPlatform, SDK.Models.ProductVersionPlatform>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.ProductVersionPlatform> ToSDKModel(this IEnumerable<ProductVersionPlatform> entities)
+        {
+            List<SDK.Models.ProductVersionPlatform> result = new List<SDK.Models.ProductVersionPlatform>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static Ticket ToDomainModel(this SDK.Models.Ticket entity, Ticket destination = null)
         {
             if (entity != null)

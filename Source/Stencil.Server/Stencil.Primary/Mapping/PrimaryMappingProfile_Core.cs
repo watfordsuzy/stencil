@@ -60,6 +60,8 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<Platform, dbPlatform>();
             am.Mapper.CreateMap<dbProductVersion, ProductVersion>();
             am.Mapper.CreateMap<ProductVersion, dbProductVersion>();
+            am.Mapper.CreateMap<dbProductVersionPlatform, ProductVersionPlatform>();
+            am.Mapper.CreateMap<ProductVersionPlatform, dbProductVersionPlatform>();
             am.Mapper.CreateMap<dbTicket, Ticket>();
             am.Mapper.CreateMap<Ticket, dbTicket>();
             am.Mapper.CreateMap<dbAsset, Asset>();
@@ -93,6 +95,9 @@ namespace Stencil.Primary.Mapping
             
             am.Mapper.CreateMap<Domain.ProductVersion, SDK.Models.ProductVersion>();
             am.Mapper.CreateMap<SDK.Models.ProductVersion, Domain.ProductVersion>();
+            
+            am.Mapper.CreateMap<Domain.ProductVersionPlatform, SDK.Models.ProductVersionPlatform>();
+            am.Mapper.CreateMap<SDK.Models.ProductVersionPlatform, Domain.ProductVersionPlatform>();
             
             am.Mapper.CreateMap<Domain.Ticket, SDK.Models.Ticket>();
             am.Mapper.CreateMap<SDK.Models.Ticket, Domain.Ticket>();

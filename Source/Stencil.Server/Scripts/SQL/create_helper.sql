@@ -129,6 +129,28 @@ CREATE TABLE [dbo].[ProductVersion] (
 GO
 
 
+CREATE TABLE [dbo].[ProductVersionPlatform] (
+	 [product_version_platform_id] uniqueidentifier NOT NULL
+    ,[product_version_id] uniqueidentifier NOT NULL
+    ,[platform_id] uniqueidentifier NOT NULL
+    ,[created_utc] DATETIMEOFFSET(0) NOT NULL
+    ,[updated_utc] DATETIMEOFFSET(0) NOT NULL
+    ,[deleted_utc] DATETIMEOFFSET(0) NULL
+	,[sync_hydrate_utc] DATETIMEOFFSET(0) NULL
+    ,[sync_success_utc] DATETIMEOFFSET(0) NULL
+    ,[sync_invalid_utc] DATETIMEOFFSET(0) NULL
+    ,[sync_attempt_utc] DATETIMEOFFSET(0) NULL
+    ,[sync_agent] NVARCHAR(50) NULL
+    ,[sync_log] NVARCHAR(MAX) NULL
+  ,CONSTRAINT [PK_ProductVersionPlatform] PRIMARY KEY CLUSTERED 
+  (
+	  [product_version_platform_id] ASC
+  )
+)
+
+GO
+
+
 CREATE TABLE [dbo].[Ticket] (
 	 [ticket_id] uniqueidentifier NOT NULL
     ,[reported_by_id] uniqueidentifier NOT NULL
@@ -211,6 +233,8 @@ AS
 
    UPDATE [dbo].[ProductVersion] SET [sync_success_utc] = NULL, [sync_log] = 'invalidateall'
 
+   UPDATE [dbo].[ProductVersionPlatform] SET [sync_success_utc] = NULL, [sync_log] = 'invalidateall'
+
    UPDATE [dbo].[Ticket] SET [sync_success_utc] = NULL, [sync_log] = 'invalidateall'
 
 
@@ -226,6 +250,8 @@ AS
    UPDATE [dbo].[Platform] SET [sync_hydrate_utc] = NULL
 
    UPDATE [dbo].[ProductVersion] SET [sync_hydrate_utc] = NULL
+
+   UPDATE [dbo].[ProductVersionPlatform] SET [sync_hydrate_utc] = NULL
 
    UPDATE [dbo].[Ticket] SET [sync_hydrate_utc] = NULL
 
@@ -263,6 +289,8 @@ AS
 
       ,(select count(1) from [dbo].[Ticket] where  [sync_success_utc] IS NULL) as [Ticket - 50]
 
+      ,(select count(1) from [dbo].[ProductVersionPlatform] where  [sync_success_utc] IS NULL) as [ProductVersionPlatform - 60]
+
          
 
 GO
@@ -281,6 +309,8 @@ AS
       ,(select count(1) from [dbo].[ProductVersion] where  [sync_hydrate_utc] IS NULL) as [ProductVersion - 40]
 
       ,(select count(1) from [dbo].[Ticket] where  [sync_hydrate_utc] IS NULL) as [Ticket - 50]
+
+      ,(select count(1) from [dbo].[ProductVersionPlatform] where  [sync_hydrate_utc] IS NULL) as [ProductVersionPlatform - 60]
 
          
 
@@ -645,6 +675,95 @@ END
 
 GO
 
+CREATE PROCEDURE [dbo].[spProductVersionPlatform_SyncGetInvalid]
+	@allowableSecondsToProcessIndex int
+    ,@sync_agent nvarchar(50)
+AS
+  SELECT [product_version_platform_id]
+  FROM [dbo].[ProductVersionPlatform]
+  WHERE [sync_success_utc] IS NULL OR [deleted_utc] > [sync_success_utc]  OR [updated_utc] > [sync_success_utc]
+  AND ISNULL([sync_agent],'') = ISNULL(@sync_agent,'')
+  ORDER BY  -- oldest attempt, not attempted, failed -> then by change date  
+	CASE WHEN NOT [sync_attempt_utc] IS NULL AND DATEDIFF(second,[sync_attempt_utc], GETUTCDATE()) > @allowableSecondsToProcessIndex  
+			THEN 0 -- oldest in queue
+		WHEN [sync_attempt_utc] IS NULL 
+			THEN 1  -- synch is null , freshly invalidated 
+		ELSE  2-- recently failed
+	END asc
+	,[sync_invalid_utc] asc
+
+GO
+
+CREATE PROCEDURE [dbo].[spProductVersionPlatform_SyncUpdate]  
+	 @product_version_platform_id uniqueidentifier,  
+	 @sync_success bit,  
+	 @sync_success_utc datetimeoffset(0),  
+	 @sync_log nvarchar(MAX)  
+AS  
+BEGIN 
+	IF (@sync_success = 1)   
+	BEGIN  
+		-- ON SUCCESSFUL, SET SYNCH DATE
+		UPDATE [dbo].[ProductVersionPlatform]
+		SET [sync_success_utc] = @sync_success_utc
+			,[sync_attempt_utc] = NULL
+			,[sync_invalid_utc] = NULL
+			,[sync_log] = @sync_log
+		WHERE [product_version_platform_id] = @product_version_platform_id
+		AND [sync_success_utc] IS NULL
+		AND (([sync_invalid_utc] IS NULL) OR ([sync_invalid_utc] <= @sync_success_utc))
+	END
+	ELSE
+	BEGIN
+		-- ON FAILED, SET SYNCH "ATTEMPT" DATE
+		UPDATE [dbo].[ProductVersionPlatform]
+		SET [sync_attempt_utc] = GETUTCDATE()
+			,[sync_log] = @sync_log
+		WHERE [product_version_platform_id] = @product_version_platform_id
+		AND [sync_success_utc] IS NULL
+	END  
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncGetInvalid]
+	@allowableSecondsToProcessIndex int
+    ,@sync_agent nvarchar(50) -- not used yet
+AS
+  SELECT [product_version_platform_id]
+  FROM [dbo].[ProductVersionPlatform]
+  WHERE [sync_hydrate_utc] IS NULL
+  ORDER BY [sync_invalid_utc] asc
+
+GO
+
+CREATE PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncUpdate]  
+	 @product_version_platform_id uniqueidentifier,  
+	 @sync_success bit,  
+	 @sync_hydrate_utc datetimeoffset(0),  
+	 @sync_log nvarchar(MAX)   -- not used yet
+AS  
+BEGIN 
+	IF (@sync_success = 1)   
+	BEGIN  
+		-- ON SUCCESSFUL, SET SYNC DATE
+		UPDATE [dbo].[ProductVersionPlatform]
+		SET [sync_hydrate_utc] = @sync_hydrate_utc
+		WHERE [product_version_platform_id] = @product_version_platform_id
+		AND [sync_hydrate_utc] IS NULL
+	END
+	ELSE
+	BEGIN
+		-- ON FAILED, ADD TO LOG
+		UPDATE [dbo].[ProductVersionPlatform]
+		SET [sync_log] = @sync_log
+		WHERE [product_version_platform_id] = @product_version_platform_id
+		AND [sync_hydrate_utc] IS NULL
+	END  
+END
+
+GO
+
 CREATE PROCEDURE [dbo].[spTicket_SyncGetInvalid]
 	@allowableSecondsToProcessIndex int
     ,@sync_agent nvarchar(50)
@@ -745,6 +864,14 @@ GO
 
 ALTER TABLE [dbo].[Ticket] WITH CHECK ADD  CONSTRAINT [FK_Ticket_Account_assigned_to_id] FOREIGN KEY([assigned_to_id])
 REFERENCES [dbo].[Account] ([account_id])
+GO
+
+ALTER TABLE [dbo].[ProductVersionPlatform] WITH CHECK ADD  CONSTRAINT [FK_ProductVersionPlatform_ProductVersion_product_version_id] FOREIGN KEY([product_version_id])
+REFERENCES [dbo].[ProductVersion] ([product_version_id])
+GO
+
+ALTER TABLE [dbo].[ProductVersionPlatform] WITH CHECK ADD  CONSTRAINT [FK_ProductVersionPlatform_Platform_platform_id] FOREIGN KEY([platform_id])
+REFERENCES [dbo].[Platform] ([platform_id])
 GO
 
 ALTER TABLE [dbo].[ProductVersion] WITH CHECK ADD  CONSTRAINT [FK_ProductVersion_Product_product_id] FOREIGN KEY([product_id])

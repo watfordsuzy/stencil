@@ -36,7 +36,7 @@
   <item name="Platform" friendlyName="Platform" uiDisplayField="platform_name" useIndex="true" indexPriority="30">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Platform ID">platform_id</field>
     <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Name">platform_name</field>
-    <field type="Bitness" dbType="int" isNullable="false" sortable="true" friendlyName="Bitness">bitness</field>
+    <field type="Bitness" dbType="int" isNullable="false" friendlyName="Bitness">bitness</field>
   </item>
   <!-- Products have Product Versions -->
   <item name="ProductVersion" friendlyName="Product Version" uiDisplayField="version" useIndex="true" indexPriority="40">
@@ -47,11 +47,13 @@
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="End of Life Date">end_of_life_date_utc</field>
     <indexfield type="string" isNullable="false" sortable="true" friendlyName="ProductName" computedFrom="Product" computedReferenceField="product_id" computedField="product_name" computedBy="Extra">product_name</indexfield>
   </item>
-  <!--<item name="ProductVersionPlatform" friendlyName="Product Version Platform" useIndex="true" indexPriority="60">
+  <item name="ProductVersionPlatform" friendlyName="Product Version Platform" useIndex="true" indexPriority="60">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Product Verison Platform ID">product_version_platform_id</field>
-    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="ProductVersion" foreignKeyField="product_version_id" friendlyName="Product Verison ID">product_version_id</field>
-    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Platform" foreignKeyField="platform_id" friendlyName="Platform ID">platform_id</field>
-  </item>-->
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="ProductVersion" foreignKeyField="product_version_id" foreignKeyInvalidatesMe="true" friendlyName="ProductVerisonID">product_version_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Platform" foreignKeyField="platform_id" foreignKeyInvalidatesMe="true" friendlyName="PlatformID">platform_id</field>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="ProductVersion" computedFrom="ProductVersion" computedReferenceField="product_version_id" computedField="version" computedBy="Extra">product_version</indexfield>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="PlatformName" computedFrom="Platform" computedReferenceField="platform_id" computedField="platform_name" computedBy="Extra">platform_name</indexfield>
+  </item>
   <!-- Tickets are filed against Products by users and assigned to Product Version Platforms by Product owners (or their delegate)-->
   <item name="Ticket" friendlyName="Ticket" uiDisplayField="ticket_description" useIndex="true" indexPriority="50">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Ticket ID">ticket_id</field>

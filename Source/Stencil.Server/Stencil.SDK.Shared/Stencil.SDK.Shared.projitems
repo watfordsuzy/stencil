@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\PlatformEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionPlatformEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\TicketEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\EndpointBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\ServerEndpoint.cs" />
@@ -35,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Platform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Product.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ProductVersion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ProductVersionPlatform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\AuthLoginInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\PasswordResetInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Requests\PushTokenInput.cs" />

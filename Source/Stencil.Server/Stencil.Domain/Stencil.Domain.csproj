@@ -78,6 +78,7 @@
     <Compile Include="Domain\Platform.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\ProductVersion.cs" />
+    <Compile Include="Domain\ProductVersionPlatform.cs" />
     <Compile Include="Domain\Ticket.cs" />
     <Compile Include="Domain\TicketStatus.cs" />
     <Compile Include="Domain\TicketType.cs" />

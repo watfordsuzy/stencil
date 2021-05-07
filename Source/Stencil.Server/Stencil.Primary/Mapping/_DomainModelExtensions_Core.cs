@@ -185,6 +185,39 @@ namespace Stencil.Primary
         
         
         
+        public static dbProductVersionPlatform ToDbModel(this ProductVersionPlatform entity, dbProductVersionPlatform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbProductVersionPlatform(); }
+                return am.Mapper.Map<ProductVersionPlatform, dbProductVersionPlatform>(entity, destination);
+            }
+            return null;
+        }
+        public static ProductVersionPlatform ToDomainModel(this dbProductVersionPlatform entity, ProductVersionPlatform destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new ProductVersionPlatform(); }
+                return am.Mapper.Map<dbProductVersionPlatform, ProductVersionPlatform>(entity, destination);
+            }
+            return null;
+        }
+        public static List<ProductVersionPlatform> ToDomainModel(this IEnumerable<dbProductVersionPlatform> entities)
+        {
+            List<ProductVersionPlatform> result = new List<ProductVersionPlatform>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbTicket ToDbModel(this Ticket entity, dbTicket destination = null)
         {
             if (entity != null)

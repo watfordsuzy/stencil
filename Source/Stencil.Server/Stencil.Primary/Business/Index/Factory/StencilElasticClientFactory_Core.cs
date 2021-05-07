@@ -21,214 +21,247 @@ namespace Stencil.Primary.Business.Index
     {
         partial void MapIndexModels(CreateIndexDescriptor indexer)
         {
-            indexer.Mappings(mp => mp.Map<sdk.Account>(DocumentNames.Account, p => p
-                .AutoMap()
-                .Properties(props => props
-                    .String(s => s
-                        .Name(n => n.account_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(m => m
-                        .Name(t => t.email)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.email)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.email.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.first_name)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.first_name)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.first_name.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.last_name)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.last_name)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.last_name.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.last_login_utc)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.last_login_utc)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.last_login_utc.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.last_login_platform)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.last_login_platform)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.last_login_platform.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    )
-                )
-            ));
-            indexer.Mappings(mp => mp.Map<sdk.Product>(DocumentNames.Product, p => p
-                .AutoMap()
-                .Properties(props => props
-                    .String(s => s
-                        .Name(n => n.product_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(s => s
-                        .Name(n => n.product_owner_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(m => m
-                        .Name(t => t.product_name)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.product_name)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.product_name.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    )
-                )
-            ));
-            indexer.Mappings(mp => mp.Map<sdk.Platform>(DocumentNames.Platform, p => p
-                .AutoMap()
-                .Properties(props => props
-                    .String(s => s
-                        .Name(n => n.platform_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(m => m
-                        .Name(t => t.platform_name)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.platform_name)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.platform_name.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.bitness)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.bitness)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.bitness.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    )
-                )
-            ));
-            indexer.Mappings(mp => mp.Map<sdk.ProductVersion>(DocumentNames.ProductVersion, p => p
-                .AutoMap()
-                .Properties(props => props
-                    .String(s => s
-                        .Name(n => n.product_version_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(s => s
-                        .Name(n => n.product_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(m => m
-                        .Name(t => t.product_name)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.product_name)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.product_name.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.version)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.version)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.version.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.release_date_utc)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.release_date_utc)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.release_date_utc.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.end_of_life_date_utc)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.end_of_life_date_utc)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.end_of_life_date_utc.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    )
-                )
-            ));
-            indexer.Mappings(mp => mp.Map<sdk.Ticket>(DocumentNames.Ticket, p => p
-                .AutoMap()
-                .Properties(props => props
-                    .String(s => s
-                        .Name(n => n.ticket_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(s => s
-                        .Name(n => n.reported_by_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(s => s
-                        .Name(n => n.assigned_to_id)
-                        .Index(FieldIndexOption.NotAnalyzed)
-                    ).String(m => m
-                        .Name(t => t.opened_on_utc)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.opened_on_utc)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.opened_on_utc.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.closed_on_utc)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.closed_on_utc)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.closed_on_utc.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    ).String(m => m
-                        .Name(t => t.ticket_title)
-                        .Fields(f => f
-                                .String(s => s.Name(n => n.ticket_title)
-                                .Index(FieldIndexOption.Analyzed))
-                                .String(s => s
-                                    .Name(n => n.ticket_title.Suffix("sort"))
-                                    .Analyzer("case_insensitive"))
-                                
-                        )
-                    )
-                )
-            ));
+            indexer.Mappings(mp => mp
             
+                .Map<sdk.Account>(DocumentNames.Account, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.account_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.email)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.email)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.email.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.first_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.first_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.first_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.last_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.last_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.last_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.last_login_utc)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.last_login_utc)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.last_login_utc.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.last_login_platform)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.last_login_platform)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.last_login_platform.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+                .Map<sdk.Product>(DocumentNames.Product, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.product_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.product_owner_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.product_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.product_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.product_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+                .Map<sdk.Platform>(DocumentNames.Platform, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.platform_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.platform_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.platform_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.platform_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+                .Map<sdk.ProductVersion>(DocumentNames.ProductVersion, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.product_version_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.product_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.product_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.product_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.product_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.version)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.version)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.version.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.release_date_utc)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.release_date_utc)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.release_date_utc.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.end_of_life_date_utc)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.end_of_life_date_utc)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.end_of_life_date_utc.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+                .Map<sdk.ProductVersionPlatform>(DocumentNames.ProductVersionPlatform, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.product_version_platform_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.product_version_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.platform_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.product_version)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.product_version)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.product_version.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.platform_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.platform_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.platform_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+                .Map<sdk.Ticket>(DocumentNames.Ticket, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.ticket_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.reported_by_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.assigned_to_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.opened_on_utc)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.opened_on_utc)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.opened_on_utc.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.closed_on_utc)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.closed_on_utc)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.closed_on_utc.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.ticket_title)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.ticket_title)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.ticket_title.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
+            );
         }
     }
 }

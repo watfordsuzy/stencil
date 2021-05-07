@@ -80,6 +80,9 @@ namespace Stencil.Primary.Business.Integration
             base.ExecuteMethod("ProcessPlatformInvalidation", delegate ()
             {
                 
+                this.API.Direct.ProductVersionPlatforms.InvalidateForPlatformID(platform_id, " changed");
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
             });
         }
         public virtual void ProductVersionInvalidated(Dependency affectedDependencies, Guid product_version_id)
@@ -93,6 +96,8 @@ namespace Stencil.Primary.Business.Integration
         {
             base.ExecuteMethod("ProcessProductVersionInvalidation", delegate ()
             {
+                
+                this.API.Direct.ProductVersionPlatforms.InvalidateForProductVerisonID(product_version_id, " changed");
                 ProductVersion item = this.API.Direct.ProductVersions.GetById(product_version_id);
                 if (item != null)
                 {
@@ -100,6 +105,20 @@ namespace Stencil.Primary.Business.Integration
                 }
                 
                 this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
+        public virtual void ProductVersionPlatformInvalidated(Dependency affectedDependencies, Guid product_version_platform_id)
+        {
+            base.ExecuteMethod("ProductVersionPlatformInvalidated", delegate ()
+            {
+                DependencyWorker<ProductVersionPlatform>.EnqueueRequest(this.IFoundation, affectedDependencies, product_version_platform_id, this.ProcessProductVersionPlatformInvalidation);
+            });
+        }
+        protected virtual void ProcessProductVersionPlatformInvalidation(Dependency dependencies, Guid product_version_platform_id)
+        {
+            base.ExecuteMethod("ProcessProductVersionPlatformInvalidation", delegate ()
+            {
+                
             });
         }
         public virtual void TicketInvalidated(Dependency affectedDependencies, Guid ticket_id)

@@ -247,17 +247,6 @@ namespace Stencil.Primary.Business.Direct.Implementation
                             }
                             break;
                         
-                        case "bitness":
-                            if (!descending)
-                            {
-                                result = data.OrderBy(s => s.bitness).Skip(skip).Take(take).ToList();
-                            }
-                            else
-                            {
-                                result = data.OrderByDescending(s => s.bitness).Skip(skip).Take(take).ToList();
-                            }
-                            break;
-                        
                         default:
                             result = data.OrderBy(s => s.platform_id).Skip(skip).Take(take).ToList();
                             break;

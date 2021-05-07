@@ -97,6 +97,9 @@
     <Compile Include="dbProductVersion.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbProductVersionPlatform.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbTicket.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>

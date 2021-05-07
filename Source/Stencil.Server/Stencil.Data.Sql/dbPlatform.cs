@@ -14,6 +14,12 @@ namespace Stencil.Data.Sql
     
     public partial class dbPlatform
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public dbPlatform()
+        {
+            this.ProductVersionPlatforms = new HashSet<dbProductVersionPlatform>();
+        }
+    
         public System.Guid platform_id { get; set; }
         public string platform_name { get; set; }
         public int bitness { get; set; }
@@ -26,5 +32,8 @@ namespace Stencil.Data.Sql
         public Nullable<System.DateTimeOffset> sync_attempt_utc { get; set; }
         public string sync_agent { get; set; }
         public string sync_log { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dbProductVersionPlatform> ProductVersionPlatforms { get; set; }
     }
 }

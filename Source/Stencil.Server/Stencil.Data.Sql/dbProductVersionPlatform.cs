@@ -12,19 +12,11 @@ namespace Stencil.Data.Sql
     using System;
     using System.Collections.Generic;
     
-    public partial class dbProductVersion
+    public partial class dbProductVersionPlatform
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dbProductVersion()
-        {
-            this.ProductVersionPlatforms = new HashSet<dbProductVersionPlatform>();
-        }
-    
+        public System.Guid product_version_platform_id { get; set; }
         public System.Guid product_version_id { get; set; }
-        public System.Guid product_id { get; set; }
-        public string version { get; set; }
-        public Nullable<System.DateTimeOffset> release_date_utc { get; set; }
-        public Nullable<System.DateTimeOffset> end_of_life_date_utc { get; set; }
+        public System.Guid platform_id { get; set; }
         public System.DateTimeOffset created_utc { get; set; }
         public System.DateTimeOffset updated_utc { get; set; }
         public Nullable<System.DateTimeOffset> deleted_utc { get; set; }
@@ -35,8 +27,7 @@ namespace Stencil.Data.Sql
         public string sync_agent { get; set; }
         public string sync_log { get; set; }
     
-        public virtual dbProduct Product { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dbProductVersionPlatform> ProductVersionPlatforms { get; set; }
+        public virtual dbPlatform Platform { get; set; }
+        public virtual dbProductVersion ProductVersion { get; set; }
     }
 }

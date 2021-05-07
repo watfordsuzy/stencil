@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,8 @@ namespace Stencil.Primary.Business.Index
         public static readonly string Platform = "platforms";
         
         public static readonly string ProductVersion = "productversions";
+        
+        public static readonly string ProductVersionPlatform = "productversionplatforms";
         
         public static readonly string Ticket = "tickets";
         
