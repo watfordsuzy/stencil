@@ -136,11 +136,13 @@
     <Compile Include="Business\Direct\Implementation\ProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\ProductVersionBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\ProductVersionPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\TicketBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IPlatformBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductVersionBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductVersionPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\ITicketBusiness.cs" />
     <Compile Include="Business\Direct\ITicketBusiness_Crud.cs" />
     <Compile Include="Business\Direct\_DirectExtensions.cs" />
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />

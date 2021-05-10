@@ -14,7 +14,12 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             base.ExecuteMethod(nameof(BeforeUpdate), delegate ()
             {
-                this.ValidateAdmin();
+                dm.Account account = this.GetCurrentAccount();
+                if (!this.API.Direct.Tickets.CanAccountUpdateTicket(account, insert.ticket_id))
+                {
+                    // If the user cannot inherently update the account, require them to be an admin
+                    this.ValidateAdmin();
+                }
             });
         }
 
