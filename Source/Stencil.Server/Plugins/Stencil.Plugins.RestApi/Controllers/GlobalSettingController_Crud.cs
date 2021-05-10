@@ -37,6 +37,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 dm.GlobalSetting result = this.API.Direct.GlobalSettings.GetById(global_setting_id);
                 if (result == null)
                 {
@@ -45,6 +47,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 
 
+                this.AfterGet(result);
+
                 return base.Http200(new ItemResult<sdk.GlobalSetting>()
                 {
                     success = true,
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(dm.GlobalSetting result);
+        partial void AfterGet(List<dm.GlobalSetting> result);
         
         [HttpGet]
         [Route("")]
@@ -59,7 +67,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
-
+                this.BeforeFind();
 
                 int takePlus = take;
                 if (take != int.MaxValue)
@@ -68,10 +76,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 }
 
                 List<dm.GlobalSetting> result = this.API.Direct.GlobalSettings.Find(skip, takePlus, keyword, order_by, descending);
+
+                this.AfterFind(result);
+
                 return base.Http200(result.ToSteppedListResult(skip, take));
 
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(List<dm.GlobalSetting> result);
         
         
         
@@ -88,6 +102,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.GlobalSetting insert = globalsetting.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.GlobalSettings.Insert(insert);
                 
@@ -106,6 +121,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.GlobalSetting insert);
 
         [HttpPut]
         [Route("{global_setting_id}")]
@@ -119,6 +135,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 globalsetting.global_setting_id = global_setting_id;
                 dm.GlobalSetting update = globalsetting.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.GlobalSettings.Update(update);
                 
@@ -135,6 +152,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.GlobalSetting insert);
+
         
 
         [HttpDelete]
@@ -145,6 +164,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.GlobalSetting delete = this.API.Direct.GlobalSettings.GetById(global_setting_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.GlobalSettings.Delete(global_setting_id);
 
@@ -155,6 +175,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.GlobalSetting delete);
 
     }
 }

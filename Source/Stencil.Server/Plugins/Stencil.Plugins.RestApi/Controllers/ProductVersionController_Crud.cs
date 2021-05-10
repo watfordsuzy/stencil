@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.ProductVersion result = this.API.Index.ProductVersions.GetById(product_version_id);
                 if (result == null)
                 {
                     return Http404("ProductVersion");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.ProductVersion result);
+        partial void AfterGet(ListResult<sdk.ProductVersion> result);
         
         
         [HttpGet]
@@ -60,22 +68,36 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
+                this.BeforeFind();
+
                 
                 ListResult<sdk.ProductVersion> result = this.API.Index.ProductVersions.Find(skip, take, keyword, order_by, descending, product_id);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult<sdk.ProductVersion> result);
+        
+        
         [HttpGet]
         [Route("by_productid/{product_id}")]
         public object GetByProductID(Guid product_id, int skip = 0, int take = 10, string order_by = "", bool descending = false)
         {
             return base.ExecuteFunction<object>("GetByProductID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.ProductVersion> result = this.API.Index.ProductVersions.GetByProductID(product_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -94,6 +116,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.ProductVersion insert = productversion.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.ProductVersions.Insert(insert);
                 
@@ -112,6 +135,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.ProductVersion insert);
 
         [HttpPut]
         [Route("{product_version_id}")]
@@ -125,6 +149,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 productversion.product_version_id = product_version_id;
                 dm.ProductVersion update = productversion.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.ProductVersions.Update(update);
                 
@@ -142,6 +167,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.ProductVersion insert);
+
         
 
         [HttpDelete]
@@ -152,6 +179,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.ProductVersion delete = this.API.Direct.ProductVersions.GetById(product_version_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.ProductVersions.Delete(product_version_id);
 
@@ -162,6 +190,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.ProductVersion delete);
 
     }
 }

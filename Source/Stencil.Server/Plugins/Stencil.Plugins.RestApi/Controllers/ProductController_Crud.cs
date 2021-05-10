@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.Product result = this.API.Index.Products.GetById(product_id);
                 if (result == null)
                 {
                     return Http404("Product");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.Product result);
+        partial void AfterGet(ListResult<sdk.Product> result);
         
         
         [HttpGet]
@@ -60,22 +68,36 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
+                this.BeforeFind();
+
                 
                 ListResult<sdk.Product> result = this.API.Index.Products.Find(skip, take, keyword, order_by, descending, product_owner_id);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult<sdk.Product> result);
+        
+        
         [HttpGet]
         [Route("by_productownerid/{account_id}")]
         public object GetByProductOwnerID(Guid account_id, int skip = 0, int take = 10, string order_by = "", bool descending = false)
         {
             return base.ExecuteFunction<object>("GetByProductOwnerID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.Product> result = this.API.Index.Products.GetByProductOwnerID(account_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -94,6 +116,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.Product insert = product.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.Products.Insert(insert);
                 
@@ -112,6 +135,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.Product insert);
 
         [HttpPut]
         [Route("{product_id}")]
@@ -125,6 +149,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 product.product_id = product_id;
                 dm.Product update = product.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.Products.Update(update);
                 
@@ -142,6 +167,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.Product insert);
+
         
 
         [HttpDelete]
@@ -152,6 +179,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Product delete = this.API.Direct.Products.GetById(product_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Products.Delete(product_id);
 
@@ -162,6 +190,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Product delete);
 
     }
 }

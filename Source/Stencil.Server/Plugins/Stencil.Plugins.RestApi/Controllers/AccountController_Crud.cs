@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.Account result = this.API.Index.Accounts.GetById(account_id);
                 if (result == null)
                 {
                     return Http404("Account");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.Account result);
+        partial void AfterGet(ListResult<sdk.Account> result);
         
         
         [HttpGet]
@@ -60,12 +68,22 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
+                this.BeforeFind();
+
                 
                 ListResult<sdk.Account> result = this.API.Index.Accounts.Find(skip, take, keyword, order_by, descending);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult<sdk.Account> result);
+        
+        
         
         
        
@@ -80,6 +98,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.Account insert = account.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.Accounts.Insert(insert);
                 
@@ -98,6 +117,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.Account insert);
 
         [HttpPut]
         [Route("{account_id}")]
@@ -111,6 +131,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 account.account_id = account_id;
                 dm.Account update = account.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.Accounts.Update(update);
                 
@@ -128,6 +149,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.Account insert);
+
         
 
         [HttpDelete]
@@ -138,6 +161,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Account delete = this.API.Direct.Accounts.GetById(account_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Accounts.Delete(account_id);
 
@@ -148,6 +172,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Account delete);
 
     }
 }

@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.Platform result = this.API.Index.Platforms.GetById(platform_id);
                 if (result == null)
                 {
                     return Http404("Platform");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.Platform result);
+        partial void AfterGet(ListResult<sdk.Platform> result);
         
         
         [HttpGet]
@@ -60,12 +68,22 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
+                this.BeforeFind();
+
                 
                 ListResult<sdk.Platform> result = this.API.Index.Platforms.Find(skip, take, keyword, order_by, descending);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult<sdk.Platform> result);
+        
+        
         
         
        
@@ -80,6 +98,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.Platform insert = platform.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.Platforms.Insert(insert);
                 
@@ -98,6 +117,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.Platform insert);
 
         [HttpPut]
         [Route("{platform_id}")]
@@ -111,6 +131,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 platform.platform_id = platform_id;
                 dm.Platform update = platform.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.Platforms.Update(update);
                 
@@ -128,6 +149,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.Platform insert);
+
         
 
         [HttpDelete]
@@ -138,6 +161,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Platform delete = this.API.Direct.Platforms.GetById(platform_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Platforms.Delete(platform_id);
 
@@ -148,6 +172,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Platform delete);
 
     }
 }

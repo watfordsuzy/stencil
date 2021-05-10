@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.ProductVersionPlatform result = this.API.Index.ProductVersionPlatforms.GetById(product_version_platform_id);
                 if (result == null)
                 {
                     return Http404("ProductVersionPlatform");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.ProductVersionPlatform result);
+        partial void AfterGet(ListResult<sdk.ProductVersionPlatform> result);
         
         
         [HttpGet]
@@ -60,10 +68,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetByProductVerisonID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.ProductVersionPlatform> result = this.API.Index.ProductVersionPlatforms.GetByProductVerisonID(product_version_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -74,10 +86,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetByPlatformID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.ProductVersionPlatform> result = this.API.Index.ProductVersionPlatforms.GetByPlatformID(platform_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -96,6 +112,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.ProductVersionPlatform insert = productversionplatform.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.ProductVersionPlatforms.Insert(insert);
                 
@@ -114,6 +131,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.ProductVersionPlatform insert);
 
         [HttpPut]
         [Route("{product_version_platform_id}")]
@@ -127,6 +145,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 productversionplatform.product_version_platform_id = product_version_platform_id;
                 dm.ProductVersionPlatform update = productversionplatform.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.ProductVersionPlatforms.Update(update);
                 
@@ -144,6 +163,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.ProductVersionPlatform insert);
+
         
 
         [HttpDelete]
@@ -154,6 +175,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.ProductVersionPlatform delete = this.API.Direct.ProductVersionPlatforms.GetById(product_version_platform_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.ProductVersionPlatforms.Delete(product_version_platform_id);
 
@@ -164,6 +186,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.ProductVersionPlatform delete);
 
     }
 }

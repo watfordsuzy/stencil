@@ -37,11 +37,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 sdk.Ticket result = this.API.Index.Tickets.GetById(ticket_id);
                 if (result == null)
                 {
                     return Http404("Ticket");
                 }
+
+                this.AfterGet(result);
 
                 
 
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.Ticket result);
+        partial void AfterGet(ListResult<sdk.Ticket> result);
         
         
         [HttpGet]
@@ -60,22 +68,36 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
+                this.BeforeFind();
+
                 
                 ListResult<sdk.Ticket> result = this.API.Index.Tickets.Find(skip, take, keyword, order_by, descending, reported_by_id, assigned_to_id);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult<sdk.Ticket> result);
+        
+        
         [HttpGet]
         [Route("by_reportedbyid/{account_id}")]
         public object GetByReportedByID(Guid account_id, int skip = 0, int take = 10, string order_by = "", bool descending = false)
         {
             return base.ExecuteFunction<object>("GetByReportedByID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.Ticket> result = this.API.Index.Tickets.GetByReportedByID(account_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -86,10 +108,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetByAssignedToID", delegate ()
             {
-                
+                this.BeforeGet();
+
                 
                 ListResult<sdk.Ticket> result = this.API.Index.Tickets.GetByAssignedToID(account_id, skip, take, order_by, descending);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -108,6 +134,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.Ticket insert = ticket.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.Tickets.Insert(insert);
                 
@@ -126,6 +153,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.Ticket insert);
 
         [HttpPut]
         [Route("{ticket_id}")]
@@ -139,6 +167,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 ticket.ticket_id = ticket_id;
                 dm.Ticket update = ticket.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.Tickets.Update(update);
                 
@@ -156,6 +185,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.Ticket insert);
+
         
 
         [HttpDelete]
@@ -166,6 +197,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Ticket delete = this.API.Direct.Tickets.GetById(ticket_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Tickets.Delete(ticket_id);
 
@@ -176,6 +208,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Ticket delete);
 
     }
 }

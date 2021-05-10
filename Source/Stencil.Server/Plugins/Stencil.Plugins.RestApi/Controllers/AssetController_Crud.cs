@@ -37,6 +37,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 dm.Asset result = this.API.Direct.Assets.GetById(asset_id);
                 if (result == null)
                 {
@@ -45,6 +47,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 
 
+                this.AfterGet(result);
+
                 return base.Http200(new ItemResult<sdk.Asset>()
                 {
                     success = true,
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(dm.Asset result);
+        partial void AfterGet(List<dm.Asset> result);
         
         
         
@@ -68,6 +76,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 dm.Asset insert = asset.ToDomainModel();
 
+                this.BeforeInsert(insert);
                 
                 insert = this.API.Direct.Assets.Insert(insert);
                 
@@ -86,6 +95,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(dm.Asset insert);
 
         [HttpPut]
         [Route("{asset_id}")]
@@ -99,6 +109,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 asset.asset_id = asset_id;
                 dm.Asset update = asset.ToDomainModel();
 
+                this.BeforeUpdate(update);
 
                 update = this.API.Direct.Assets.Update(update);
                 
@@ -115,6 +126,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(dm.Asset insert);
+
         
 
         [HttpDelete]
@@ -125,6 +138,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Asset delete = this.API.Direct.Assets.GetById(asset_id);
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Assets.Delete(asset_id);
 
@@ -135,6 +149,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Asset delete);
 
     }
 }
