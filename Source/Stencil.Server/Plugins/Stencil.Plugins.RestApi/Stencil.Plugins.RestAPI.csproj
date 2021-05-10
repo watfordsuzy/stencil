@@ -143,11 +143,16 @@
     <Compile Include="Controllers\AssetController_Crud.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\GlobalSettingController_Crud.cs" />
+    <Compile Include="Controllers\PlatformController.cs" />
     <Compile Include="Controllers\PlatformController_Crud.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductController_Crud.cs" />
+    <Compile Include="Controllers\ProductVersionController.cs" />
     <Compile Include="Controllers\ProductVersionController_Crud.cs" />
+    <Compile Include="Controllers\ProductVersionPlatformController.cs" />
     <Compile Include="Controllers\ProductVersionPlatformController_Crud.cs" />
     <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\TicketController_Crud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

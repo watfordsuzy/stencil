@@ -100,12 +100,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(globalsetting, "GlobalSetting");
 
-                dm.GlobalSetting insert = globalsetting.ToDomainModel();
+                this.BeforeInsert(globalsetting);
 
-                this.BeforeInsert(insert);
-                
+                dm.GlobalSetting insert = globalsetting.ToDomainModel();
+              
                 insert = this.API.Direct.GlobalSettings.Insert(insert);
                 
+                this.AfterInsert(globalsetting, insert);
 
                 
                 sdk.GlobalSetting result = insert.ToSDKModel();
@@ -121,7 +122,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.GlobalSetting insert);
+        partial void BeforeInsert(sdk.GlobalSetting globalsetting);
+        partial void AfterInsert(sdk.GlobalSetting globalsetting, dm.GlobalSetting inserted);
 
         [HttpPut]
         [Route("{global_setting_id}")]
@@ -133,11 +135,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(global_setting_id, globalsetting.global_setting_id, "GlobalSetting");
 
                 globalsetting.global_setting_id = global_setting_id;
+
+                this.BeforeUpdate(globalsetting);
+
                 dm.GlobalSetting update = globalsetting.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.GlobalSettings.Update(update);
+
+                this.AfterUpdate(globalsetting, update);
                 
                 
                 sdk.GlobalSetting existing = this.API.Direct.GlobalSettings.GetById(update.global_setting_id).ToSDKModel();
@@ -152,7 +157,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.GlobalSetting insert);
+        partial void BeforeUpdate(sdk.GlobalSetting globalsetting);
+        partial void AfterUpdate(sdk.GlobalSetting globalsetting, dm.GlobalSetting updated);
 
         
 

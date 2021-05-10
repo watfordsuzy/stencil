@@ -110,12 +110,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(productversionplatform, "ProductVersionPlatform");
 
-                dm.ProductVersionPlatform insert = productversionplatform.ToDomainModel();
+                this.BeforeInsert(productversionplatform);
 
-                this.BeforeInsert(insert);
-                
+                dm.ProductVersionPlatform insert = productversionplatform.ToDomainModel();
+              
                 insert = this.API.Direct.ProductVersionPlatforms.Insert(insert);
                 
+                this.AfterInsert(productversionplatform, insert);
 
                 
                 sdk.ProductVersionPlatform result = this.API.Index.ProductVersionPlatforms.GetById(insert.product_version_platform_id);
@@ -131,7 +132,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.ProductVersionPlatform insert);
+        partial void BeforeInsert(sdk.ProductVersionPlatform productversionplatform);
+        partial void AfterInsert(sdk.ProductVersionPlatform productversionplatform, dm.ProductVersionPlatform inserted);
 
         [HttpPut]
         [Route("{product_version_platform_id}")]
@@ -143,11 +145,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(product_version_platform_id, productversionplatform.product_version_platform_id, "ProductVersionPlatform");
 
                 productversionplatform.product_version_platform_id = product_version_platform_id;
+
+                this.BeforeUpdate(productversionplatform);
+
                 dm.ProductVersionPlatform update = productversionplatform.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.ProductVersionPlatforms.Update(update);
+
+                this.AfterUpdate(productversionplatform, update);
                 
                 
                 sdk.ProductVersionPlatform existing = this.API.Index.ProductVersionPlatforms.GetById(update.product_version_platform_id);
@@ -163,7 +168,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.ProductVersionPlatform insert);
+        partial void BeforeUpdate(sdk.ProductVersionPlatform productversionplatform);
+        partial void AfterUpdate(sdk.ProductVersionPlatform productversionplatform, dm.ProductVersionPlatform updated);
 
         
 

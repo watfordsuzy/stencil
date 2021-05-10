@@ -96,12 +96,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(platform, "Platform");
 
-                dm.Platform insert = platform.ToDomainModel();
+                this.BeforeInsert(platform);
 
-                this.BeforeInsert(insert);
-                
+                dm.Platform insert = platform.ToDomainModel();
+              
                 insert = this.API.Direct.Platforms.Insert(insert);
                 
+                this.AfterInsert(platform, insert);
 
                 
                 sdk.Platform result = this.API.Index.Platforms.GetById(insert.platform_id);
@@ -117,7 +118,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.Platform insert);
+        partial void BeforeInsert(sdk.Platform platform);
+        partial void AfterInsert(sdk.Platform platform, dm.Platform inserted);
 
         [HttpPut]
         [Route("{platform_id}")]
@@ -129,11 +131,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(platform_id, platform.platform_id, "Platform");
 
                 platform.platform_id = platform_id;
+
+                this.BeforeUpdate(platform);
+
                 dm.Platform update = platform.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.Platforms.Update(update);
+
+                this.AfterUpdate(platform, update);
                 
                 
                 sdk.Platform existing = this.API.Index.Platforms.GetById(update.platform_id);
@@ -149,7 +154,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.Platform insert);
+        partial void BeforeUpdate(sdk.Platform platform);
+        partial void AfterUpdate(sdk.Platform platform, dm.Platform updated);
 
         
 

@@ -114,12 +114,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(productversion, "ProductVersion");
 
-                dm.ProductVersion insert = productversion.ToDomainModel();
+                this.BeforeInsert(productversion);
 
-                this.BeforeInsert(insert);
-                
+                dm.ProductVersion insert = productversion.ToDomainModel();
+              
                 insert = this.API.Direct.ProductVersions.Insert(insert);
                 
+                this.AfterInsert(productversion, insert);
 
                 
                 sdk.ProductVersion result = this.API.Index.ProductVersions.GetById(insert.product_version_id);
@@ -135,7 +136,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.ProductVersion insert);
+        partial void BeforeInsert(sdk.ProductVersion productversion);
+        partial void AfterInsert(sdk.ProductVersion productversion, dm.ProductVersion inserted);
 
         [HttpPut]
         [Route("{product_version_id}")]
@@ -147,11 +149,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(product_version_id, productversion.product_version_id, "ProductVersion");
 
                 productversion.product_version_id = product_version_id;
+
+                this.BeforeUpdate(productversion);
+
                 dm.ProductVersion update = productversion.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.ProductVersions.Update(update);
+
+                this.AfterUpdate(productversion, update);
                 
                 
                 sdk.ProductVersion existing = this.API.Index.ProductVersions.GetById(update.product_version_id);
@@ -167,7 +172,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.ProductVersion insert);
+        partial void BeforeUpdate(sdk.ProductVersion productversion);
+        partial void AfterUpdate(sdk.ProductVersion productversion, dm.ProductVersion updated);
 
         
 

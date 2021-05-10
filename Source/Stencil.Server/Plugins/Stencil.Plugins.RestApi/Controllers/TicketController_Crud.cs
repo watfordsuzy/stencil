@@ -132,12 +132,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(ticket, "Ticket");
 
-                dm.Ticket insert = ticket.ToDomainModel();
+                this.BeforeInsert(ticket);
 
-                this.BeforeInsert(insert);
-                
+                dm.Ticket insert = ticket.ToDomainModel();
+              
                 insert = this.API.Direct.Tickets.Insert(insert);
                 
+                this.AfterInsert(ticket, insert);
 
                 
                 sdk.Ticket result = this.API.Index.Tickets.GetById(insert.ticket_id);
@@ -153,7 +154,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.Ticket insert);
+        partial void BeforeInsert(sdk.Ticket ticket);
+        partial void AfterInsert(sdk.Ticket ticket, dm.Ticket inserted);
 
         [HttpPut]
         [Route("{ticket_id}")]
@@ -165,11 +167,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(ticket_id, ticket.ticket_id, "Ticket");
 
                 ticket.ticket_id = ticket_id;
+
+                this.BeforeUpdate(ticket);
+
                 dm.Ticket update = ticket.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.Tickets.Update(update);
+
+                this.AfterUpdate(ticket, update);
                 
                 
                 sdk.Ticket existing = this.API.Index.Tickets.GetById(update.ticket_id);
@@ -185,7 +190,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.Ticket insert);
+        partial void BeforeUpdate(sdk.Ticket ticket);
+        partial void AfterUpdate(sdk.Ticket ticket, dm.Ticket updated);
 
         
 

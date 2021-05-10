@@ -96,12 +96,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(account, "Account");
 
-                dm.Account insert = account.ToDomainModel();
+                this.BeforeInsert(account);
 
-                this.BeforeInsert(insert);
-                
+                dm.Account insert = account.ToDomainModel();
+              
                 insert = this.API.Direct.Accounts.Insert(insert);
                 
+                this.AfterInsert(account, insert);
 
                 
                 sdk.Account result = this.API.Index.Accounts.GetById(insert.account_id);
@@ -117,7 +118,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.Account insert);
+        partial void BeforeInsert(sdk.Account account);
+        partial void AfterInsert(sdk.Account account, dm.Account inserted);
 
         [HttpPut]
         [Route("{account_id}")]
@@ -129,11 +131,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(account_id, account.account_id, "Account");
 
                 account.account_id = account_id;
+
+                this.BeforeUpdate(account);
+
                 dm.Account update = account.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.Accounts.Update(update);
+
+                this.AfterUpdate(account, update);
                 
                 
                 sdk.Account existing = this.API.Index.Accounts.GetById(update.account_id);
@@ -149,7 +154,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.Account insert);
+        partial void BeforeUpdate(sdk.Account account);
+        partial void AfterUpdate(sdk.Account account, dm.Account updated);
 
         
 

@@ -114,12 +114,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(product, "Product");
 
-                dm.Product insert = product.ToDomainModel();
+                this.BeforeInsert(product);
 
-                this.BeforeInsert(insert);
-                
+                dm.Product insert = product.ToDomainModel();
+              
                 insert = this.API.Direct.Products.Insert(insert);
                 
+                this.AfterInsert(product, insert);
 
                 
                 sdk.Product result = this.API.Index.Products.GetById(insert.product_id);
@@ -135,7 +136,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.Product insert);
+        partial void BeforeInsert(sdk.Product product);
+        partial void AfterInsert(sdk.Product product, dm.Product inserted);
 
         [HttpPut]
         [Route("{product_id}")]
@@ -147,11 +149,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(product_id, product.product_id, "Product");
 
                 product.product_id = product_id;
+
+                this.BeforeUpdate(product);
+
                 dm.Product update = product.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.Products.Update(update);
+
+                this.AfterUpdate(product, update);
                 
                 
                 sdk.Product existing = this.API.Index.Products.GetById(update.product_id);
@@ -167,7 +172,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.Product insert);
+        partial void BeforeUpdate(sdk.Product product);
+        partial void AfterUpdate(sdk.Product product, dm.Product updated);
 
         
 
