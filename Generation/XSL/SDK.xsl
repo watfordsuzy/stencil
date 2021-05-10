@@ -358,12 +358,13 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(<xsl:value-of select="$name_lowered"/>, "<xsl:value-of select="@name" />");
 
-                dm.<xsl:value-of select="@name" /> insert = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
+                this.BeforeInsert(<xsl:value-of select="$name_lowered"/>);
 
-                this.BeforeInsert(insert);
-                
+                dm.<xsl:value-of select="@name" /> insert = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
+              
                 insert = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Insert(insert);
                 
+                this.AfterInsert(<xsl:value-of select="$name_lowered"/>, insert);
 
                 <xsl:choose><xsl:when test="@useIndex='true'">
                 sdk.<xsl:value-of select="@name" /> result = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:if test="string-length(@indexParent) > 0"><xsl:for-each select="field[@indexParent='true']">insert.<xsl:value-of select="text()" />, </xsl:for-each></xsl:if>insert.<xsl:value-of select="field[1]"/>);</xsl:when><xsl:otherwise>
@@ -380,7 +381,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeInsert(dm.<xsl:value-of select="@name" /> insert);
+        partial void BeforeInsert(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
+        partial void AfterInsert(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, dm.<xsl:value-of select="@name" /> inserted);
 
         [HttpPut]
         [Route("{<xsl:value-of select="field[1]"/>}")]
@@ -392,11 +394,14 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(<xsl:value-of select="field[1]"/>, <xsl:value-of select="$name_lowered"/>.<xsl:value-of select="field[1]"/>, "<xsl:value-of select="@name" />");
 
                 <xsl:value-of select="$name_lowered"/>.<xsl:value-of select="field[1]"/> = <xsl:value-of select="field[1]"/>;
+
+                this.BeforeUpdate(<xsl:value-of select="$name_lowered"/>);
+
                 dm.<xsl:value-of select="@name" /> update = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
 
-                this.BeforeUpdate(update);
-
                 update = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Update(update);
+
+                this.AfterUpdate(<xsl:value-of select="$name_lowered"/>, update);
                 
                 <xsl:choose><xsl:when test="@useIndex='true'">
                 sdk.<xsl:value-of select="@name" /> existing = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:if test="string-length(@indexParent) > 0"><xsl:for-each select="field[@indexParent='true']">update.<xsl:value-of select="text()" />, </xsl:for-each></xsl:if>update.<xsl:value-of select="field[1]"/>);
@@ -413,7 +418,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
 
         }
 
-        partial void BeforeUpdate(dm.<xsl:value-of select="@name" /> insert);
+        partial void BeforeUpdate(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
+        partial void AfterUpdate(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, dm.<xsl:value-of select="@name" /> updated);
 
         <xsl:for-each select="field[string-length(@priorityGroupBy)>0]">
         [HttpPost]
