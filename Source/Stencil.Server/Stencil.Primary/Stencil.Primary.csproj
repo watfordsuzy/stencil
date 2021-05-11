@@ -148,9 +148,8 @@
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />
     <Compile Include="Business\Index\Factory\IStencilElasticClientFactory.cs" />
     <Compile Include="Business\Index\Factory\StencilElasticClientFactory.cs" />
-    <Compile Include="Business\Index\Factory\StencilElasticClientFactory_Core.cs">
-      <DependentUpon>StencilElasticClientFactory.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Business\Index\Factory\StencilElasticIndexFactory.cs" />
+    <Compile Include="Business\Index\Factory\StencilElasticIndexFactory.Generated.cs" />
     <Compile Include="Business\Index\IAccountIndex.cs" />
     <Compile Include="Business\Index\IAccountIndex_Core.cs">
       <DependentUpon>IAccountIndex.cs</DependentUpon>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Stencil.Primary.Business.Index;
 
 namespace Stencil.Primary.Business.Index
 {
@@ -169,6 +170,7 @@ namespace Stencil.Primary.Business.Index
                                 Analysis analysis = new Analysis();
                                 analysis.Analyzers = new Analyzers();
                                 analysis.Analyzers.Add("case_insensitive", ignoreCaseAnalyzer);
+                                StencilElasticIndexFactory indexFactory = new StencilElasticIndexFactory();
                                 ICreateIndexResponse createResult = client.CreateIndex(this.IndexName, delegate (Nest.CreateIndexDescriptor descriptor)
                                 {
                                     descriptor.Settings(ss => ss
@@ -179,7 +181,7 @@ namespace Stencil.Primary.Business.Index
                                         .Setting("search.slowlog.threshold.fetch.warn", "1s")
                                         .Setting("max_result_window", "2147483647")
                                     );
-                                    this.MapIndexModels(descriptor);
+                                    indexFactory.BeforeIndexCreation(descriptor);
                                     return descriptor;
                                 });
                                 if (!createResult.Acknowledged)
@@ -193,7 +195,5 @@ namespace Stencil.Primary.Business.Index
                 }
             });
         }
-
-        partial void MapIndexModels(CreateIndexDescriptor indexer);
     }
 }

@@ -17,7 +17,7 @@ using sdk = Stencil.SDK.Models;
 
 namespace Stencil.Primary.Business.Index
 {
-    public partial class StencilElasticClientFactory
+    public partial class StencilElasticIndexFactory
     {
         partial void MapIndexModels(CreateIndexDescriptor indexer)
         {
