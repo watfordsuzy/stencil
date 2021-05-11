@@ -52,6 +52,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{BC217FE5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGenerator", "..\..\Generation\Tools\CodeGenerator.csproj", "{C97B6B7E-7E6E-49D4-8910-625774B52BA9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C1168EAE-1C39-4346-9281-6489ED4B1FBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Primary.UnitTests", "Stencil.Primary.UnitTests\Stencil.Primary.UnitTests.csproj", "{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Stencil.SDK.Shared\Stencil.SDK.Shared.projitems*{09e84254-b519-4dac-b02d-d8caa97fd4b9}*SharedItemsImports = 4
@@ -125,6 +129,10 @@ Global
 		{C97B6B7E-7E6E-49D4-8910-625774B52BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C97B6B7E-7E6E-49D4-8910-625774B52BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C97B6B7E-7E6E-49D4-8910-625774B52BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +155,7 @@ Global
 		{DF6BD0D9-E199-43FD-94E6-D3A4CCAD77B2} = {0390AEAB-CF3E-4D8D-BDF3-606066A7B557}
 		{7552B994-8754-4CEE-B8D2-609263716036} = {0390AEAB-CF3E-4D8D-BDF3-606066A7B557}
 		{C97B6B7E-7E6E-49D4-8910-625774B52BA9} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
+		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A} = {C1168EAE-1C39-4346-9281-6489ED4B1FBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3505C23C-15A7-49BC-9956-59D38CDA667F}
