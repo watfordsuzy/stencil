@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,11 @@ namespace Stencil.Data.Sql
             : base(nameOrConnectionString)
         {
             this.Configuration.LazyLoadingEnabled = false;
+        }
+
+        public StencilContext(DbConnection connection)
+            : base(connection, contextOwnsConnection: false)
+        {
         }
 
 
