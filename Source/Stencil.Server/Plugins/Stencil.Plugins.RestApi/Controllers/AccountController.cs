@@ -26,10 +26,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 dm.Account currentAccount = this.GetCurrentAccount();
 
-                dm.Account account = null;
-
-                AccountInfo data = account.ToInfoModel();
-
+                AccountInfo data = currentAccount.ToInfoModel();
 
                 ItemResult<AccountInfo> result = new ItemResult<AccountInfo>()
                 {
