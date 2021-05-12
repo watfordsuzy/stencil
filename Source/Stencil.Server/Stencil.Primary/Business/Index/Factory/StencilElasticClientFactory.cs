@@ -1,15 +1,11 @@
 ﻿using Codeable.Foundation.Common;
 using Codeable.Foundation.Common.Aspect;
+using Nest;
 using Stencil.Common;
 using Stencil.Common.Configuration;
-using Nest;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using Stencil.Primary.Business.Index;
+using System.Text;
 
 namespace Stencil.Primary.Business.Index
 {
@@ -107,6 +103,20 @@ namespace Stencil.Primary.Business.Index
             });
         }
 
+        [Obsolete("Should only be used in dev", false)]
+        public virtual void CreateIndex()
+        {
+            base.ExecuteMethod(nameof(CreateIndex), delegate ()
+            {
+                lock (ensure_lock)
+                {
+                    ElasticClient client = CreateClient();
+                    client.CreateIndex(this.IndexName);
+                    this.HasEnsuredModelIndices = true;
+                }
+            });
+        }
+
         public virtual ElasticClient CreateClient()
         {
             return base.ExecuteFunction("CreateClient", delegate ()
@@ -117,7 +127,6 @@ namespace Stencil.Primary.Business.Index
                 return result;
             });
         }
-
 
         private static bool debug_reset = false;
         private static object debug_lock = new object();
@@ -162,37 +171,53 @@ namespace Stencil.Primary.Business.Index
                         {
                             if (!client.IndexExists(this.IndexName).Exists)
                             {
-                                CustomAnalyzer ignoreCaseAnalyzer = new CustomAnalyzer
-                                {
-                                    Tokenizer = "keyword",
-                                    Filter = new[] { "lowercase" }
-                                };
-                                Analysis analysis = new Analysis();
-                                analysis.Analyzers = new Analyzers();
-                                analysis.Analyzers.Add("case_insensitive", ignoreCaseAnalyzer);
-                                StencilElasticIndexFactory indexFactory = new StencilElasticIndexFactory();
-                                ICreateIndexResponse createResult = client.CreateIndex(this.IndexName, delegate (Nest.CreateIndexDescriptor descriptor)
-                                {
-                                    descriptor.Settings(ss => ss
-                                        .Analysis(a => analysis)
-                                        .NumberOfReplicas(this.ReplicaCount)
-                                        .NumberOfShards(this.ShardCount)
-                                        .Setting("merge.policy.merge_factor", "10")
-                                        .Setting("search.slowlog.threshold.fetch.warn", "1s")
-                                        .Setting("max_result_window", "2147483647")
-                                    );
-                                    indexFactory.BeforeIndexCreation(descriptor);
-                                    return descriptor;
-                                });
-                                if (!createResult.Acknowledged)
-                                {
-                                    throw new Exception("Error creating index, mapping is no longer valid");
-                                }
+                                this.CreateIndex(client);
                             }
                             HasEnsuredModelIndices = true;
                         }
                     }
                 }
+            });
+        }
+
+        protected void CreateIndex(ElasticClient client)
+        {
+            base.ExecuteMethod(nameof(CreateIndex), delegate ()
+            {
+                ICreateIndexResponse createResult = client.CreateIndex(this.IndexName, BuildCreateIndexRequest);
+
+                if (!createResult.Acknowledged)
+                {
+                    throw new Exception("Error creating index, mapping is no longer valid");
+                }
+            });
+        }
+
+        protected ICreateIndexRequest BuildCreateIndexRequest(CreateIndexDescriptor descriptor)
+        {
+            return base.ExecuteFunction(nameof(BuildCreateIndexRequest), delegate ()
+            {
+                StencilElasticIndexFactory indexFactory = new StencilElasticIndexFactory();
+
+                CustomAnalyzer ignoreCaseAnalyzer = new CustomAnalyzer
+                {
+                    Tokenizer = "keyword",
+                    Filter = new[] { "lowercase" }
+                };
+
+                Analysis analysis = new Analysis();
+                analysis.Analyzers = new Analyzers();
+                analysis.Analyzers.Add("case_insensitive", ignoreCaseAnalyzer);
+
+                descriptor.Settings(ss => ss.Analysis(a => analysis)
+                                            .NumberOfReplicas(this.ReplicaCount)
+                                            .NumberOfShards(this.ShardCount)
+                                            .Setting("merge.policy.merge_factor", "10")
+                                            .Setting("search.slowlog.threshold.fetch.warn", "1s")
+                                            .Setting("max_result_window", "2147483647"));
+
+                indexFactory.BeforeIndexCreation(descriptor);
+                return descriptor;
             });
         }
     }
