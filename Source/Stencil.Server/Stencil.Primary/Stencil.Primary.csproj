@@ -134,6 +134,7 @@
       <DependentUpon>GlobalSettingBusiness.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Direct\Implementation\InterceptArgs.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\PlatformBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\ProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\ProductVersionBusiness_Crud.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Business\Direct\IProductVersionPlatformBusiness_Crud.cs" />
     <Compile Include="Business\Direct\ITicketBusiness.cs" />
     <Compile Include="Business\Direct\ITicketBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductBusiness.cs" />
     <Compile Include="Business\Direct\_DirectExtensions.cs" />
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />
     <Compile Include="Business\Index\Factory\IStencilElasticClientFactory.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="Business\Synchronization\Implementation\ProductVersionPlatformSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\ProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\SynchronizerBase.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer.cs" />
     <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\IPlatformSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\IProductSynchronizer_Core.cs" />

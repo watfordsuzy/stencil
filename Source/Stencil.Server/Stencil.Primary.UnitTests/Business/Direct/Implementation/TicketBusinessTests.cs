@@ -1,54 +1,20 @@
-using Codeable.Foundation.Common;
-using Codeable.Foundation.Common.Aspect;
-using Codeable.Foundation.Common.System;
-using Effort.Provider;
-using Microsoft.Practices.Unity;
-using Moq;
 using Stencil.Data.Sql;
-using Stencil.Primary.UnitTests;
 using System;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Core.EntityClient;
 using Xunit;
 
 using dm = Stencil.Domain;
 
 namespace Stencil.Primary.Business.Direct.Implementation
 {
-    public class TicketBusinessTests : IDisposable
+    public class TicketBusinessTests : BusinessTestBase
     {
-        private readonly EntityConnection _connection;
-        private readonly StencilContext _context;
-        private readonly Mock<IHandleExceptionProvider> _exceptionHandler;
-        private readonly Mock<IStencilContextFactory> _dataContextFactory;
-        private readonly UnityContainer _container;
-        private readonly Mock<IFoundation> _foundation;
-
         private readonly dm.Account _reportedByAccount;
         private readonly dm.Account _assignedToAccount;
         private readonly dm.Ticket _ticket0;
 
         public TicketBusinessTests()
+            : base()
         {
-            _connection = Effort.EntityConnectionFactory.CreateTransient("name=Test");
-            _context = new StencilContext(_connection);
-
-            _exceptionHandler = new Mock<IHandleExceptionProvider>();
-            _dataContextFactory = new Mock<IStencilContextFactory>();
-            _dataContextFactory.Setup(dd => dd.CreateContext())
-                               .Returns(_context);
-            
-            _container = new UnityContainer();
-            _container.RegisterInstance<IHandleExceptionProvider>(_exceptionHandler.Object);
-            _container.RegisterInstance<IStencilContextFactory>(_dataContextFactory.Object);
-            
-            _foundation = new Mock<IFoundation>();
-            _foundation.Setup(ff => ff.Container)
-                       .Returns(_container);
-            _foundation.Setup(ff => ff.GetAspectCoordinator())
-                       .Returns(new TestAspectCoordinator());
-
             _reportedByAccount = new dm.Account
             {
                 account_id = Guid.NewGuid(),
@@ -215,13 +181,6 @@ namespace Stencil.Primary.Business.Direct.Implementation
             var account = new dm.Account { account_id = Guid.NewGuid(), };
 
             Assert.False(ticketBusiness.CanAccountDeleteTicket(account, _ticket0.ticket_id));
-        }
-
-        public void Dispose()
-        {
-            _connection.Dispose();
-            _context.Dispose();
-            _container.Dispose();
         }
     }
 }
