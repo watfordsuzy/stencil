@@ -12,6 +12,12 @@
 
 GO
 
+ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Ticket_ticket_id]
+
+ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Product_product_id]
+
+GO
+
 ALTER TABLE [dbo].[Ticket] DROP  [FK_Ticket_Account_reported_by_id]
 
 ALTER TABLE [dbo].[Ticket] DROP  [FK_Ticket_Account_assigned_to_id]
@@ -57,6 +63,9 @@ GO
 -- <Tables> --------------------------------------------------------------------
 
 DROP TABLE [dbo].[Asset]
+GO
+
+DROP TABLE [dbo].[AffectedProduct]
 GO
 
 DROP TABLE [dbo].[Ticket]
@@ -170,6 +179,21 @@ DROP PROCEDURE [dbo].[spTicket_HydrateSyncUpdate]
 GO
 
 DROP PROCEDURE [dbo].[spTicket_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spAffectedProduct_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncGetInvalid]
 GO
 
 

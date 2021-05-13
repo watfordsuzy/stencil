@@ -82,6 +82,9 @@
     <Compile Include="dbAccount.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbAffectedProduct.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbAsset.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>

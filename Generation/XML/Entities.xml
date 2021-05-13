@@ -65,6 +65,12 @@
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" sortable="true" friendlyName="Closed Date">closed_on_utc</field>
     <field type="string" dbType="nvarchar(250)" isNullable="false" searchable="true" sortable="true" friendlyName="Title">ticket_title</field>
     <field type="string" dbType="nvarchar(max)" isNullable="false" searchable="true" friendlyName="Description">ticket_description</field>
+    <indexfield type="string[]" friendlyName="AffectedProducts">affected_products</indexfield>
+  </item>
+  <item name="AffectedProduct" friendlyName="Affected Product" useIndex="true" indexPriority="60">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Affected Product ID">affected_product_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="TicketID" iInvalidateforeignKey="true" foreignKey="Ticket" foreignKeyField="ticket_id">ticket_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="ProductID" foreignKey="Product" foreignKeyField="product_id">product_id</field>
   </item>
   <item name="Asset" friendlyName="Asset" uiDisplayField="asset_id" trackUpdates="true">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Asset ID">asset_id</field>

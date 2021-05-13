@@ -49,6 +49,10 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<ITicketBusiness>(); }
         }
+        public IAffectedProductBusiness AffectedProducts
+        {
+            get { return this.IFoundation.Resolve<IAffectedProductBusiness>(); }
+        }
         public IAssetBusiness Assets
         {
             get { return this.IFoundation.Resolve<IAssetBusiness>(); }

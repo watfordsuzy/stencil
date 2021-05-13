@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\AccountsEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\AuthEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\AccountEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\AffectedProductEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\AssetEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\GlobalSettingEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\PlatformEndpoint.cs" />
@@ -27,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IDPair.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ListResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\AffectedProduct.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Asset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AssetType.cs" />

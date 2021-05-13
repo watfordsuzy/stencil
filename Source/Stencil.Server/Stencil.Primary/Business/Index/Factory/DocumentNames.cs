@@ -19,6 +19,8 @@ namespace Stencil.Primary.Business.Index
         public static readonly string ProductVersionPlatform = "productversionplatforms";
         
         public static readonly string Ticket = "tickets";
+
+        public static readonly string AffectedProduct = "affectedproducts";
         
     }
 }

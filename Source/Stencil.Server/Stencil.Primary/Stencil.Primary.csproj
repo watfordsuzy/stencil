@@ -109,6 +109,7 @@
     <Compile Include="Business\Direct\IAccountBusiness_Crud.cs">
       <DependentUpon>IAccountBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\IAffectedProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IAssetBusiness.cs" />
     <Compile Include="Business\Direct\IAssetBusiness_Crud.cs">
       <DependentUpon>IAssetBusiness.cs</DependentUpon>
@@ -121,6 +122,7 @@
     <Compile Include="Business\Direct\Implementation\AccountBusiness_Crud.cs">
       <DependentUpon>AccountBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\Implementation\AffectedProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\AssetBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\AssetBusiness_Crud.cs">
       <DependentUpon>AssetBusiness.cs</DependentUpon>
@@ -154,11 +156,13 @@
     <Compile Include="Business\Index\IAccountIndex_Core.cs">
       <DependentUpon>IAccountIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Index\IAffectedProductIndex_Core.cs" />
     <Compile Include="Business\Index\IIndexer.cs" />
     <Compile Include="Business\Index\Implementation\AccountIndex.cs" />
     <Compile Include="Business\Index\Implementation\AccountIndex_Core.cs">
       <DependentUpon>AccountIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Index\Implementation\AffectedProductIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\IndexerBase.cs" />
     <Compile Include="Business\Index\Implementation\IndexerBaseHealth.cs" />
     <Compile Include="Business\Index\Implementation\PlatformIndex_Core.cs" />
@@ -181,7 +185,9 @@
     <Compile Include="Business\Integration\DependencyCoordinator.cs" />
     <Compile Include="Business\Synchronization\Availability.cs" />
     <Compile Include="Business\Synchronization\IAccountSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IAffectedProductSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\AccountSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\AffectedProductSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\PlatformSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\ProductSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\ProductVersionPlatformSynchronizer_Core.cs" />

@@ -29,6 +29,11 @@ namespace Stencil.SDK.Models
         public virtual string ticket_title { get; set; }
         public virtual string ticket_description { get; set; }
         
+        //<IndexOnly>
+        
+        public string[] affected_products { get; set; }
+        
+        //</IndexOnly>
 	}
 }
 

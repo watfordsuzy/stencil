@@ -251,6 +251,39 @@ namespace Stencil.Primary
         
         
         
+        public static dbAffectedProduct ToDbModel(this AffectedProduct entity, dbAffectedProduct destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbAffectedProduct(); }
+                return am.Mapper.Map<AffectedProduct, dbAffectedProduct>(entity, destination);
+            }
+            return null;
+        }
+        public static AffectedProduct ToDomainModel(this dbAffectedProduct entity, AffectedProduct destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new AffectedProduct(); }
+                return am.Mapper.Map<dbAffectedProduct, AffectedProduct>(entity, destination);
+            }
+            return null;
+        }
+        public static List<AffectedProduct> ToDomainModel(this IEnumerable<dbAffectedProduct> entities)
+        {
+            List<AffectedProduct> result = new List<AffectedProduct>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbAsset ToDbModel(this Asset entity, dbAsset destination = null)
         {
             if (entity != null)

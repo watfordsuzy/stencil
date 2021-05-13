@@ -266,6 +266,41 @@ namespace Stencil.Primary
         
         
         
+        public static AffectedProduct ToDomainModel(this SDK.Models.AffectedProduct entity, AffectedProduct destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.AffectedProduct(); }
+                AffectedProduct result = am.Mapper.Map<SDK.Models.AffectedProduct, AffectedProduct>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.AffectedProduct ToSDKModel(this AffectedProduct entity, SDK.Models.AffectedProduct destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.AffectedProduct(); }
+                SDK.Models.AffectedProduct result = am.Mapper.Map<AffectedProduct, SDK.Models.AffectedProduct>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.AffectedProduct> ToSDKModel(this IEnumerable<AffectedProduct> entities)
+        {
+            List<SDK.Models.AffectedProduct> result = new List<SDK.Models.AffectedProduct>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static Asset ToDomainModel(this SDK.Models.Asset entity, Asset destination = null)
         {
             if (entity != null)

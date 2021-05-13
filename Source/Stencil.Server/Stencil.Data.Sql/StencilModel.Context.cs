@@ -35,6 +35,7 @@ namespace Stencil.Data.Sql
         public virtual DbSet<dbProductVersion> dbProductVersions { get; set; }
         public virtual DbSet<dbTicket> dbTickets { get; set; }
         public virtual DbSet<dbProductVersionPlatform> dbProductVersionPlatforms { get; set; }
+        public virtual DbSet<dbAffectedProduct> dbAffectedProducts { get; set; }
     
         public virtual ObjectResult<Nullable<System.Guid>> spAccount_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
         {
@@ -472,6 +473,74 @@ namespace Stencil.Data.Sql
                 new ObjectParameter("sync_log", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spProductVersionPlatform_SyncUpdate", product_version_platform_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spAffectedProduct_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spAffectedProduct_HydrateSyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spAffectedProduct_HydrateSyncUpdate(Nullable<System.Guid> affected_product_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_hydrate_utc, string sync_log)
+        {
+            var affected_product_idParameter = affected_product_id.HasValue ?
+                new ObjectParameter("affected_product_id", affected_product_id) :
+                new ObjectParameter("affected_product_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_hydrate_utcParameter = sync_hydrate_utc.HasValue ?
+                new ObjectParameter("sync_hydrate_utc", sync_hydrate_utc) :
+                new ObjectParameter("sync_hydrate_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spAffectedProduct_HydrateSyncUpdate", affected_product_idParameter, sync_successParameter, sync_hydrate_utcParameter, sync_logParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> spAffectedProduct_SyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
+        {
+            var allowableSecondsToProcessIndexParameter = allowableSecondsToProcessIndex.HasValue ?
+                new ObjectParameter("allowableSecondsToProcessIndex", allowableSecondsToProcessIndex) :
+                new ObjectParameter("allowableSecondsToProcessIndex", typeof(int));
+    
+            var sync_agentParameter = sync_agent != null ?
+                new ObjectParameter("sync_agent", sync_agent) :
+                new ObjectParameter("sync_agent", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("spAffectedProduct_SyncGetInvalid", allowableSecondsToProcessIndexParameter, sync_agentParameter);
+        }
+    
+        public virtual int spAffectedProduct_SyncUpdate(Nullable<System.Guid> affected_product_id, Nullable<bool> sync_success, Nullable<System.DateTimeOffset> sync_success_utc, string sync_log)
+        {
+            var affected_product_idParameter = affected_product_id.HasValue ?
+                new ObjectParameter("affected_product_id", affected_product_id) :
+                new ObjectParameter("affected_product_id", typeof(System.Guid));
+    
+            var sync_successParameter = sync_success.HasValue ?
+                new ObjectParameter("sync_success", sync_success) :
+                new ObjectParameter("sync_success", typeof(bool));
+    
+            var sync_success_utcParameter = sync_success_utc.HasValue ?
+                new ObjectParameter("sync_success_utc", sync_success_utc) :
+                new ObjectParameter("sync_success_utc", typeof(System.DateTimeOffset));
+    
+            var sync_logParameter = sync_log != null ?
+                new ObjectParameter("sync_log", sync_log) :
+                new ObjectParameter("sync_log", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spAffectedProduct_SyncUpdate", affected_product_idParameter, sync_successParameter, sync_success_utcParameter, sync_logParameter);
         }
     }
 }

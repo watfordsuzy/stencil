@@ -34,6 +34,7 @@ namespace Stencil.Primary.Foundation
             foundation.Container.RegisterType<IProductVersionBusiness, ProductVersionBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IProductVersionPlatformBusiness, ProductVersionPlatformBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<ITicketBusiness, TicketBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductBusiness, AffectedProductBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAssetBusiness, AssetBusiness>(new HttpRequestLifetimeManager());
             
             
@@ -44,6 +45,7 @@ namespace Stencil.Primary.Foundation
             foundation.Container.RegisterType<IProductVersionIndex, ProductVersionIndex>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IProductVersionPlatformIndex, ProductVersionPlatformIndex>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<ITicketIndex, TicketIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductIndex, AffectedProductIndex>(new HttpRequestLifetimeManager());
             
             
             //Synchronizers
@@ -53,6 +55,7 @@ namespace Stencil.Primary.Foundation
             foundation.Container.RegisterType<IProductVersionSynchronizer, ProductVersionSynchronizer>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IProductVersionPlatformSynchronizer, ProductVersionPlatformSynchronizer>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<ITicketSynchronizer, TicketSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductSynchronizer, AffectedProductSynchronizer>(new HttpRequestLifetimeManager());
             
         }
     }

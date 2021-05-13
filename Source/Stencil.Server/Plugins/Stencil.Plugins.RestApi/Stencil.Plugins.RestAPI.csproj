@@ -140,6 +140,7 @@
     <Compile Include="Controllers\AccountController_Crud.cs">
       <DependentUpon>AccountController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AffectedProductController_Crud.cs" />
     <Compile Include="Controllers\AssetController_Crud.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\GlobalSettingController_Crud.cs" />

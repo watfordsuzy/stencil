@@ -261,6 +261,22 @@ namespace Stencil.Primary.Business.Index
                     )
                 )
             
+                .Map<sdk.AffectedProduct>(DocumentNames.AffectedProduct, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.affected_product_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.ticket_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.product_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        )
+                    )
+                )
+            
             );
         }
     }

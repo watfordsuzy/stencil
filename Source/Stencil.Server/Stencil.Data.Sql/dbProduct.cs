@@ -18,6 +18,7 @@ namespace Stencil.Data.Sql
         public dbProduct()
         {
             this.ProductVersions = new HashSet<dbProductVersion>();
+            this.AffectedProducts = new HashSet<dbAffectedProduct>();
         }
     
         public System.Guid product_id { get; set; }
@@ -37,5 +38,7 @@ namespace Stencil.Data.Sql
         public virtual dbAccount Account { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dbProductVersion> ProductVersions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dbAffectedProduct> AffectedProducts { get; set; }
     }
 }

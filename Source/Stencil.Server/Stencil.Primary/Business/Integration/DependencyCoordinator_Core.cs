@@ -135,6 +135,26 @@ namespace Stencil.Primary.Business.Integration
                 
             });
         }
+        public virtual void AffectedProductInvalidated(Dependency affectedDependencies, Guid affected_product_id)
+        {
+            base.ExecuteMethod("AffectedProductInvalidated", delegate ()
+            {
+                DependencyWorker<AffectedProduct>.EnqueueRequest(this.IFoundation, affectedDependencies, affected_product_id, this.ProcessAffectedProductInvalidation);
+            });
+        }
+        protected virtual void ProcessAffectedProductInvalidation(Dependency dependencies, Guid affected_product_id)
+        {
+            base.ExecuteMethod("ProcessAffectedProductInvalidation", delegate ()
+            {
+                AffectedProduct item = this.API.Direct.AffectedProducts.GetById(affected_product_id);
+                if (item != null)
+                {
+                    this.API.Direct.Tickets.Invalidate(item.ticket_id, "AffectedProduct changed");
+                }
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
         public virtual void AssetInvalidated(Dependency affectedDependencies, Guid asset_id)
         {
             base.ExecuteMethod("AssetInvalidated", delegate ()
