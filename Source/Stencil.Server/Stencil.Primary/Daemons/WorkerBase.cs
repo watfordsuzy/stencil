@@ -105,11 +105,11 @@ namespace Stencil.Primary.Daemons
 
         public override string DaemonName { get; }
 
-        protected override void ExecuteNonReentrant(IFoundation foundation)
+        protected override void ExecuteNonReentrant(IFoundation foundation, CancellationToken token)
         {
             base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate ()
             {
-                this.ProcessRequests();
+                this.ProcessRequests(token);
             });
         }
 
@@ -119,12 +119,13 @@ namespace Stencil.Primary.Daemons
 
         protected abstract void ProcessRequest(TRequest request);
 
-        protected virtual void ProcessRequests()
+        protected virtual void ProcessRequests(CancellationToken token)
         {
             base.ExecuteMethod("ProcessRequests", delegate ()
             {
                 TRequest request = default(TRequest);
-                while (this.RequestQueue.TryDequeue(out request))
+                while (!token.IsCancellationRequested
+                    && this.RequestQueue.TryDequeue(out request))
                 {
                     try
                     {

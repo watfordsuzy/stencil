@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Stencil.Common.Configuration;
 using Stencil.Common;
 using Stencil.Primary.Daemons;
+using System.Threading;
 
 namespace Stencil.Primary.Health.Daemons
 {
@@ -36,7 +37,7 @@ namespace Stencil.Primary.Health.Daemons
             }
         }
 
-        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation, CancellationToken token)
         {
             base.ExecuteMethod(nameof(ExecuteNonReentrant), PersistHealth);
         }

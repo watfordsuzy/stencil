@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Stencil.Primary.Business.Integration
@@ -29,7 +30,7 @@ namespace Stencil.Primary.Business.Integration
                 if (worker.ProcessMethod == null)
                 {
                     worker.ProcessMethod = processMethod;
-                    worker.Execute(worker.IFoundation); // start it now (may have been waiting for processmethod)
+                    worker.Execute(worker.IFoundation, default); // start it now (may have been waiting for processmethod)
                 }
             }
         }
@@ -48,12 +49,12 @@ namespace Stencil.Primary.Business.Integration
 
         public Action<Dependency, Guid> ProcessMethod { get; set; }
 
-        protected override void ProcessRequests()
+        protected override void ProcessRequests(CancellationToken token)
         {
             // prevent processing until we have an implementation
             if (this.ProcessMethod != null)
             {
-                base.ProcessRequests();
+                base.ProcessRequests(token);
             }
         }
         protected override void ProcessRequest(DependencyRequest request)

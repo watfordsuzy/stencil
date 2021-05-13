@@ -17,6 +17,7 @@ using Stencil.Primary.Health;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace Stencil.Plugins.Amazon.Daemons
@@ -156,16 +157,19 @@ namespace Stencil.Plugins.Amazon.Daemons
             get { return DAEMON_NAME; }
         }
 
-        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation, CancellationToken token)
         {
-            base.ExecuteMethod(nameof(ExecuteNonReentrant), PerformProcessVideos);
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate()
+            {
+                this.PerformProcessVideos(token);
+            });
         }
 
         #endregion
 
         #region Protected Methods
 
-        protected virtual void PerformProcessVideos()
+        protected virtual void PerformProcessVideos(CancellationToken token)
         {
             base.ExecuteMethod("PerformProcessVideos", delegate ()
             {
@@ -183,6 +187,12 @@ namespace Stencil.Plugins.Amazon.Daemons
                         notifyAdmin.SendAdminEmail("Videos Have Failed To Encode", body);
                     }
                 }
+
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 List<Asset> assetsToQueue = this.API.Direct.Assets.GetVideosForProcessing(EncoderStatus.not_processed.ToString(), true);
 
                 if (assetsToQueue.Count > 0)
@@ -191,6 +201,11 @@ namespace Stencil.Plugins.Amazon.Daemons
                     {
                         foreach (Asset item in assetsToQueue)
                         {
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+
                             PerformProcessVideo(client, item);
                         }
                     }
@@ -205,6 +220,11 @@ namespace Stencil.Plugins.Amazon.Daemons
                     {
                         foreach (var item in assetsToRetry)
                         {
+                            if (token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+
                             PerformProcessVideo(client, item);
                         }
                     }

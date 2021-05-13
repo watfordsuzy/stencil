@@ -17,6 +17,7 @@ namespace Stencil.Primary.Daemons
         /// Used to disable reentrancy.
         /// </summary>
         private long _executing = 0;
+        private bool disposedValue;
 
         protected NonReentrantDaemon(IFoundation foundation)
             : base(foundation)
@@ -40,7 +41,7 @@ namespace Stencil.Primary.Daemons
         /// </remarks>
         protected bool IsExecuting => Interlocked.Read(ref _executing) != 0;
 
-        public void Execute(IFoundation foundation)
+        public void Execute(IFoundation foundation, CancellationToken token)
         {
             if (0 != Interlocked.CompareExchange(ref _executing, 1, 0))
             {
@@ -53,7 +54,7 @@ namespace Stencil.Primary.Daemons
                     nameof(Execute), 
                     delegate() 
                     {
-                        this.ExecuteNonReentrant(foundation);
+                        this.ExecuteNonReentrant(foundation, token);
                     });
             }
             finally
@@ -62,6 +63,35 @@ namespace Stencil.Primary.Daemons
             }
         }
 
-        protected abstract void ExecuteNonReentrant(IFoundation foundation);
+        protected abstract void ExecuteNonReentrant(IFoundation foundation, CancellationToken token);
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~NonReentrantDaemon()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
