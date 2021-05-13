@@ -16,7 +16,7 @@ namespace Stencil.Primary.Synchronization.Implementation
     public abstract class SynchronizerTestBase : IDisposable
     {
         protected readonly EntityConnection _connection;
-        protected readonly StencilContext _context;
+        protected readonly TestStencilContext _context;
         protected readonly Mock<IHandleExceptionProvider> _exceptionHandler;
         protected readonly Mock<IStencilContextFactory> _dataContextFactory;
         protected readonly UnityContainer _container;
@@ -26,7 +26,7 @@ namespace Stencil.Primary.Synchronization.Implementation
         protected SynchronizerTestBase()
         {
             _connection = Effort.EntityConnectionFactory.CreateTransient("name=Test");
-            _context = new StencilContext(_connection);
+            _context = new TestStencilContext(_connection);
 
             _foundation = new Mock<IFoundation>();
 
@@ -55,7 +55,7 @@ namespace Stencil.Primary.Synchronization.Implementation
         public void Dispose()
         {
             _connection.Dispose();
-            _context.Dispose();
+            _context.RealDispose();
             _container.Dispose();
         }
     }

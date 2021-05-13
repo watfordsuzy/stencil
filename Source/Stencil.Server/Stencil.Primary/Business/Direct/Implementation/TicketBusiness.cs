@@ -20,7 +20,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
 
                 using (var db = base.CreateSQLContext())
                 {
-                    dbTicket ticket = db.dbTickets.SingleOrDefault(tt => tt.ticket_id == ticket_id);
+                    dbTicket ticket = db.dbTickets.FirstOrDefault(tt => tt.ticket_id == ticket_id);
                     if (ticket == null)
                     {
                         return false;
@@ -57,7 +57,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
 
                 using (var db = base.CreateSQLContext())
                 {
-                    dbTicket ticket = db.dbTickets.SingleOrDefault(tt => tt.ticket_id == ticket_id);
+                    dbTicket ticket = db.dbTickets.FirstOrDefault(tt => tt.ticket_id == ticket_id);
                     if (ticket == null)
                     {
                         return false;
@@ -71,6 +71,52 @@ namespace Stencil.Primary.Business.Direct.Implementation
 
                     // No other accounts may inherently update the ticket
                     return false;
+                }
+            });
+        }
+
+        /// <inheritdoc/>
+        public Guid? GetAssignee(Guid ticket_id)
+        {
+            return base.ExecuteFunction(nameof(GetAssignee), delegate ()
+            {
+                // Do not attempt to lookup empty tickets
+                if (ticket_id == Guid.Empty)
+                {
+                    return null;
+                }
+
+                using (var db = base.CreateSQLContext())
+                {
+                    dbTicket ticket = db.dbTickets.FirstOrDefault(tt => tt.ticket_id == ticket_id);
+                    return ticket?.assigned_to_id;
+                }
+            });
+        }
+
+        /// <inheritdoc/>
+        public void AssignToProductOwner(Guid ticket_id, Guid product_id)
+        {
+            base.ExecuteMethod(nameof(AssignToProductOwner), delegate ()
+            {
+                // Do not attempt to lookup empty tickets or accounts
+                if (ticket_id == Guid.Empty || product_id == Guid.Empty)
+                {
+                    return;
+                }
+
+                using (var db = base.CreateSQLContext())
+                {
+                    dbTicket ticket = db.dbTickets.FirstOrDefault(tt => tt.ticket_id == ticket_id);
+                    Guid? product_owner_id = db.dbProducts.FirstOrDefault(pp => pp.product_id == product_id)?.product_owner_id;
+                    if (ticket != null && product_owner_id != null && product_owner_id != Guid.Empty)
+                    {
+                        ticket.assigned_to_id = product_owner_id;
+
+                        db.SaveChanges();
+
+                        this.API.Index.Tickets.UpdateAssignedTo(ticket_id, ticket.ToDomainModel().assigned_to_id);
+                    }
                 }
             });
         }

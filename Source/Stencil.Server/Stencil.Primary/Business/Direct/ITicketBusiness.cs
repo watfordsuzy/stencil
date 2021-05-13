@@ -26,5 +26,21 @@ namespace Stencil.Primary.Business.Direct
         /// <returns><see langword="true"/> if and only if the account has access
         /// to delete the ticket; otherwise <see langword="false"/>.</returns>
         bool CanAccountDeleteTicket(Account account, Guid ticket_id);
+
+        /// <summary>
+        /// Gets the unique identifier of the account assigned to work
+        /// on a ticket, if one exists.
+        /// </summary>
+        /// <param name="ticket_id">The unique identifier of the ticket.</param>
+        /// <returns>The unique identifier of the account assigned to work
+        /// on the ticket, otherwise <see langword="null"/>.</returns>
+        Guid? GetAssignee(Guid ticket_id);
+
+        /// <summary>
+        /// Assigns a ticket to the owner of a product.
+        /// </summary>
+        /// <param name="ticket_id">The unique identifier of the ticket.</param>
+        /// <param name="product_id">The unique identifier of the product.</param>
+        void AssignToProductOwner(Guid ticket_id, Guid product_id);
     }
 }

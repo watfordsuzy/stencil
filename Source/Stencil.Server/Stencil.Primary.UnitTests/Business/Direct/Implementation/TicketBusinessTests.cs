@@ -1,4 +1,7 @@
+using Microsoft.Practices.Unity;
+using Moq;
 using Stencil.Data.Sql;
+using Stencil.Primary.Business.Index;
 using System;
 using Xunit;
 
@@ -11,6 +14,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         private readonly dm.Account _reportedByAccount;
         private readonly dm.Account _assignedToAccount;
         private readonly dm.Ticket _ticket0;
+        private readonly dm.Product _product0;
 
         public TicketBusinessTests()
             : base()
@@ -26,6 +30,13 @@ namespace Stencil.Primary.Business.Direct.Implementation
             _ticket0 = new dm.Ticket
             {
                 ticket_id = Guid.NewGuid(),
+                reported_by_id = _reportedByAccount.account_id,
+                assigned_to_id = _assignedToAccount.account_id,
+            };
+            _product0 = new dm.Product
+            {
+                product_id = Guid.NewGuid(),
+                product_owner_id = _reportedByAccount.account_id,
             };
 
             _context.dbAccounts.Add(new dbAccount
@@ -49,13 +60,19 @@ namespace Stencil.Primary.Business.Direct.Implementation
             _context.dbTickets.Add(new dbTicket
             {
                 ticket_id = _ticket0.ticket_id,
-                reported_by_id = _reportedByAccount.account_id,
-                assigned_to_id = _assignedToAccount.account_id,
+                reported_by_id = _ticket0.reported_by_id,
+                assigned_to_id = _ticket0.assigned_to_id,
                 ticket_title = "Title",
                 ticket_description = "Description",
                 opened_on_utc = DateTimeOffset.UtcNow,
                 ticket_type = (int)dm.TicketType.Feature,
                 ticket_status = (int)dm.TicketStatus.Open,
+            });
+            _context.dbProducts.Add(new dbProduct
+            {
+                product_id = _product0.product_id,
+                product_name = "Product 0",
+                product_owner_id = _product0.product_owner_id,
             });
             _context.SaveChanges();
         }
@@ -181,6 +198,74 @@ namespace Stencil.Primary.Business.Direct.Implementation
             var account = new dm.Account { account_id = Guid.NewGuid(), };
 
             Assert.False(ticketBusiness.CanAccountDeleteTicket(account, _ticket0.ticket_id));
+        }
+
+        [Fact]
+        public void GetAssignee_Returns_Null_If_Invalid_Ticket()
+        {
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            Assert.Null(ticketBusiness.GetAssignee(Guid.Empty));
+
+            Assert.Null(ticketBusiness.GetAssignee(Guid.NewGuid()));
+        }
+
+        [Fact]
+        public void GetAssignee_Returns_Assignee_Of_Ticket()
+        {
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            Assert.Equal(_assignedToAccount.account_id, ticketBusiness.GetAssignee(_ticket0.ticket_id));
+        }
+
+        [Fact]
+        public void AssignToProductOwner_Does_Nothing_If_Missing_Ticket()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            ticketBusiness.AssignToProductOwner(Guid.Empty, _product0.product_id);
+
+            ticketIndex.Verify(tt => tt.UpdateAssignedTo(It.IsAny<Guid>(), It.IsAny<Guid?>()), Times.Never());
+
+            ticketBusiness.AssignToProductOwner(Guid.NewGuid(), _product0.product_id);
+
+            ticketIndex.Verify(tt => tt.UpdateAssignedTo(It.IsAny<Guid>(), It.IsAny<Guid?>()), Times.Never());
+        }
+
+        [Fact]
+        public void AssignToProductOwner_Does_Nothing_If_Missing_Product()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            ticketBusiness.AssignToProductOwner(_ticket0.ticket_id, Guid.Empty);
+
+            ticketIndex.Verify(tt => tt.UpdateAssignedTo(It.IsAny<Guid>(), It.IsAny<Guid?>()), Times.Never());
+
+            ticketBusiness.AssignToProductOwner(_ticket0.ticket_id, Guid.NewGuid());
+
+            ticketIndex.Verify(tt => tt.UpdateAssignedTo(It.IsAny<Guid>(), It.IsAny<Guid?>()), Times.Never());
+        }
+
+        [Fact]
+        public void AssignToProductOwner_Assigns_Ticket_To_Product_Owner()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            ticketBusiness.AssignToProductOwner(_ticket0.ticket_id, _product0.product_id);
+
+            dbTicket ticket = _context.dbTickets.Find(_ticket0.ticket_id);
+            Assert.Equal(_product0.product_owner_id, ticket.assigned_to_id);
+
+            ticketIndex.Verify(tt => tt.UpdateAssignedTo(_ticket0.ticket_id, _product0.product_owner_id), Times.Once());
         }
     }
 }

@@ -167,12 +167,14 @@
     <Compile Include="Business\Index\Implementation\ProductIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\ProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\ProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\TicketIndex.cs" />
     <Compile Include="Business\Index\Implementation\TicketIndex_Core.cs" />
     <Compile Include="Business\Index\IndexResult.cs" />
     <Compile Include="Business\Index\IPlatformIndex_Core.cs" />
     <Compile Include="Business\Index\IProductIndex_Core.cs" />
     <Compile Include="Business\Index\IProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\IProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\ITicketIndex.cs" />
     <Compile Include="Business\Index\ITicketIndex_Core.cs" />
     <Compile Include="Business\Index\_IndexExtensions.cs" />
     <Compile Include="Business\Integration\DependencyCoordinator_Core.cs">
@@ -243,6 +245,8 @@
     <Compile Include="StencilAPIIndex.cs" />
     <Compile Include="StencilAPIIntegration.cs" />
     <Compile Include="Workers\AccountLoggedInWorker.cs" />
+    <Compile Include="Workers\AssignProductOwnerWorker.cs" />
+    <Compile Include="Workers\Models\AssignProductOwnerRequest.cs" />
     <Compile Include="Workers\Models\LoggedInRequest.cs" />
   </ItemGroup>
   <ItemGroup>
