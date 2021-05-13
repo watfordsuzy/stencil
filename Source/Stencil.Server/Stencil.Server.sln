@@ -58,6 +58,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stencil.Primary.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticMappingGenerator", "ElasticMappingGenerator\ElasticMappingGenerator.csproj", "{B89E88A9-E7D9-48D3-B60D-93840925FD9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbAndIndexMigrator", "DbAndIndexMigrator\DbAndIndexMigrator.csproj", "{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Stencil.SDK.Shared\Stencil.SDK.Shared.projitems*{09e84254-b519-4dac-b02d-d8caa97fd4b9}*SharedItemsImports = 4
@@ -139,6 +141,10 @@ Global
 		{B89E88A9-E7D9-48D3-B60D-93840925FD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B89E88A9-E7D9-48D3-B60D-93840925FD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B89E88A9-E7D9-48D3-B60D-93840925FD9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{C97B6B7E-7E6E-49D4-8910-625774B52BA9} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
 		{42673CA2-8B5C-448B-A46E-2C5B4D94C62A} = {C1168EAE-1C39-4346-9281-6489ED4B1FBA}
 		{B89E88A9-E7D9-48D3-B60D-93840925FD9B} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
+		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3505C23C-15A7-49BC-9956-59D38CDA667F}
