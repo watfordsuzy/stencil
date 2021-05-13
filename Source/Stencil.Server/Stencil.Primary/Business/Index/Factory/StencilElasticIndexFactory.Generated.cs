@@ -228,6 +228,16 @@ namespace Stencil.Primary.Business.Index
                             .Name(n => n.assigned_to_id)
                             .Index(FieldIndexOption.NotAnalyzed)
                         ).String(m => m
+                            .Name(t => t.affected_products)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.affected_products)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.affected_products.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
                             .Name(t => t.opened_on_utc)
                             .Fields(f => f
                                     .String(s => s.Name(n => n.opened_on_utc)
