@@ -172,6 +172,8 @@
     <Content Include="Plugins\ElasticSync\Stencil.Plugins.ElasticSync.dll" />
     <Content Include="Plugins\Email\PluginConfig.txt" />
     <Content Include="Plugins\Email\Stencil.Plugins.Email.dll" />
+    <Content Include="Plugins\GitHub\PluginConfig.txt" />
+    <Content Include="Plugins\GitHub\Stencil.Plugins.GitHub.dll" />
     <Content Include="Plugins\RestAPI\PluginConfig.txt" />
     <Content Include="Plugins\RestAPI\Stencil.Plugins.RestAPI.dll" />
     <Content Include="Plugins\SystemMonitor\PluginConfig.txt" />

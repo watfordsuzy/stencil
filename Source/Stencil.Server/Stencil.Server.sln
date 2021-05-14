@@ -62,6 +62,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbAndIndexMigrator", "DbAnd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Plugins.RestAPI.UnitTests", "Stencil.Plugins.RestAPI.UnitTests\Stencil.Plugins.RestAPI.UnitTests.csproj", "{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Plugins.GitHub", "Plugins\Stencil.Plugins.GitHub\Stencil.Plugins.GitHub.csproj", "{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Stencil.SDK.Shared\Stencil.SDK.Shared.projitems*{09e84254-b519-4dac-b02d-d8caa97fd4b9}*SharedItemsImports = 4
@@ -151,6 +153,10 @@ Global
 		{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{B89E88A9-E7D9-48D3-B60D-93840925FD9B} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
 		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
 		{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF} = {C1168EAE-1C39-4346-9281-6489ED4B1FBA}
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF} = {0390AEAB-CF3E-4D8D-BDF3-606066A7B557}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3505C23C-15A7-49BC-9956-59D38CDA667F}
