@@ -18,7 +18,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
             var task1 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
@@ -42,7 +42,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
             
@@ -77,7 +77,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
 
@@ -109,7 +109,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             // Throw an exception while executing the first time
             daemon0.ThrowOnceOnExecute = true;
