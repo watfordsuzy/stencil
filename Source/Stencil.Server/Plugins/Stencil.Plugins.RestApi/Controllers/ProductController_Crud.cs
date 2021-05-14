@@ -184,12 +184,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.Product delete = this.API.Direct.Products.GetById(product_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"Product");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.Products.Delete(product_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = product_id.ToString()

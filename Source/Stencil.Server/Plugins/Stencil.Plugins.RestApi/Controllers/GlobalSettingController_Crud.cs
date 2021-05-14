@@ -169,12 +169,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.GlobalSetting delete = this.API.Direct.GlobalSettings.GetById(global_setting_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"GlobalSetting");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.GlobalSettings.Delete(global_setting_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = global_setting_id.ToString()

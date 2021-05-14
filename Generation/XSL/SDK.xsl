@@ -448,12 +448,16 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.<xsl:value-of select="@name" /> delete = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:value-of select="field[1]"/>);
+                if (delete == null)
+                {
+                    return base.Http404(@"<xsl:value-of select="@name" />");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Delete(<xsl:value-of select="field[1]"/>);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = <xsl:value-of select="field[1]"/>.ToString()

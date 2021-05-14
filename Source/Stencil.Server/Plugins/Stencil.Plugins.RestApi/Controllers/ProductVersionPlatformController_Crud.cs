@@ -180,12 +180,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.ProductVersionPlatform delete = this.API.Direct.ProductVersionPlatforms.GetById(product_version_platform_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"ProductVersionPlatform");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.ProductVersionPlatforms.Delete(product_version_platform_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = product_version_platform_id.ToString()

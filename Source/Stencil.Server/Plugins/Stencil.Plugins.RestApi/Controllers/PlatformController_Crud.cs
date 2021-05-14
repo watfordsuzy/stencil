@@ -166,12 +166,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.Platform delete = this.API.Direct.Platforms.GetById(platform_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"Platform");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.Platforms.Delete(platform_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = platform_id.ToString()

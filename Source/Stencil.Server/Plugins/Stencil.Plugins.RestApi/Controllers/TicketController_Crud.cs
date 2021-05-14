@@ -202,12 +202,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.Ticket delete = this.API.Direct.Tickets.GetById(ticket_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"Ticket");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.Tickets.Delete(ticket_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = ticket_id.ToString()

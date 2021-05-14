@@ -166,12 +166,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.Account delete = this.API.Direct.Accounts.GetById(account_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"Account");
+                }
                 
                 this.BeforeDelete(delete);
                 
                 this.API.Direct.Accounts.Delete(account_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = account_id.ToString()
