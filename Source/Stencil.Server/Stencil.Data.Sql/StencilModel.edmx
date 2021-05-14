@@ -86,6 +86,19 @@
           <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
           <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
         </EntityType>
+        <EntityType Name="Commit">
+          <Key>
+            <PropertyRef Name="commit_id" />
+          </Key>
+          <Property Name="commit_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="commit_ref" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="commit_author_name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="commit_author_email" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="commit_message_decoded_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="commit_message" Type="nvarchar(max)" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+        </EntityType>
         <EntityType Name="GlobalSetting">
           <Key>
             <PropertyRef Name="global_setting_id" />
@@ -434,6 +447,7 @@
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AffectedProduct" EntityType="Self.AffectedProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Commit" EntityType="Self.Commit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GlobalSetting" EntityType="Self.GlobalSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Platform" EntityType="Self.Platform" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
@@ -665,6 +679,7 @@
             <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
             <Parameter Name="sync_log" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="dbCommits" EntityType="Stencil.Data.Sql.dbCommit" />
         </EntityContainer>
         <EntityType Name="dbAccount">
           <Key>
@@ -969,6 +984,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="dbCommit">
+          <Key>
+            <PropertyRef Name="commit_id" />
+          </Key>
+          <Property Name="commit_ref" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="commit_author_name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="commit_author_email" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="commit_message_decoded_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="commit_message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="commit_id" Type="Guid" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1215,6 +1243,20 @@
           <FunctionImportMapping FunctionImportName="spAffectedProduct_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spAffectedProduct_HydrateSyncUpdate" />
           <FunctionImportMapping FunctionImportName="spAffectedProduct_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spAffectedProduct_SyncGetInvalid" />
           <FunctionImportMapping FunctionImportName="spAffectedProduct_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spAffectedProduct_SyncUpdate" />
+          <EntitySetMapping Name="dbCommits">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbCommit">
+              <MappingFragment StoreEntitySet="Commit">
+                <ScalarProperty Name="commit_id" ColumnName="commit_id" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="commit_message" ColumnName="commit_message" />
+                <ScalarProperty Name="commit_message_decoded_utc" ColumnName="commit_message_decoded_utc" />
+                <ScalarProperty Name="commit_author_email" ColumnName="commit_author_email" />
+                <ScalarProperty Name="commit_author_name" ColumnName="commit_author_name" />
+                <ScalarProperty Name="commit_ref" ColumnName="commit_ref" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

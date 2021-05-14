@@ -22,6 +22,7 @@
         <EntityTypeShape EntityType="Stencil.Data.Sql.dbAffectedProduct" Width="1.5" PointX="5.25" PointY="15.875" />
         <AssociationConnector Association="Stencil.Data.Sql.FK_AffectedProduct_Product_product_id" />
         <AssociationConnector Association="Stencil.Data.Sql.FK_AffectedProduct_Ticket_ticket_id" />
+        <EntityTypeShape EntityType="Stencil.Data.Sql.dbCommit" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

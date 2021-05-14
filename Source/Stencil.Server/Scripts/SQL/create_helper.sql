@@ -201,6 +201,24 @@ CREATE TABLE [dbo].[AffectedProduct] (
 GO
 
 
+CREATE TABLE [dbo].[Commit] (
+	 [commit_id] uniqueidentifier NOT NULL
+    ,[commit_ref] nvarchar(64) NOT NULL
+    ,[commit_author_name] nvarchar(256) NOT NULL
+    ,[commit_author_email] nvarchar(256) NOT NULL
+    ,[commit_message_decoded_utc] datetimeoffset(0) NULL
+    ,[commit_message] nvarchar(max) NULL
+    ,[created_utc] DATETIMEOFFSET(0) NOT NULL
+    ,[updated_utc] DATETIMEOFFSET(0) NOT NULL
+  ,CONSTRAINT [PK_Commit] PRIMARY KEY CLUSTERED 
+  (
+	  [commit_id] ASC
+  )
+)
+
+GO
+
+
 CREATE TABLE [dbo].[Asset] (
 	 [asset_id] uniqueidentifier NOT NULL
     ,[type] int NOT NULL

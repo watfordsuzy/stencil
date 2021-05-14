@@ -140,6 +140,7 @@
     <Compile Include="Controllers\AffectedProductController_Crud.cs" />
     <Compile Include="Controllers\AssetController_Crud.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CommitController_Crud.cs" />
     <Compile Include="Controllers\GlobalSettingController_Crud.cs" />
     <Compile Include="Controllers\PlatformController.cs" />
     <Compile Include="Controllers\PlatformController_Crud.cs" />

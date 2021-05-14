@@ -72,6 +72,14 @@
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="TicketID" iInvalidateforeignKey="true" foreignKey="Ticket" foreignKeyField="ticket_id">ticket_id</field>
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="ProductID" foreignKey="Product" foreignKeyField="product_id">product_id</field>
   </item>
+  <item name="Commit" friendlyName="Commit" uiDisplayField="commit_ref" trackUpdates="true">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Commit ID">commit_id</field>
+    <field type="string" dbType="nvarchar(64)" isNullable="false" friendlyName="Commit Ref">commit_ref</field>
+    <field type="string" dbType="nvarchar(256)" isNullable="false" friendlyName="Commit Author Name">commit_author_name</field>
+    <field type="string" dbType="nvarchar(256)" isNullable="false" friendlyName="Commit Author Email">commit_author_email</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" friendlyName="Commit Message Decoded At">commit_message_decoded_utc</field>
+    <field type="string" dbType="nvarchar(max)" isNullable="true" friendlyName="Commit Message">commit_message</field>
+  </item>
   <item name="Asset" friendlyName="Asset" uiDisplayField="asset_id" trackUpdates="true">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Asset ID">asset_id</field>
     <field type="AssetType" dbType="int" isNullable="false" friendlyName="Asset Type">type</field>

@@ -36,6 +36,7 @@ namespace Stencil.Data.Sql
         public virtual DbSet<dbTicket> dbTickets { get; set; }
         public virtual DbSet<dbProductVersionPlatform> dbProductVersionPlatforms { get; set; }
         public virtual DbSet<dbAffectedProduct> dbAffectedProducts { get; set; }
+        public virtual DbSet<dbCommit> dbCommits { get; set; }
     
         public virtual ObjectResult<Nullable<System.Guid>> spAccount_HydrateSyncGetInvalid(Nullable<int> allowableSecondsToProcessIndex, string sync_agent)
         {

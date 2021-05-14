@@ -53,6 +53,10 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<IAffectedProductBusiness>(); }
         }
+        public ICommitBusiness Commits
+        {
+            get { return this.IFoundation.Resolve<ICommitBusiness>(); }
+        }
         public IAssetBusiness Assets
         {
             get { return this.IFoundation.Resolve<IAssetBusiness>(); }

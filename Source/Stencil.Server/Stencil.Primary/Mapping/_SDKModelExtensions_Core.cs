@@ -301,6 +301,41 @@ namespace Stencil.Primary
         
         
         
+        public static Commit ToDomainModel(this SDK.Models.Commit entity, Commit destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Domain.Commit(); }
+                Commit result = am.Mapper.Map<SDK.Models.Commit, Commit>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static SDK.Models.Commit ToSDKModel(this Commit entity, SDK.Models.Commit destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new SDK.Models.Commit(); }
+                SDK.Models.Commit result = am.Mapper.Map<Commit, SDK.Models.Commit>(entity, destination);
+                return result;
+            }
+            return null;
+        }
+        public static List<SDK.Models.Commit> ToSDKModel(this IEnumerable<Commit> entities)
+        {
+            List<SDK.Models.Commit> result = new List<SDK.Models.Commit>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToSDKModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static Asset ToDomainModel(this SDK.Models.Asset entity, Asset destination = null)
         {
             if (entity != null)

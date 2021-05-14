@@ -4,6 +4,8 @@ using Stencil.Primary;
 using Stencil.Primary.Daemons;
 using System;
 
+using dm = Stencil.Domain;
+
 namespace Stencil.Plugins.GitHub.Workers
 {
     public class GitHubPushEventWorker : WorkerBase<GitHubPushEvent>
@@ -19,12 +21,9 @@ namespace Stencil.Plugins.GitHub.Workers
             : base(iFoundation, WORKER_NAME)
         {
             this.API = iFoundation.Resolve<StencilAPI>();
-            this.CommitMessageParser = iFoundation.Resolve<ICommitMessageParser>();
         }
 
         public StencilAPI API { get; set; }
-
-        public ICommitMessageParser CommitMessageParser { get; set; }
 
         protected override void ProcessRequest(GitHubPushEvent request)
         {
@@ -38,10 +37,13 @@ namespace Stencil.Plugins.GitHub.Workers
 
                 foreach (GitHubCommit commit in request.commits)
                 {
-                    foreach (Guid ticket_id in this.CommitMessageParser.FindTicketIdCandidates(commit.message))
+                    this.API.Direct.Commits.Insert(new dm.Commit
                     {
-                        // TODO: transition a ticket to InProgress once the first commit hits
-                    }
+                        commit_ref = commit.id,
+                        commit_author_name = commit.author?.name ?? "<unknown>",
+                        commit_author_email = commit.author?.email ?? "<unknown>",
+                        commit_message = commit.message,
+                    });
                 }
             });
         }

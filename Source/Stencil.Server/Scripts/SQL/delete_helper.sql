@@ -12,6 +12,8 @@
 
 GO
 
+GO
+
 ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Ticket_ticket_id]
 
 ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Product_product_id]
@@ -63,6 +65,9 @@ GO
 -- <Tables> --------------------------------------------------------------------
 
 DROP TABLE [dbo].[Asset]
+GO
+
+DROP TABLE [dbo].[Commit]
 GO
 
 DROP TABLE [dbo].[AffectedProduct]

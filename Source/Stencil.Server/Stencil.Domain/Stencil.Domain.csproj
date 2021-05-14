@@ -70,6 +70,7 @@
     <Compile Include="Domain\Asset.cs" />
     <Compile Include="Domain\AssetType.cs" />
     <Compile Include="Domain\Bitness.cs" />
+    <Compile Include="Domain\Commit.cs" />
     <Compile Include="Domain\Dependency.cs" />
     <Compile Include="Domain\GlobalSetting.cs" />
     <Compile Include="Domain\Platform.cs" />

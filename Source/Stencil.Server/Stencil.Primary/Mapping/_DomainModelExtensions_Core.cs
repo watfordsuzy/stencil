@@ -284,6 +284,39 @@ namespace Stencil.Primary
         
         
         
+        public static dbCommit ToDbModel(this Commit entity, dbCommit destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbCommit(); }
+                return am.Mapper.Map<Commit, dbCommit>(entity, destination);
+            }
+            return null;
+        }
+        public static Commit ToDomainModel(this dbCommit entity, Commit destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new Commit(); }
+                return am.Mapper.Map<dbCommit, Commit>(entity, destination);
+            }
+            return null;
+        }
+        public static List<Commit> ToDomainModel(this IEnumerable<dbCommit> entities)
+        {
+            List<Commit> result = new List<Commit>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbAsset ToDbModel(this Asset entity, dbAsset destination = null)
         {
             if (entity != null)

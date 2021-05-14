@@ -35,6 +35,7 @@ namespace Stencil.Primary.Foundation
             foundation.Container.RegisterType<IProductVersionPlatformBusiness, ProductVersionPlatformBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<ITicketBusiness, TicketBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAffectedProductBusiness, AffectedProductBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ICommitBusiness, CommitBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAssetBusiness, AssetBusiness>(new HttpRequestLifetimeManager());
             
             

@@ -155,6 +155,20 @@ namespace Stencil.Primary.Business.Integration
                 this.API.Integration.Synchronization.AgitateSyncDaemon();
             });
         }
+        public virtual void CommitInvalidated(Dependency affectedDependencies, Guid commit_id)
+        {
+            base.ExecuteMethod("CommitInvalidated", delegate ()
+            {
+                DependencyWorker<Commit>.EnqueueRequest(this.IFoundation, affectedDependencies, commit_id, this.ProcessCommitInvalidation);
+            });
+        }
+        protected virtual void ProcessCommitInvalidation(Dependency dependencies, Guid commit_id)
+        {
+            base.ExecuteMethod("ProcessCommitInvalidation", delegate ()
+            {
+                
+            });
+        }
         public virtual void AssetInvalidated(Dependency affectedDependencies, Guid asset_id)
         {
             base.ExecuteMethod("AssetInvalidated", delegate ()
