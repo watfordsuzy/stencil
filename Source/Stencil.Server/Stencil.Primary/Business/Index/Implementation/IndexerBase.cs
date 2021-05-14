@@ -75,7 +75,7 @@ namespace Stencil.Primary.Business.Index.Implementation
         }
         public virtual IndexResult UpdateDocumentPartial(string id, object partialAnonymousObject)
         {
-            return base.ExecuteFunction("UpdateDocumentPartial", delegate ()
+            return base.ExecuteFunctionWrite("UpdateDocumentPartial", delegate ()
             {
                 try
                 {
