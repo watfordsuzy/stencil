@@ -18,10 +18,35 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
 
-            var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
-            var task1 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
+            long taskCount = 0;
+            var task0 = Task.Run(() =>
+            {
+                Interlocked.Increment(ref taskCount);
+                daemon0.Execute(_foundation.Object, cts.Token);
+            });
+            var task1 = Task.Run(() =>
+            {
+                Interlocked.Increment(ref taskCount);
+                daemon0.Execute(_foundation.Object, cts.Token);
+            });
+
+            //
+            // Wait for the two tasks to actually start
+            //
+            // CAW: we need to do this for the test, because of a race
+            //      condition introduced spawning tasks.
+            //
+            //      If task0 launches, waits, and receives the GO below
+            //      before task1 gets off the ground. task1 will be stuck
+            //      on its own Wait and Task.WhenAll will never complete
+            //      before the cancellation token throws.
+            //
+            while (2 != Interlocked.Read(ref taskCount))
+            {
+                await Task.Yield();
+            }
 
             // Allow only one of the daemons to continue (if they are unexpectedly reentrant)
             daemon0.Go();
@@ -42,7 +67,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
 
             var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
             
@@ -77,7 +102,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
 
             var task0 = Task.Run(() => daemon0.Execute(_foundation.Object, cts.Token));
 
@@ -109,7 +134,7 @@ namespace Stencil.Primary.Daemons
 
             // Don't let this test go on forever
             using var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
 
             // Throw an exception while executing the first time
             daemon0.ThrowOnceOnExecute = true;
