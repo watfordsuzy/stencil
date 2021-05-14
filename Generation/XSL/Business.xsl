@@ -171,6 +171,9 @@ namespace <xsl:value-of select="../@projectName"/>.Primary.Business.Direct.Imple
                         update<xsl:value-of select="../@name"/>.<xsl:value-of select="text()"/> = found.<xsl:value-of select="text()"/>;// prevent priority update
                         </xsl:for-each>
                         found = update<xsl:value-of select="@name"/>.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         <xsl:if test="@useIndex='true'">found.InvalidateSync(this.DefaultAgent, "updated");</xsl:if>
                         db.SaveChanges();
                         
@@ -551,6 +554,7 @@ namespace <xsl:value-of select="../@projectName"/>.Primary.Business.Direct.Imple
         partial void PerformIntercept(InterceptArgs&lt;<xsl:value-of select="@name"/>&gt; args);
         partial void PreProcess(<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, bool forInsert);
         partial void AfterInsertPersisted(<xsl:value-of select="../@projectName"/>Context db, db<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
+        partial void BeforeUpdatePersisted(db<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, <xsl:value-of select="@name"/> previous);
         partial void AfterUpdatePersisted(<xsl:value-of select="../@projectName"/>Context db, db<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, <xsl:value-of select="@name"/> previous);
         partial void AfterDeletePersisted(<xsl:value-of select="../@projectName"/>Context db, db<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
         <xsl:if test="@useIndex='true'">partial void AfterUpdateIndexed(<xsl:value-of select="../@projectName"/>Context db, db<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);

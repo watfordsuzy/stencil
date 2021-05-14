@@ -100,6 +100,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         Platform previous = found.ToDomainModel();
                         
                         found = updatePlatform.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         found.InvalidateSync(this.DefaultAgent, "updated");
                         db.SaveChanges();
                         
@@ -274,6 +277,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<Platform> args);
         partial void PreProcess(Platform platform, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbPlatform platform);
+        partial void BeforeUpdatePersisted(dbPlatform platform, Platform previous);
         partial void AfterUpdatePersisted(StencilContext db, dbPlatform platform, Platform previous);
         partial void AfterDeletePersisted(StencilContext db, dbPlatform platform);
         partial void AfterUpdateIndexed(StencilContext db, dbPlatform platform);

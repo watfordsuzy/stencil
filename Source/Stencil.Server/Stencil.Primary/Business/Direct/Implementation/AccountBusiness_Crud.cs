@@ -100,6 +100,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         Account previous = found.ToDomainModel();
                         
                         found = updateAccount.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         found.InvalidateSync(this.DefaultAgent, "updated");
                         db.SaveChanges();
                         
@@ -318,6 +321,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<Account> args);
         partial void PreProcess(Account account, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbAccount account);
+        partial void BeforeUpdatePersisted(dbAccount account, Account previous);
         partial void AfterUpdatePersisted(StencilContext db, dbAccount account, Account previous);
         partial void AfterDeletePersisted(StencilContext db, dbAccount account);
         partial void AfterUpdateIndexed(StencilContext db, dbAccount account);

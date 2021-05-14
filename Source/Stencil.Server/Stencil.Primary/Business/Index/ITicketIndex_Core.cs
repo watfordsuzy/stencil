@@ -26,5 +26,6 @@ namespace Stencil.Primary.Business.Index
         ListResult<Ticket> GetByAssignedToID(Guid account_id, int skip, int take, string order_by = "", bool descending = false);
         
         ListResult<Ticket> Find(int skip, int take, string keyword = "", string order_by = "", bool descending = false, Guid? reported_by_id = null, Guid? assigned_to_id = null);
+       
     }
 }

@@ -2,7 +2,9 @@ using Microsoft.Practices.Unity;
 using Moq;
 using Stencil.Data.Sql;
 using Stencil.Primary.Business.Index;
+using Stencil.Primary.Synchronization;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 using dm = Stencil.Domain;
@@ -266,6 +268,177 @@ namespace Stencil.Primary.Business.Direct.Implementation
             Assert.Equal(_product0.product_owner_id, ticket.assigned_to_id);
 
             ticketIndex.Verify(tt => tt.UpdateAssignedTo(_ticket0.ticket_id, _product0.product_owner_id), Times.Once());
+        }
+
+        public static IEnumerable<object[]> Insert_Sets_Specific_Properties_TestData()
+        {
+            foreach (var ticketStatus in Enum.GetValues(typeof(dm.TicketStatus)))
+            {
+                foreach (var ticketType in Enum.GetValues(typeof(dm.TicketType)))
+                {
+                    yield return new object[] { ticketStatus, ticketType, };
+                }
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(Insert_Sets_Specific_Properties_TestData))]
+        public void Insert_Sets_Specific_Properties(dm.TicketStatus ticketStatus, dm.TicketType ticketType)
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketSynchronizer = new Mock<ITicketSynchronizer>();
+            _container.RegisterInstance<ITicketSynchronizer>(ticketSynchronizer.Object);
+
+            DateTime now = DateTime.UtcNow;
+
+            // When inserting a new ticket, the following properties should be overridden:
+            //    - ticket_status => TicketStatus.Open
+            //    - opened_on_utc => DateTime.UtcNow
+            //    - closed_on_utc => null
+            //
+            // The rest should be left as-is.
+            var ticket = new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                closed_on_utc = now.Subtract(TimeSpan.FromDays(10)),
+                opened_on_utc = now.Subtract(TimeSpan.FromDays(100)),
+                ticket_status = ticketStatus,
+                ticket_type = ticketType,
+                reported_by_id = _reportedByAccount.account_id,
+                assigned_to_id = _assignedToAccount.account_id,
+            };
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            dm.Ticket insertedTicket = ticketBusiness.Insert(ticket);
+            Assert.NotEqual(Guid.Empty, insertedTicket.ticket_id);
+
+            Assert.Equal(ticket.ticket_title, insertedTicket.ticket_title);
+            Assert.Equal(ticket.ticket_description, insertedTicket.ticket_description);
+            Assert.Null(insertedTicket.closed_on_utc);
+            Assert.True(insertedTicket.opened_on_utc >= now);
+            Assert.Equal(dm.TicketStatus.Open, insertedTicket.ticket_status);
+            Assert.Equal(ticket.ticket_type, insertedTicket.ticket_type);
+            Assert.Equal(ticket.reported_by_id, insertedTicket.reported_by_id);
+            Assert.Equal(ticket.assigned_to_id, insertedTicket.assigned_to_id);
+        }
+
+        [Fact]
+        public void Update_To_Closed_Sets_ClosedOnDate()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketSynchronizer = new Mock<ITicketSynchronizer>();
+            _container.RegisterInstance<ITicketSynchronizer>(ticketSynchronizer.Object);
+
+            DateTime now = DateTime.UtcNow;
+
+            // When we close this ticket its closed on date should be after `now`
+            var ticket = new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                ticket_status = dm.TicketStatus.Open,
+                ticket_type = dm.TicketType.TechDebt,
+                reported_by_id = _reportedByAccount.account_id,
+            };
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            // Setup the system to have an Open ticket we can close
+            dm.Ticket insertedTicket = ticketBusiness.Insert(ticket);
+
+            // Close the ticket
+            insertedTicket.ticket_status = dm.TicketStatus.Closed;
+
+            dm.Ticket updatedTicket = ticketBusiness.Update(insertedTicket);
+
+            Assert.Equal(dm.TicketStatus.Closed, updatedTicket.ticket_status);
+            Assert.True(updatedTicket.closed_on_utc >= now);
+        }
+
+        [Fact]
+        public void Update_If_Already_Closed_Leaves_ClosedOnDate_Alone()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketSynchronizer = new Mock<ITicketSynchronizer>();
+            _container.RegisterInstance<ITicketSynchronizer>(ticketSynchronizer.Object);
+
+            DateTime now = DateTime.UtcNow;
+            var ticket = new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                ticket_status = dm.TicketStatus.Open,
+                ticket_type = dm.TicketType.TechDebt,
+                reported_by_id = _reportedByAccount.account_id,
+            };
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            dm.Ticket insertedTicket = ticketBusiness.Insert(ticket);
+
+            insertedTicket.ticket_status = dm.TicketStatus.Closed;
+            
+            dm.Ticket closedTicket = ticketBusiness.Update(insertedTicket);
+            Assert.NotNull(closedTicket.closed_on_utc);
+
+            DateTime originalClosedOn = closedTicket.closed_on_utc.Value;
+
+            // Update the closed on date to something else as well as
+            // updating a different property.
+            closedTicket.closed_on_utc = DateTime.UtcNow.AddDays(30);
+            closedTicket.assigned_to_id = _assignedToAccount.account_id;
+            dm.Ticket updatedTicket = ticketBusiness.Update(closedTicket);
+
+            // The closed on date should not have changed
+            Assert.Equal(originalClosedOn, updatedTicket.closed_on_utc);
+            Assert.Equal(closedTicket.assigned_to_id, updatedTicket.assigned_to_id);
+        }
+
+        [Fact]
+        public void Update_To_Reopened_Clears_ClosedOnDate()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketSynchronizer = new Mock<ITicketSynchronizer>();
+            _container.RegisterInstance<ITicketSynchronizer>(ticketSynchronizer.Object);
+
+            DateTime now = DateTime.UtcNow;
+            var ticket = new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                ticket_status = dm.TicketStatus.Open,
+                ticket_type = dm.TicketType.TechDebt,
+                reported_by_id = _reportedByAccount.account_id,
+            };
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            dm.Ticket insertedTicket = ticketBusiness.Insert(ticket);
+
+            insertedTicket.ticket_status = dm.TicketStatus.Closed;
+
+            dm.Ticket closedTicket = ticketBusiness.Update(insertedTicket);
+            Assert.NotNull(closedTicket.closed_on_utc);
+
+            // Re-open the ticket
+            closedTicket.ticket_status = dm.TicketStatus.Open;
+            closedTicket.assigned_to_id = _assignedToAccount.account_id;
+            dm.Ticket reopenedTicket = ticketBusiness.Update(closedTicket);
+
+            // The closed on date should not have changed
+            Assert.Equal(dm.TicketStatus.Open, reopenedTicket.ticket_status);
+            Assert.Null(reopenedTicket.closed_on_utc);
+            Assert.Equal(closedTicket.assigned_to_id, reopenedTicket.assigned_to_id);
         }
     }
 }

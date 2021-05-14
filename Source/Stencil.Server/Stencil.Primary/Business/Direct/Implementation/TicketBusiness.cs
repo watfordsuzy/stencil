@@ -1,4 +1,5 @@
 ﻿using Stencil.Data.Sql;
+using Stencil.Domain;
 using System;
 using System.Linq;
 using dm = Stencil.Domain;
@@ -7,6 +8,44 @@ namespace Stencil.Primary.Business.Direct.Implementation
 {
     public partial class TicketBusiness : ITicketBusiness
     {
+        partial void PreProcess(Ticket ticket, bool forInsert)
+        {
+            if (forInsert)
+            {
+                // Brand new tickets have the following properties automatically set,
+                // because it does not make sense for a user to update these.
+                ticket.opened_on_utc = DateTime.UtcNow;
+                ticket.closed_on_utc = null;
+                ticket.ticket_status = TicketStatus.Open;
+            }
+            else
+            {
+                if (ticket.ticket_status != TicketStatus.Closed)
+                {
+                    // Ensure open tickets do not have a closed on date set during updates.
+                    ticket.closed_on_utc = null;
+                }
+            }
+        }
+
+        partial void BeforeUpdatePersisted(dbTicket ticket, Ticket previous)
+        {
+            // Ensure we do not reset the closed on date
+            if (previous.ticket_status == TicketStatus.Closed
+             && ticket.ticket_status == (int)TicketStatus.Closed
+             && ticket.closed_on_utc != previous.closed_on_utc)
+            {
+                ticket.closed_on_utc = previous.closed_on_utc;
+            }
+
+            // Set the closed on date for tickets that were just closed
+            if (previous.ticket_status != TicketStatus.Closed
+             && ticket.ticket_status == (int)TicketStatus.Closed)
+            {
+                ticket.closed_on_utc = DateTime.UtcNow;
+            }
+        }
+
         /// <inheritdoc/>
         public bool CanAccountUpdateTicket(dm.Account account, Guid ticket_id)
         {

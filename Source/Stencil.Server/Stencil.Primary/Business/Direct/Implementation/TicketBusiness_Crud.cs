@@ -100,6 +100,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         Ticket previous = found.ToDomainModel();
                         
                         found = updateTicket.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         found.InvalidateSync(this.DefaultAgent, "updated");
                         db.SaveChanges();
                         
@@ -326,6 +329,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<Ticket> args);
         partial void PreProcess(Ticket ticket, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbTicket ticket);
+        partial void BeforeUpdatePersisted(dbTicket ticket, Ticket previous);
         partial void AfterUpdatePersisted(StencilContext db, dbTicket ticket, Ticket previous);
         partial void AfterDeletePersisted(StencilContext db, dbTicket ticket);
         partial void AfterUpdateIndexed(StencilContext db, dbTicket ticket);

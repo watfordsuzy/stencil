@@ -5,6 +5,7 @@ using Codeable.Foundation.Core;
 using Microsoft.Practices.Unity;
 using Moq;
 using Stencil.Data.Sql;
+using Stencil.Primary.Business.Integration;
 using Stencil.Primary.Mapping;
 using Stencil.Primary.UnitTests;
 using System;
@@ -20,6 +21,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         protected readonly Mock<IStencilContextFactory> _dataContextFactory;
         protected readonly UnityContainer _container;
         protected readonly Mock<IFoundation> _foundation;
+        protected readonly Mock<IDependencyCoordinator> _dependencyCoordinator;
 
         protected BusinessTestBase()
         {
@@ -32,10 +34,12 @@ namespace Stencil.Primary.Business.Direct.Implementation
             _dataContextFactory = new Mock<IStencilContextFactory>();
             _dataContextFactory.Setup(dd => dd.CreateContext())
                                .Returns(_context);
+            _dependencyCoordinator = new Mock<IDependencyCoordinator>();
 
             _container.RegisterInstance<IHandleExceptionProvider>(_exceptionHandler.Object);
             _container.RegisterInstance<IHandleExceptionProvider>(Assumptions.SWALLOWED_EXCEPTION_HANDLER, _exceptionHandler.Object);
             _container.RegisterInstance<IStencilContextFactory>(_dataContextFactory.Object);
+            _container.RegisterInstance<IDependencyCoordinator>(_dependencyCoordinator.Object);
 
             _foundation = new Mock<IFoundation>();
             _foundation.Setup(ff => ff.Container)

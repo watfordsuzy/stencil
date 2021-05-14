@@ -100,6 +100,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         AffectedProduct previous = found.ToDomainModel();
                         
                         found = updateAffectedProduct.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         found.InvalidateSync(this.DefaultAgent, "updated");
                         db.SaveChanges();
                         
@@ -263,6 +266,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<AffectedProduct> args);
         partial void PreProcess(AffectedProduct affectedproduct, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbAffectedProduct affectedproduct);
+        partial void BeforeUpdatePersisted(dbAffectedProduct affectedproduct, AffectedProduct previous);
         partial void AfterUpdatePersisted(StencilContext db, dbAffectedProduct affectedproduct, AffectedProduct previous);
         partial void AfterDeletePersisted(StencilContext db, dbAffectedProduct affectedproduct);
         partial void AfterUpdateIndexed(StencilContext db, dbAffectedProduct affectedproduct);

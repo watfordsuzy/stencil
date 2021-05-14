@@ -91,6 +91,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         GlobalSetting previous = found.ToDomainModel();
                         
                         found = updateGlobalSetting.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         
                         db.SaveChanges();
                         
@@ -193,6 +196,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<GlobalSetting> args);
         partial void PreProcess(GlobalSetting globalsetting, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbGlobalSetting globalsetting);
+        partial void BeforeUpdatePersisted(dbGlobalSetting globalsetting, GlobalSetting previous);
         partial void AfterUpdatePersisted(StencilContext db, dbGlobalSetting globalsetting, GlobalSetting previous);
         partial void AfterDeletePersisted(StencilContext db, dbGlobalSetting globalsetting);
         
