@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using Stencil.SDK.Models;
 using Stencil.Web.Security;
 using dm = Stencil.Domain;
@@ -24,7 +25,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 dm.Account account = this.GetCurrentAccount();
                 if (!this.API.Direct.Tickets.CanAccountUpdateTicket(account, insert.ticket_id))
                 {
-                    // If the user cannot inherently update the account, require them to be an admin
+                    // If the user cannot inherently update the ticket, require them to be an admin
                     this.ValidateAdmin();
                 }
             });
@@ -34,7 +35,12 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             base.ExecuteMethod(nameof(BeforeDelete), delegate ()
             {
-                this.ValidateAdmin();
+                dm.Account account = this.GetCurrentAccount();
+                if (!this.API.Direct.Tickets.CanAccountDeleteTicket(account, delete.ticket_id))
+                {
+                    // If the user cannot inherently delete the ticket, require them to be an admin
+                    this.ValidateAdmin();
+                }
             });
         }
     }

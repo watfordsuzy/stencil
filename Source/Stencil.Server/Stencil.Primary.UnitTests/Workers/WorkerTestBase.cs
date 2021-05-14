@@ -8,10 +8,11 @@ using Moq;
 using Stencil.Common.Configuration;
 using Stencil.Primary.Mapping;
 using Stencil.Primary.UnitTests;
+using System;
 
 namespace Stencil.Primary.Workers
 {
-    public abstract class WorkerTestBase
+    public abstract class WorkerTestBase : IDisposable
     {
         protected readonly Mock<IHandleExceptionProvider> _exceptionHandler;
         protected readonly UnityContainer _container;
