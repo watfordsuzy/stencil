@@ -1,5 +1,6 @@
 ﻿using Stencil.Primary.Workers;
 using Stencil.Primary.Workers.Models;
+using Stencil.Web.Security;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -12,13 +13,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
 {
     public partial class AffectedProductController
     {
-        partial void BeforeUpdate(sdk.AffectedProduct affectedproduct)
+        partial void BeforeInsert(sdk.AffectedProduct affectedproduct)
         {
-            string message = "Method not allowed";
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
+            base.ExecuteMethod(nameof(BeforeInsert), delegate ()
             {
-                Content = new StringContent(message),
-                ReasonPhrase = message,
+                dm.Account account = this.GetCurrentAccount();
+                if (!this.API.Direct.Tickets.CanAccountUpdateTicket(account, affectedproduct.ticket_id))
+                {
+                    // If the user cannot inherently update the ticket, require them to be an admin
+                    this.ValidateAdmin();
+                }
             });
         }
 
@@ -36,6 +40,32 @@ namespace Stencil.Plugins.RestAPI.Controllers
                             ticket_id = inserted.ticket_id,
                             product_id = inserted.product_id,
                         });
+                }
+            });
+        }
+
+        partial void BeforeUpdate(sdk.AffectedProduct affectedproduct)
+        {
+            base.ExecuteMethod(nameof(BeforeUpdate), (Action)delegate ()
+            {
+                string message = "Method not allowed";
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
+                {
+                    Content = new StringContent(message),
+                    ReasonPhrase = message,
+                });
+            });
+        }
+
+        partial void BeforeDelete(dm.AffectedProduct delete)
+        {
+            base.ExecuteMethod(nameof(BeforeDelete), delegate ()
+            {
+                dm.Account account = this.GetCurrentAccount();
+                if (!this.API.Direct.Tickets.CanAccountUpdateTicket(account, delete.ticket_id))
+                {
+                    // If the user cannot inherently update the ticket, require them to be an admin
+                    this.ValidateAdmin();
                 }
             });
         }

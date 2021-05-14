@@ -47,6 +47,15 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return Assert.IsType<TContent>(objectContent.Value);
         }
 
+        public static HttpResponseMessage IsMethodNotAllowed(this object response)
+        {
+            var httpResponse = response.IsFailure();
+
+            Assert.Equal(System.Net.HttpStatusCode.MethodNotAllowed, httpResponse.StatusCode);
+
+            return httpResponse;
+        }
+
         public static HttpResponseMessage IsUnauthorizedResponse(this object response)
         {
             var httpResponse = response.IsFailure();

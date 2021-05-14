@@ -14,11 +14,15 @@ using System;
 using dm = Stencil.Domain;
 using Stencil.Web.Controllers;
 using Stencil.Web.Security;
+using System.Collections.Concurrent;
 
 namespace Stencil.Plugins.RestAPI.Controllers
 {
-    public abstract class ControllerTestBase : IDisposable
+    public abstract class ControllerTestBase<TController> : IDisposable
+        where TController : RestApiBaseController
     {
+        private readonly ConcurrentDictionary<string, IDaemonTask> _tasks = new ConcurrentDictionary<string, IDaemonTask>();
+
         protected readonly Mock<IHandleExceptionProvider> _exceptionHandler;
         protected readonly UnityContainer _container;
         protected readonly Mock<IFoundation> _foundation;
@@ -36,8 +40,20 @@ namespace Stencil.Plugins.RestAPI.Controllers
             _exceptionHandler = new Mock<IHandleExceptionProvider>();
             _settingsResolver = new Mock<ISettingsResolver>();
             _daemonManager = new Mock<IDaemonManager>();
+            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(It.IsAny<string>()))
+                          .Returns<string>(workerName =>
+                          {
+                              _tasks.TryGetValue(workerName, out IDaemonTask task);
+                              return task;
+                          });
+            _daemonManager.Setup(dd => dd.RegisterDaemon(It.IsAny<DaemonConfig>(), It.IsAny<IDaemonTask>(), It.IsAny<bool>()))
+                          .Callback<DaemonConfig, IDaemonTask, bool>((config, task, autoStart) =>
+                          {
+                              _tasks.TryAdd(config.InstanceName, task);
+                          });
 
             _container = new UnityContainer();
+            _container.RegisterInstance<IFoundation>(_foundation.Object);
             _container.RegisterInstance<IHandleExceptionProvider>(_exceptionHandler.Object);
             _container.RegisterInstance<IHandleExceptionProvider>(Assumptions.SWALLOWED_EXCEPTION_HANDLER, _exceptionHandler.Object);
             _container.RegisterInstance<ISettingsResolver>(_settingsResolver.Object);
@@ -68,27 +84,29 @@ namespace Stencil.Plugins.RestAPI.Controllers
             Mapper.AddProfile<PrimaryMappingProfile>();
         }
 
-        protected TicketController CreateGet(string route, dm.Account account = null)
+        protected TController CreateGet(string route, dm.Account account = null)
             => CreateController(route, account, System.Net.Http.HttpMethod.Get);
 
-        protected TicketController CreatePost(string route, dm.Account account = null)
+        protected TController CreatePost(string route, dm.Account account = null)
             => CreateController(route, account, System.Net.Http.HttpMethod.Post);
 
-        protected TicketController CreatePut(string route, dm.Account account = null)
+        protected TController CreatePut(string route, dm.Account account = null)
             => CreateController(route, account, System.Net.Http.HttpMethod.Put);
 
-        protected TicketController CreateDelete(string route, dm.Account account = null)
+        protected TController CreateDelete(string route, dm.Account account = null)
             => CreateController(route, account, System.Net.Http.HttpMethod.Delete);
 
-        protected TicketController CreateController(string route, dm.Account account = null, System.Net.Http.HttpMethod method = null)
+        protected abstract TController CreateController();
+
+        protected TController CreateController(string route, dm.Account account = null, System.Net.Http.HttpMethod method = null)
         {
-            var controller = new TicketController(_foundation.Object);
+            var controller = CreateController();
             SetCurrentRequest(controller, route, method);
             SetCurrentAccount(controller, account);
             return controller;
         }
 
-        protected void SetCurrentRequest(RestApiBaseController controller, string route, System.Net.Http.HttpMethod method = null)
+        protected void SetCurrentRequest(TController controller, string route, System.Net.Http.HttpMethod method = null)
         {
             controller.Configuration = new System.Web.Http.HttpConfiguration
             {
@@ -100,7 +118,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
             };
         }
 
-        protected void SetCurrentAccount(RestApiBaseController controller, dm.Account account)
+        protected void SetCurrentAccount(TController controller, dm.Account account)
         {
             controller.Request.Properties[ApiKeyHttpAuthorize.CURRENT_ACCOUNT_HTTP_CONTEXT_KEY] = account;
         }

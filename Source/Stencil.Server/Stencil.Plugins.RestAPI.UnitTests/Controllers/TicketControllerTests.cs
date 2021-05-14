@@ -5,7 +5,6 @@ using Stencil.Primary.Business.Direct;
 using Stencil.Primary.Business.Index;
 using Stencil.SDK;
 using System;
-using System.Net.Http;
 using System.Web.Http;
 using Xunit;
 
@@ -14,8 +13,10 @@ using sdk = Stencil.SDK.Models;
 
 namespace Stencil.Plugins.RestAPI.Controllers
 {
-    public class TicketControllerTests : ControllerTestBase
+    public class TicketControllerTests : ControllerTestBase<TicketController>
     {
+        protected override TicketController CreateController() => new(_foundation.Object);
+
         [Fact]
         public void Create_Sets_ReportedBy_To_Current_Account()
         {
