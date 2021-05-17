@@ -9,6 +9,8 @@ namespace Stencil.Plugins.GitHub.Integration
     {
         public bool Success { get; }
 
+        public string EventId { get; }
+
         public string EventName { get; }
 
         public byte[] Payload { get; }
@@ -18,11 +20,12 @@ namespace Stencil.Plugins.GitHub.Integration
             Success = false;
         }
 
-        public GitHubWebHookValidationResult(string eventName, byte[] payload)
+        public GitHubWebHookValidationResult(string eventId, string eventName, byte[] payload)
         {
             Success = true;
-            EventName = eventName;
-            Payload = payload;
+            EventId = eventId ?? throw new ArgumentNullException(nameof(eventId));
+            EventName = eventName ?? throw new ArgumentNullException(nameof(eventName));
+            Payload = payload ?? throw new ArgumentNullException(nameof(payload));
         }
 
         public static GitHubWebHookValidationResult Failed()

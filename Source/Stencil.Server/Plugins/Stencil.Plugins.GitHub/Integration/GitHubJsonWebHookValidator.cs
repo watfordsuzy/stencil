@@ -1,13 +1,12 @@
 ﻿using Codeable.Foundation.Common;
+using Codeable.Foundation.Common.Aspect;
 using Codeable.Foundation.Core.Caching;
 using Codeable.Foundation.Core.Unity;
-using Newtonsoft.Json;
 using Stencil.Common;
 using Stencil.Common.Configuration;
 using Stencil.Primary;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Stencil.Plugins.GitHub.Integration
 {
-    public class GitHubJsonWebHookValidator : IGitHubWebHookValidator
+    public class GitHubJsonWebHookValidator : ChokeableClass, IGitHubWebHookValidator
     {
         private const string SignaturePrefix = "sha256=";
 
@@ -46,65 +45,55 @@ namespace Stencil.Plugins.GitHub.Integration
         protected virtual AspectCache Cache { get; set; }
 
         public GitHubJsonWebHookValidator(IFoundation foundation)
+            : base(foundation)
         {
             _foundation = foundation ?? throw new ArgumentNullException(nameof(foundation));
 
-            this.Cache = new AspectCache(nameof(GitHubJsonWebHookValidator), foundation, new ExpireStaticLifetimeManager($"{nameof(GitHubJsonWebHookValidator)}.Life15", TimeSpan.FromMinutes(15), false));
+            this.Cache = new AspectCache(
+                nameof(GitHubJsonWebHookValidator),
+                foundation,
+                new ExpireStaticLifetimeManager($"{nameof(GitHubJsonWebHookValidator)}.Life15", TimeSpan.FromMinutes(15), false));
         }
 
-        public async Task<GitHubWebHookValidationResult> ValidateEventPayloadAsync(HttpRequestMessage request)
+        public Task<GitHubWebHookValidationResult> ValidateEventPayloadAsync(HttpRequestMessage request)
         {
-            var result = GitHubWebHookValidationResult.Failed();
-
-            string eventName = request.Headers.GetValues("X-GitHub-Event").FirstOrDefault();
-            string signatureWithPrefix = request.Headers.GetValues("X-Hub-Signature-256").FirstOrDefault();
-            string delivery = request.Headers.GetValues("X-GitHub-Delivery").FirstOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(eventName))
+            return base.ExecuteFunction(nameof(ValidateEventPayloadAsync), async delegate ()
             {
-                return result;
-            }
-
-            if (string.IsNullOrWhiteSpace(signatureWithPrefix))
-            {
-                return result;
-            }
-
-            if (string.IsNullOrWhiteSpace(delivery))
-            {
-                return result;
-            }
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-
-                // Save the request body to a memory stream so we can calculate
-                // the hash of the body before we actually deserialize the payload.
-                await request.Content.CopyToAsync(ms);
-
-                ms.Position = 0;
-
-                string signatureWithPrefixString = signatureWithPrefix;
-                if (signatureWithPrefixString.StartsWith(SignaturePrefix, StringComparison.OrdinalIgnoreCase))
+                if (!GitHubEventHeaders.TryParse(request, out GitHubEventHeaders headers))
                 {
-                    string signature = signatureWithPrefixString.Substring("sha256=".Length);
-                    byte[] secret = Encoding.ASCII.GetBytes(GitHubSecret);
-                    using (var hmac = new HMACSHA256(secret))
-                    {
-                        byte[] hash = hmac.ComputeHash(ms);
-                        string hashString = ToHexString(hash);
-                        if (hashString.Equals(signature))
-                        {
-                            ms.Position = 0;
+                    return GitHubWebHookValidationResult.Failed();
+                }
 
-                            // Only provide the payload to the caller if we've validated it.
-                            result = new GitHubWebHookValidationResult(eventName, ms.ToArray());
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Save the request body to a memory stream so we can calculate
+                    // the hash of the body before we actually deserialize the payload.
+                    await request.Content.CopyToAsync(ms);
+
+                    ms.Position = 0;
+
+                    string signatureWithPrefixString = headers.SignatureWithPrefix;
+                    if (signatureWithPrefixString.StartsWith(GitHubAssumptions.SIGNATURE_PREFIX, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string signature = signatureWithPrefixString.Substring(GitHubAssumptions.SIGNATURE_PREFIX.Length);
+                        byte[] secret = Encoding.ASCII.GetBytes(this.GitHubSecret);
+                        using (var hmac = new HMACSHA256(secret))
+                        {
+                            byte[] hash = hmac.ComputeHash(ms);
+                            string hashString = ToHexString(hash);
+                            if (hashString.Equals(signature, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ms.Position = 0;
+
+                                // Only provide the payload to the caller if we've validated it.
+                                return new GitHubWebHookValidationResult(headers.Delivery, headers.EventName, ms.ToArray());
+                            }
                         }
                     }
                 }
-            }
 
-            return result;
+                return GitHubWebHookValidationResult.Failed();
+            });
 
             string ToHexString(byte[] bytes)
             {

@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Web;
 using Stencil.Plugins.GitHub.Integration;
 using Stencil.Plugins.GitHub.Workers;
+using Stencil.Plugins.GitHub.Daemons;
 
 namespace Stencil.Plugins.GitHub
 {
@@ -51,33 +52,19 @@ namespace Stencil.Plugins.GitHub
                 IDaemonManager daemonManager = this.IFoundation.GetDaemonManager();
                 ISettingsResolver settingsResolver = this.IFoundation.Resolve<ISettingsResolver>();
                 bool isBackPane = settingsResolver.IsBackPane();
-                bool isLocalHost = settingsResolver.IsLocalHost();
                 bool isHydrate = settingsResolver.IsHydrate();
-                if (isBackPane && !isLocalHost && !isHydrate)
+                if (isBackPane && !isHydrate)
                 {
-                    /*
                     DaemonConfig config = new DaemonConfig()
                     {
-                        InstanceName = AmazonEncodingDaemon.DAEMON_NAME,
+                        InstanceName = GitHubTicketInProgressDaemon.DAEMON_NAME,
                         ContinueOnError = true,
-                        IntervalMilliSeconds = (int)TimeSpan.FromMinutes(1).TotalMilliseconds,
+                        IntervalMilliSeconds = (int)TimeSpan.FromMinutes(5).TotalMilliseconds,
                         StartDelayMilliSeconds = 15,
                         TaskConfiguration = string.Empty
                     };
-                    daemonManager.RegisterDaemon(config, new AmazonEncodingDaemon(this.IFoundation), true);
-
-                    config = new DaemonConfig()
-                    {
-                        InstanceName = AmazonImageResizeDaemon.DAEMON_NAME,
-                        ContinueOnError = true,
-                        IntervalMilliSeconds = (int)TimeSpan.FromMinutes(1).TotalMilliseconds,
-                        StartDelayMilliSeconds = 15,
-                        TaskConfiguration = string.Empty
-                    };
-                    daemonManager.RegisterDaemon(config, new AmazonImageResizeDaemon(this.IFoundation), true);
-                    */
+                    daemonManager.RegisterDaemon(config, new GitHubTicketInProgressDaemon(this.IFoundation), true);
                 }
-
             });
         }
 

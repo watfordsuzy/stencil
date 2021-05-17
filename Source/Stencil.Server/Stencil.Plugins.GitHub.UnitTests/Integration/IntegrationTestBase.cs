@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using Moq;
 using Stencil.Common.Configuration;
 using Stencil.Plugins.GitHub.UnitTests;
+using Stencil.Primary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace Stencil.Plugins.GitHub.Integration
             _container.RegisterInstance<IHandleExceptionProvider>(_exceptionHandler.Object);
             _container.RegisterInstance<IHandleExceptionProvider>(Assumptions.SWALLOWED_EXCEPTION_HANDLER, _exceptionHandler.Object);
             _container.RegisterInstance<ISettingsResolver>(_settingsResolver.Object);
+            _container.RegisterInstance<StencilAPI>(new StencilAPI(_foundation.Object));
 
             _foundation.Setup(ff => ff.Container)
                        .Returns(_container);
