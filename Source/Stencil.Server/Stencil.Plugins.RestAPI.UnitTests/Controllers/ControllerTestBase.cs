@@ -6,23 +6,19 @@ using Codeable.Foundation.Core;
 using Microsoft.Practices.Unity;
 using Moq;
 using Stencil.Common.Configuration;
+using Stencil.Plugins.RestAPI.UnitTests;
 using Stencil.Primary;
 using Stencil.Primary.Mapping;
-using Stencil.Plugins.RestAPI.UnitTests;
-using System;
-
-using dm = Stencil.Domain;
 using Stencil.Web.Controllers;
 using Stencil.Web.Security;
-using System.Collections.Concurrent;
+using System;
+using dm = Stencil.Domain;
 
 namespace Stencil.Plugins.RestAPI.Controllers
 {
     public abstract class ControllerTestBase<TController> : IDisposable
         where TController : RestApiBaseController
     {
-        private readonly ConcurrentDictionary<string, IDaemonTask> _tasks = new ConcurrentDictionary<string, IDaemonTask>();
-
         protected readonly Mock<IHandleExceptionProvider> _exceptionHandler;
         protected readonly UnityContainer _container;
         protected readonly Mock<IFoundation> _foundation;
@@ -40,17 +36,6 @@ namespace Stencil.Plugins.RestAPI.Controllers
             _exceptionHandler = new Mock<IHandleExceptionProvider>();
             _settingsResolver = new Mock<ISettingsResolver>();
             _daemonManager = new Mock<IDaemonManager>();
-            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(It.IsAny<string>()))
-                          .Returns<string>(workerName =>
-                          {
-                              _tasks.TryGetValue(workerName, out IDaemonTask task);
-                              return task;
-                          });
-            _daemonManager.Setup(dd => dd.RegisterDaemon(It.IsAny<DaemonConfig>(), It.IsAny<IDaemonTask>(), It.IsAny<bool>()))
-                          .Callback<DaemonConfig, IDaemonTask, bool>((config, task, autoStart) =>
-                          {
-                              _tasks.TryAdd(config.InstanceName, task);
-                          });
 
             _container = new UnityContainer();
             _container.RegisterInstance<IFoundation>(_foundation.Object);

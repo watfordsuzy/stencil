@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity;
+﻿using Codeable.Foundation.Common;
+using Microsoft.Practices.Unity;
 using Moq;
 using Stencil.Primary;
 using Stencil.Primary.Business.Direct;
@@ -7,6 +8,7 @@ using Stencil.Primary.Workers;
 using Stencil.Primary.Workers.Models;
 using Stencil.SDK;
 using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using Xunit;
 
@@ -48,6 +50,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
             ticketBusiness.Setup(tt => tt.CanAccountUpdateTicket(It.IsAny<dm.Account>(), ticket_id))
                           .Returns(true);
             _container.RegisterInstance<ITicketBusiness>(ticketBusiness.Object);
+
+            var assignProductOwnerWorker = new TestAssignProductOwnerWorker(_foundation.Object);
+            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(nameof(AssignProductOwnerWorker)))
+                          .Returns(assignProductOwnerWorker);
 
             var affectedProductController = CreatePost("affectedproducts", _userAccount);
 
@@ -101,6 +107,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
             ticketBusiness.Setup(tt => tt.CanAccountUpdateTicket(It.IsAny<dm.Account>(), ticket_id))
                           .Returns(false);
             _container.RegisterInstance<ITicketBusiness>(ticketBusiness.Object);
+
+            var assignProductOwnerWorker = new TestAssignProductOwnerWorker(_foundation.Object);
+            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(nameof(AssignProductOwnerWorker)))
+                          .Returns(assignProductOwnerWorker);
 
             var affectedProductController = CreatePost("affectedproducts", _adminAccount);
 
@@ -181,8 +191,9 @@ namespace Stencil.Plugins.RestAPI.Controllers
                           .Returns((Guid?)null);
             _container.RegisterInstance<ITicketBusiness>(ticketBusiness.Object);
 
-            var assignProductOwnerWorker = new AssignProductOwnerWorker(_foundation.Object);
-            _container.RegisterInstance<AssignProductOwnerWorker>(assignProductOwnerWorker);
+            var assignProductOwnerWorker = new TestAssignProductOwnerWorker(_foundation.Object);
+            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(nameof(AssignProductOwnerWorker)))
+                          .Returns(assignProductOwnerWorker);
 
             var affectedProductController = CreatePost("affectedproducts", _userAccount);
 
@@ -196,15 +207,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
             _ = HttpAssert.IsSuccess(response);
 
-            assignProductOwnerWorker.Execute(_foundation.Object, default);
-
-            // The worker should see there is no assignee, then assign the ticket to the product owner
-            // NB: this is in effect retesting a worker, but we need to ensure (somehow) that
-            //     the worker does or does not get called.
-            ticketBusiness.Verify(tt => tt.GetAssignee(ticket_id), Times.Once());
-            ticketBusiness.Verify(
-                tt => tt.AssignToProductOwner(affectedProduct.ticket_id, affectedProduct.product_id),
-                Times.Once());
+            Assert.Collection(
+                assignProductOwnerWorker.GetEnqueuedRequests(),
+                req =>
+                {
+                    Assert.Equal(affectedProduct.ticket_id, req.ticket_id);
+                    Assert.Equal(affectedProduct.product_id, req.product_id);
+                });
         }
 
         [Fact]
@@ -239,8 +248,9 @@ namespace Stencil.Plugins.RestAPI.Controllers
                           .Returns(_adminAccount.account_id);
             _container.RegisterInstance<ITicketBusiness>(ticketBusiness.Object);
 
-            var assignProductOwnerWorker = new AssignProductOwnerWorker(_foundation.Object);
-            _container.RegisterInstance<AssignProductOwnerWorker>(assignProductOwnerWorker);
+            var assignProductOwnerWorker = new TestAssignProductOwnerWorker(_foundation.Object);
+            _daemonManager.Setup(dd => dd.GetRegisteredDaemonTask(nameof(AssignProductOwnerWorker)))
+                          .Returns(assignProductOwnerWorker);
 
             var affectedProductController = CreatePost("affectedproducts", _userAccount);
 
@@ -254,15 +264,18 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
             _ = HttpAssert.IsSuccess(response);
 
-            assignProductOwnerWorker.Execute(_foundation.Object, default);
+            Assert.Empty(assignProductOwnerWorker.GetEnqueuedRequests());
+        }
 
-            // The worker should get the assignee, then realize it cannot assign the ticket
-            // NB: this is in effect retesting a worker, but we need to ensure (somehow) that
-            //     the worker does or does not get called.
-            ticketBusiness.Verify(tt => tt.GetAssignee(ticket_id), Times.Once());
-            ticketBusiness.Verify(
-                tt => tt.AssignToProductOwner(affectedProduct.ticket_id, affectedProduct.product_id),
-                Times.Never());
+        private class TestAssignProductOwnerWorker : AssignProductOwnerWorker
+        {
+            public TestAssignProductOwnerWorker(IFoundation foundation)
+                : base(foundation)
+            {
+            }
+
+            public IEnumerable<AssignProductOwnerRequest> GetEnqueuedRequests()
+                => base.RequestQueue.ToArray();
         }
 
         [Fact]
