@@ -110,6 +110,7 @@
     <Compile Include="Business\Direct\IAssetBusiness_Crud.cs">
       <DependentUpon>IAssetBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\ICommitBusiness.cs" />
     <Compile Include="Business\Direct\ICommitBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IGlobalSettingBusiness.cs" />
     <Compile Include="Business\Direct\IGlobalSettingBusiness_Crud.cs">
@@ -126,6 +127,7 @@
     </Compile>
     <Compile Include="Business\Direct\Implementation\BusinessBase.cs" />
     <Compile Include="Business\Direct\Implementation\BusinessBaseHealth.cs" />
+    <Compile Include="Business\Direct\Implementation\CommitBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\CommitBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\GlobalSettingBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\GlobalSettingBusiness_Crud.cs">

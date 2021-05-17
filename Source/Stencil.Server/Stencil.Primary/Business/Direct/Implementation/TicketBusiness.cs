@@ -2,7 +2,6 @@
 using Stencil.Domain;
 using System;
 using System.Linq;
-using dm = Stencil.Domain;
 
 namespace Stencil.Primary.Business.Direct.Implementation
 {
@@ -47,7 +46,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         }
 
         /// <inheritdoc/>
-        public bool CanAccountUpdateTicket(dm.Account account, Guid ticket_id)
+        public bool CanAccountUpdateTicket(Account account, Guid ticket_id)
         {
             return base.ExecuteFunction(nameof(CanAccountUpdateTicket), delegate ()
             {
@@ -84,7 +83,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         }
 
         /// <inheritdoc/>
-        public bool CanAccountDeleteTicket(dm.Account account, Guid ticket_id)
+        public bool CanAccountDeleteTicket(Account account, Guid ticket_id)
         {
             return base.ExecuteFunction(nameof(CanAccountDeleteTicket), delegate ()
             {
@@ -155,6 +154,34 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         db.SaveChanges();
 
                         this.API.Index.Tickets.UpdateAssignedTo(ticket_id, ticket.ToDomainModel().assigned_to_id);
+                    }
+                }
+            });
+        }
+
+        public void MarkTicketAsInProgress(Guid ticket_id, Guid? commit_id)
+        {
+            base.ExecuteMethod(nameof(MarkTicketAsInProgress), delegate ()
+            {
+                // Do not attempt to lookup empty tickets
+                if (ticket_id == Guid.Empty)
+                {
+                    return;
+                }
+
+                using (var db = base.CreateSQLContext())
+                {
+                    dbTicket ticket = db.dbTickets.FirstOrDefault(tt => tt.ticket_id == ticket_id);
+                    if (ticket != null && ticket.ticket_status == (int)TicketStatus.Open)
+                    {
+                        ticket.ticket_status = (int)TicketStatus.InProgress;
+
+                        db.SaveChanges();
+
+                        // CAW: this seems off, is there a better way?
+                        this.API.Index.Tickets.UpdateTicketStatus(
+                            ticket_id,
+                            ticket.ToDomainModel().ToSDKModel().ticket_status);
                     }
                 }
             });

@@ -42,5 +42,14 @@ namespace Stencil.Primary.Business.Direct
         /// <param name="ticket_id">The unique identifier of the ticket.</param>
         /// <param name="product_id">The unique identifier of the product.</param>
         void AssignToProductOwner(Guid ticket_id, Guid product_id);
+
+        /// <summary>
+        /// Marks a ticket as In Progress.
+        /// </summary>
+        /// <param name="ticket_id">The unique identifier of the ticket.</param>
+        /// <param name="commit_id">The unique identifier of the commit which
+        /// referenced the ticket, or <see langword="null"/> if a user manually
+        /// marked the ticket as in progress.</param>
+        void MarkTicketAsInProgress(Guid ticket_id, Guid? commit_id);
     }
 }

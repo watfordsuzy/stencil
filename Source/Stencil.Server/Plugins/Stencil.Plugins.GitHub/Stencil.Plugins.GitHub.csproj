@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Daemons\GitHubTicketInProgressDaemon.cs" />
     <Compile Include="GitHubPlugin.cs" />
     <Compile Include="Controllers\GitHubWebHookController.cs" />
     <Compile Include="Integration\GitHubJsonWebHookValidator.cs" />

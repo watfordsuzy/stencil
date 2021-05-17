@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using sdk = Stencil.SDK.Models;
+
 namespace Stencil.Primary.Business.Index.Implementation
 {
     public partial class TicketIndex
@@ -16,6 +18,17 @@ namespace Stencil.Primary.Business.Index.Implementation
                 this.UpdateDocumentPartial(ticket_id.ToString(), new
                 {
                     assigned_to_id = assigned_to_id,
+                });
+            });
+        }
+
+        public void UpdateTicketStatus(Guid ticket_id, sdk.TicketStatus ticket_status)
+        {
+            base.ExecuteMethod(nameof(UpdateTicketStatus), delegate ()
+            {
+                this.UpdateDocumentPartial(ticket_id.ToString(), new
+                {
+                    ticket_status = ticket_status,
                 });
             });
         }
