@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Xunit;
 
 using dm = Stencil.Domain;
+using sdk = Stencil.SDK.Models;
 
 namespace Stencil.Primary.Business.Direct.Implementation
 {
@@ -439,6 +440,92 @@ namespace Stencil.Primary.Business.Direct.Implementation
             Assert.Equal(dm.TicketStatus.Open, reopenedTicket.ticket_status);
             Assert.Null(reopenedTicket.closed_on_utc);
             Assert.Equal(closedTicket.assigned_to_id, reopenedTicket.assigned_to_id);
+        }
+
+        [Fact]
+        public void MarkTicketAsInProgress_Ignores_Missing_Tickets()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            ticketBusiness.MarkTicketAsInProgress(Guid.Empty, null);
+
+            ticketBusiness.MarkTicketAsInProgress(Guid.Empty, Guid.NewGuid());
+            
+            ticketBusiness.MarkTicketAsInProgress(Guid.NewGuid(), null);
+            
+            ticketBusiness.MarkTicketAsInProgress(Guid.NewGuid(), Guid.NewGuid());
+
+            ticketIndex.Verify(tt => tt.UpdateTicketStatus(It.IsAny<Guid>(), It.IsAny<sdk.TicketStatus>()), Times.Never());
+        }
+
+        [Fact]
+        public void MarkTicketAsInProgress_Ignores_NonOpen_Tickets()
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketSynchronizer = new Mock<ITicketSynchronizer>();
+            _container.RegisterInstance<ITicketSynchronizer>(ticketSynchronizer.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            var insertedTicket = ticketBusiness.Insert(new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                ticket_status = dm.TicketStatus.Open,
+                ticket_type = dm.TicketType.TechDebt,
+                reported_by_id = _reportedByAccount.account_id,
+            });
+            insertedTicket.ticket_status = dm.TicketStatus.Closed;
+            var closedTicket = ticketBusiness.Update(insertedTicket);
+
+            insertedTicket = ticketBusiness.Insert(new dm.Ticket
+            {
+                ticket_title = "Test",
+                ticket_description = "Description",
+                ticket_status = dm.TicketStatus.Open,
+                ticket_type = dm.TicketType.Feature,
+                reported_by_id = _reportedByAccount.account_id,
+            });
+            insertedTicket.ticket_status = dm.TicketStatus.InProgress;
+            var inProgressTicket = ticketBusiness.Update(insertedTicket);
+
+            ticketBusiness.MarkTicketAsInProgress(closedTicket.ticket_id, null);
+
+            ticketBusiness.MarkTicketAsInProgress(closedTicket.ticket_id, Guid.NewGuid());
+
+            ticketBusiness.MarkTicketAsInProgress(inProgressTicket.ticket_id, null);
+
+            ticketBusiness.MarkTicketAsInProgress(inProgressTicket.ticket_id, Guid.NewGuid());
+
+            ticketIndex.Verify(tt => tt.UpdateTicketStatus(It.IsAny<Guid>(), It.IsAny<sdk.TicketStatus>()), Times.Never());
+        }
+
+        public static IEnumerable<object[]> MarkTicketAsInProgress_Marks_Open_Tickets_As_InProgress_TestData()
+        {
+            yield return new object[] { Guid.NewGuid() };
+            yield return new object[] { (Guid?)null };
+        }
+
+        [Theory]
+        [MemberData(nameof(MarkTicketAsInProgress_Marks_Open_Tickets_As_InProgress_TestData))]
+        public void MarkTicketAsInProgress_Marks_Open_Tickets_As_InProgress(Guid? commit_id)
+        {
+            var ticketIndex = new Mock<ITicketIndex>();
+            _container.RegisterInstance<ITicketIndex>(ticketIndex.Object);
+
+            var ticketBusiness = new TicketBusiness(_foundation.Object);
+
+            ticketBusiness.MarkTicketAsInProgress(_ticket0.ticket_id, commit_id);
+
+            // Idempotent
+            ticketBusiness.MarkTicketAsInProgress(_ticket0.ticket_id, commit_id);
+
+            ticketIndex.Verify(tt => tt.UpdateTicketStatus(_ticket0.ticket_id, sdk.TicketStatus.InProgress), Times.Once());
         }
     }
 }
