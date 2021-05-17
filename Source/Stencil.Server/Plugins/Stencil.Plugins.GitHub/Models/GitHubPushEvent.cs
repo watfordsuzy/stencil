@@ -17,7 +17,7 @@ namespace Stencil.Plugins.GitHub.Models
         public string base_ref { get; set; }
         public string compare { get; set; }
         public IList<GitHubCommit> commits { get; set; }
-        public string head_commit { get; set; }
+        public GitHubCommit head_commit { get; set; }
         public GitHubCommitAuthor pusher { get; set; }
         public GitHubRepository repository { get; set; }
         public GitHubOrganization organization { get; set; }

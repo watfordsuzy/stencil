@@ -21,6 +21,7 @@ using Stencil.Plugins.GitHub.Models;
 using System.Threading.Tasks;
 using Stencil.Plugins.GitHub.Workers;
 using System.IO;
+using Stencil.Plugins.GitHub.Daemons;
 
 namespace Stencil.Plugins.GitHub.Controllers
 {
@@ -37,30 +38,6 @@ namespace Stencil.Plugins.GitHub.Controllers
         }
 
         public AspectCache Cache { get; set; }
-
-        protected string EnvironmentName
-        {
-            get
-            {
-                return this.Cache.PerLifetime("EnvironmentName", delegate ()
-                {
-                    return this.IFoundation.Resolve<ISettingsResolver>().GetSetting(CommonAssumptions.APP_KEY_ENVIRONMENT);
-                });
-            }
-        }
-
-        protected int MaximumRetries
-        {
-            get
-            {
-                return this.Cache.PerLifetime("MaximumRetries", delegate ()
-                {
-                    int maxRetries;
-                    int.TryParse(this.API.Direct.GlobalSettings.GetValueOrDefault(CommonAssumptions.CONFIG_KEY_AMAZON_ENCODE_RETRY_MAX, "5"), out maxRetries);
-                    return maxRetries;
-                });
-            }
-        }
 
         [HttpPost]
         [Route("webhook")]
@@ -105,20 +82,17 @@ namespace Stencil.Plugins.GitHub.Controllers
         [Route("agitate")]
         public object AgitateDaemons(string key, string type)
         {
-            return base.ExecuteFunction("AgitateDaemons", delegate ()
+            return base.ExecuteFunction(nameof(AgitateDaemons), delegate ()
             {
                 if (key == "codeable")
                 {
                     IDaemonManager daemonManager = this.IFoundation.GetDaemonManager();
-                    /*if (type == "photo")
+                    if (type == "commits")
                     {
-                        daemonManager.StartDaemon(AmazonImageResizeDaemon.DAEMON_NAME);
+                        daemonManager.StartDaemon(GitHubTicketInProgressDaemon.DAEMON_NAME);
                     }
-                    if (type == "video")
-                    {
-                        daemonManager.StartDaemon(AmazonEncodingDaemon.DAEMON_NAME);
-                    }*/
                 }
+
                 return this.Http200("OK", "");
             });
         }

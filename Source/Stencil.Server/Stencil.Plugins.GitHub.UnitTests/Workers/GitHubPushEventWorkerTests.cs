@@ -86,7 +86,6 @@ namespace Stencil.Plugins.GitHub.Workers
                 before = "abc",
                 after = "000",
                 created = true,
-                head_commit = "123",
                 commits = new[]
                 {
                     new GitHubCommit
