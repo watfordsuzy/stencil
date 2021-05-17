@@ -52,9 +52,11 @@ namespace Stencil.Plugins.GitHub.Integration
             {
                 yield return Build(message, guidFormat: "N");
                 yield return Build(message, guidFormat: "D");
+                yield return Build(message, guidFormat: "N", toUpper: true);
+                yield return Build(message, guidFormat: "D", toUpper: true);
             }
 
-            object[] Build(string message, string guidFormat)
+            object[] Build(string message, string guidFormat, bool toUpper = false)
             {
                 var regex = new Regex(@"\[(\$)\]");
                 var guids = new List<Guid>();
@@ -64,7 +66,8 @@ namespace Stencil.Plugins.GitHub.Integration
                     {
                         Guid guid = Guid.NewGuid();
                         guids.Add(guid);
-                        return "[" + guid.ToString(guidFormat) + "]";
+                        string formattedGuid = "[" + guid.ToString(guidFormat) + "]";
+                        return toUpper ? formattedGuid.ToUpper() : formattedGuid;
                     });
                 return new object[] { message, guids };
             }
