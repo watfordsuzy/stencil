@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Stencil.Plugins.GitHub.Workers
+namespace Stencil.Plugins.GitHub.Integration
 {
     public class CommitMessageParser : ChokeableClass, ICommitMessageParser
     {

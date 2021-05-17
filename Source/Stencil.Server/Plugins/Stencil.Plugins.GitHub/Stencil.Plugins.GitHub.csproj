@@ -144,9 +144,9 @@
     <Compile Include="Models\GitHubRepository.cs" />
     <Compile Include="Models\GitHubUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Workers\CommitMessageParser.cs" />
+    <Compile Include="Integration\CommitMessageParser.cs" />
     <Compile Include="Workers\GitHubPushEventWorker.cs" />
-    <Compile Include="Workers\ICommitMessageParser.cs" />
+    <Compile Include="Integration\ICommitMessageParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PluginConfig.txt" />

@@ -2,14 +2,11 @@
 using Codeable.Foundation.Common.Daemons;
 using Codeable.Foundation.Core.Caching;
 using Codeable.Foundation.Core.Unity;
-using Stencil.Plugins.GitHub.Workers;
+using Stencil.Plugins.GitHub.Integration;
 using Stencil.Primary;
 using Stencil.Primary.Daemons;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Web;
 
 using dm = Stencil.Domain;
 
@@ -17,6 +14,8 @@ namespace Stencil.Plugins.GitHub.Daemons
 {
     public class GitHubTicketInProgressDaemon : NonReentrantDaemon
     {
+        public static readonly string DAEMON_NAME = nameof(GitHubTicketInProgressDaemon);
+
         public StencilAPI API { get; set; }
 
         public AspectCache Cache { get; set; }
@@ -25,7 +24,7 @@ namespace Stencil.Plugins.GitHub.Daemons
 
         public override DaemonSynchronizationPolicy SynchronizationPolicy => DaemonSynchronizationPolicy.SingleAppDomain;
 
-        public override string DaemonName => nameof(GitHubTicketInProgressDaemon);
+        public override string DaemonName => DAEMON_NAME;
 
         public GitHubTicketInProgressDaemon(IFoundation iFoundation)
             : base(iFoundation)

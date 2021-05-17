@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Stencil.Plugins.GitHub.Workers
+namespace Stencil.Plugins.GitHub.Integration
 {
     public interface ICommitMessageParser
     {

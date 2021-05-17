@@ -4,6 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Website", "Stencil.Website\Stencil.Website.csproj", "{85D0F8FD-BF8D-49E5-8184-D117436B316F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A7258007-638E-4E2B-BE58-83B422F5379C} = {A7258007-638E-4E2B-BE58-83B422F5379C}
+		{FB4AE534-1DF5-45D3-9C89-FF4EBF4F5172} = {FB4AE534-1DF5-45D3-9C89-FF4EBF4F5172}
+		{7552B994-8754-4CEE-B8D2-609263716036} = {7552B994-8754-4CEE-B8D2-609263716036}
+		{6AE2CE99-CD92-42D1-9C1D-5BBD5053C591} = {6AE2CE99-CD92-42D1-9C1D-5BBD5053C591}
+		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF} = {9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}
+		{DF6BD0D9-E199-43FD-94E6-D3A4CCAD77B2} = {DF6BD0D9-E199-43FD-94E6-D3A4CCAD77B2}
+		{739A28DC-EE3A-4BA3-A4B4-E5EAB45DEF1D} = {739A28DC-EE3A-4BA3-A4B4-E5EAB45DEF1D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Backing", "Stencil.Backing\Stencil.Backing.csproj", "{227C5C9A-62E2-4050-A952-C92568055EF3}"
 EndProject
@@ -56,13 +65,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C1168EAE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stencil.Primary.UnitTests", "Stencil.Primary.UnitTests\Stencil.Primary.UnitTests.csproj", "{42673CA2-8B5C-448B-A46E-2C5B4D94C62A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticMappingGenerator", "ElasticMappingGenerator\ElasticMappingGenerator.csproj", "{B89E88A9-E7D9-48D3-B60D-93840925FD9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticMappingGenerator", "ElasticMappingGenerator\ElasticMappingGenerator.csproj", "{B89E88A9-E7D9-48D3-B60D-93840925FD9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbAndIndexMigrator", "DbAndIndexMigrator\DbAndIndexMigrator.csproj", "{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbAndIndexMigrator", "DbAndIndexMigrator\DbAndIndexMigrator.csproj", "{76F4ACFC-D183-41EE-9BDB-421CDCFE1692}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Plugins.RestAPI.UnitTests", "Stencil.Plugins.RestAPI.UnitTests\Stencil.Plugins.RestAPI.UnitTests.csproj", "{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stencil.Plugins.RestAPI.UnitTests", "Stencil.Plugins.RestAPI.UnitTests\Stencil.Plugins.RestAPI.UnitTests.csproj", "{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Plugins.GitHub", "Plugins\Stencil.Plugins.GitHub\Stencil.Plugins.GitHub.csproj", "{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stencil.Plugins.GitHub.UnitTests", "Stencil.Plugins.GitHub.UnitTests\Stencil.Plugins.GitHub.UnitTests.csproj", "{CC3579CD-087C-44BB-82DC-2A8588F3E0D1}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -157,6 +168,10 @@ Global
 		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3579CD-087C-44BB-82DC-2A8588F3E0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3579CD-087C-44BB-82DC-2A8588F3E0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3579CD-087C-44BB-82DC-2A8588F3E0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3579CD-087C-44BB-82DC-2A8588F3E0D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +199,7 @@ Global
 		{76F4ACFC-D183-41EE-9BDB-421CDCFE1692} = {BC217FE5-133D-46C6-BF9E-16B17C3AAE37}
 		{78A06DE2-4E32-4A3D-9C55-563EDB82F7AF} = {C1168EAE-1C39-4346-9281-6489ED4B1FBA}
 		{9E1F4AAC-5AC4-45F7-896B-11E43291D7DF} = {0390AEAB-CF3E-4D8D-BDF3-606066A7B557}
+		{CC3579CD-087C-44BB-82DC-2A8588F3E0D1} = {C1168EAE-1C39-4346-9281-6489ED4B1FBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3505C23C-15A7-49BC-9956-59D38CDA667F}
