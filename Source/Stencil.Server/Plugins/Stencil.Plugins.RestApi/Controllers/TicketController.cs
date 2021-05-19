@@ -14,8 +14,11 @@ namespace Stencil.Plugins.RestAPI.Controllers
     {
         partial void BeforeInsert(Ticket ticket)
         {
-            dm.Account account = this.GetCurrentAccount();
-            ticket.reported_by_id = account.account_id;
+            base.ExecuteMethod(nameof(BeforeInsert), delegate ()
+            {
+                dm.Account account = this.GetCurrentAccount();
+                ticket.reported_by_id = account.account_id;
+            });
         }
 
         partial void BeforeUpdate(sdk.Ticket insert)

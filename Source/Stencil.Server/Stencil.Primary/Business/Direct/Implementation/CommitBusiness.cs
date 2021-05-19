@@ -12,34 +12,40 @@ namespace Stencil.Primary.Business.Direct.Implementation
     {
         public IEnumerable<Commit> GetCommitsPendingIngestion(int take = 10)
         {
-            if (take <= 0)
+            return base.ExecuteFunction(nameof(GetCommitsPendingIngestion), delegate ()
             {
-                return Enumerable.Empty<Commit>();
-            }
+                if (take <= 0)
+                {
+                    return Enumerable.Empty<Commit>();
+                }
 
-            using (StencilContext db = this.CreateSQLContext())
-            {
-                return db.dbCommits.Where(cc => cc.commit_message_decoded_utc == null)
-                                   .OrderBy(cc => cc.created_utc)
-                                   .Take(take)
-                                   .ToList()
-                                   .Select(cc => cc.ToDomainModel())
-                                   .ToList();
-            }
+                using (StencilContext db = this.CreateSQLContext())
+                {
+                    return db.dbCommits.Where(cc => cc.commit_message_decoded_utc == null)
+                                       .OrderBy(cc => cc.created_utc)
+                                       .Take(take)
+                                       .ToList()
+                                       .Select(cc => cc.ToDomainModel())
+                                       .ToList();
+                }
+            });
         }
 
         public void MarkCommitAsIngested(Guid commit_id)
         {
-            using (StencilContext db = this.CreateSQLContext())
+            base.ExecuteMethod(nameof(MarkCommitAsIngested), delegate ()
             {
-                dbCommit commit = db.dbCommits.FirstOrDefault(cc => cc.commit_id == commit_id);
-                if (commit != null)
+                using (StencilContext db = this.CreateSQLContext())
                 {
-                    commit.commit_message_decoded_utc = DateTime.UtcNow;
+                    dbCommit commit = db.dbCommits.FirstOrDefault(cc => cc.commit_id == commit_id);
+                    if (commit != null)
+                    {
+                        commit.commit_message_decoded_utc = DateTime.UtcNow;
 
-                    db.SaveChanges();
+                        db.SaveChanges();
+                    }
                 }
-            }
+            });
         }
     }
 }

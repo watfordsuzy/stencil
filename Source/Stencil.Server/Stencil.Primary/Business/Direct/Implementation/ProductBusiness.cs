@@ -12,18 +12,21 @@ namespace Stencil.Primary.Business.Direct.Implementation
     {
         public IEnumerable<Product> GetAffectedProductsByTicketID(Guid ticket_id)
         {
-            if (ticket_id == Guid.Empty)
+            return base.ExecuteFunction(nameof(GetAffectedProductsByTicketID), delegate ()
             {
-                return Enumerable.Empty<Product>();
-            }
+                if (ticket_id == Guid.Empty)
+                {
+                    return Enumerable.Empty<Product>();
+                }
 
-            using (var db = this.CreateSQLContext())
-            {
-                List<dbProduct> affectedProducts = db.dbAffectedProducts.Where(ap => ap.ticket_id == ticket_id)
-                                                                        .Select(ap => ap.Product)
-                                                                        .ToList();
-                return affectedProducts.Select(pp => pp.ToDomainModel()).ToList();
-            }
+                using (var db = this.CreateSQLContext())
+                {
+                    List<dbProduct> affectedProducts = db.dbAffectedProducts.Where(ap => ap.ticket_id == ticket_id)
+                                                                            .Select(ap => ap.Product)
+                                                                            .ToList();
+                    return affectedProducts.Select(pp => pp.ToDomainModel()).ToList();
+                }
+            });
         }
     }
 }

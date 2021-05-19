@@ -9,40 +9,46 @@ namespace Stencil.Primary.Business.Direct.Implementation
     {
         partial void PreProcess(Ticket ticket, bool forInsert)
         {
-            if (forInsert)
+            base.ExecuteMethod(nameof(PreProcess), delegate ()
             {
-                // Brand new tickets have the following properties automatically set,
-                // because it does not make sense for a user to update these.
-                ticket.opened_on_utc = DateTime.UtcNow;
-                ticket.closed_on_utc = null;
-                ticket.ticket_status = TicketStatus.Open;
-            }
-            else
-            {
-                if (ticket.ticket_status != TicketStatus.Closed)
+                if (forInsert)
                 {
-                    // Ensure open tickets do not have a closed on date set during updates.
+                    // Brand new tickets have the following properties automatically set,
+                    // because it does not make sense for a user to update these.
+                    ticket.opened_on_utc = DateTime.UtcNow;
                     ticket.closed_on_utc = null;
+                    ticket.ticket_status = TicketStatus.Open;
                 }
-            }
+                else
+                {
+                    if (ticket.ticket_status != TicketStatus.Closed)
+                    {
+                        // Ensure open tickets do not have a closed on date set during updates.
+                        ticket.closed_on_utc = null;
+                    }
+                }
+            });
         }
 
         partial void BeforeUpdatePersisted(dbTicket ticket, Ticket previous)
         {
-            // Ensure we do not reset the closed on date
-            if (previous.ticket_status == TicketStatus.Closed
-             && ticket.ticket_status == (int)TicketStatus.Closed
-             && ticket.closed_on_utc != previous.closed_on_utc)
+            base.ExecuteMethod(nameof(BeforeUpdatePersisted), delegate ()
             {
-                ticket.closed_on_utc = previous.closed_on_utc;
-            }
+                // Ensure we do not reset the closed on date
+                if (previous.ticket_status == TicketStatus.Closed
+                 && ticket.ticket_status == (int)TicketStatus.Closed
+                 && ticket.closed_on_utc != previous.closed_on_utc)
+                {
+                    ticket.closed_on_utc = previous.closed_on_utc;
+                }
 
-            // Set the closed on date for tickets that were just closed
-            if (previous.ticket_status != TicketStatus.Closed
-             && ticket.ticket_status == (int)TicketStatus.Closed)
-            {
-                ticket.closed_on_utc = DateTime.UtcNow;
-            }
+                // Set the closed on date for tickets that were just closed
+                if (previous.ticket_status != TicketStatus.Closed
+                 && ticket.ticket_status == (int)TicketStatus.Closed)
+                {
+                    ticket.closed_on_utc = DateTime.UtcNow;
+                }
+            });
         }
 
         /// <inheritdoc/>

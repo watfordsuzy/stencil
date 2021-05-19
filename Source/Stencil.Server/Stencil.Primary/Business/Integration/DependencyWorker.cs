@@ -49,6 +49,7 @@ namespace Stencil.Primary.Business.Integration
 
         public Action<Dependency, Guid> ProcessMethod { get; set; }
 
+#pragma warning disable CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
         protected override void ProcessRequests(CancellationToken token)
         {
             // prevent processing until we have an implementation
@@ -57,6 +58,8 @@ namespace Stencil.Primary.Business.Integration
                 base.ProcessRequests(token);
             }
         }
+#pragma warning restore CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
+
         protected override void ProcessRequest(DependencyRequest request)
         {
             base.ExecuteMethod("ProcessRequest", delegate ()

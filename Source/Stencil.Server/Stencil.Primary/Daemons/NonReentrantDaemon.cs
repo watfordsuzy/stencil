@@ -37,6 +37,7 @@ namespace Stencil.Primary.Daemons
         /// </remarks>
         protected bool IsExecuting => Interlocked.Read(ref _executing) != 0;
 
+#pragma warning disable CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
         public void Execute(IFoundation foundation, CancellationToken token)
         {
             if (0 != Interlocked.CompareExchange(ref _executing, 1, 0))
@@ -58,6 +59,7 @@ namespace Stencil.Primary.Daemons
                 Interlocked.Exchange(ref _executing, 0);
             }
         }
+#pragma warning restore CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
 
         protected abstract void ExecuteNonReentrant(IFoundation foundation, CancellationToken token);
 
