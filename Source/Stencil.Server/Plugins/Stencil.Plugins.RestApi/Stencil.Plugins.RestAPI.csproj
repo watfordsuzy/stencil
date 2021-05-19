@@ -169,6 +169,12 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeableFoundationAnalyzers\CodeableFoundationAnalyzers.csproj">
+      <Project>{cae2d5d8-1956-47b9-8c39-8a290d4d064e}</Project>
+      <Name>CodeableFoundationAnalyzers</Name>
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\..\Stencil.Common\Stencil.Common.csproj">
       <Project>{c2ee0d22-4be4-4dde-9f19-997644057d0d}</Project>
       <Name>Stencil.Common</Name>
