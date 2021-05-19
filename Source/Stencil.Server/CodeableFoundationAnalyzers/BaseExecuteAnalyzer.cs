@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -73,7 +72,7 @@ namespace Codeable.Foundation.Analyzers
                 return;
             }
 
-            if (!HasExecuteMethodOrFunction(context, methodDeclaration))
+            if (!CouldCallBaseExecute(context, methodDeclaration))
             {
                 return;
             }
@@ -94,49 +93,19 @@ namespace Codeable.Foundation.Analyzers
 
         private void AnalyzeNodeForExecuteMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration, string methodName)
         {
-            if (methodDeclaration.Body != null 
-                && methodDeclaration.Body.Statements.Count == 1)
+            if (methodDeclaration.Body != null)
             {
-                var firstStatement = methodDeclaration.Body.Statements.First();
-                if (firstStatement is ExpressionStatementSyntax statementSyntax)
+                if (methodDeclaration.Body.Statements.OfType<ExpressionStatementSyntax>()
+                                                     .Any(ee => HasBaseExecute(ee.Expression, methodName)))
                 {
-                    if (statementSyntax.Expression is InvocationExpressionSyntax invocation)
-                    {
-                        if (IsBaseExecuteInvocation(invocation, methodName))
-                        {
-                            return;
-                        }
-                    }
-                    else if (statementSyntax.Expression is AwaitExpressionSyntax awaitExpression)
-                    {
-                        if (awaitExpression.Expression is InvocationExpressionSyntax awaitedInvocation)
-                        {
-                            if (IsBaseExecuteInvocation(awaitedInvocation, methodName))
-                            {
-                                return;
-                            }
-                        }
-                    }
+                    return;
                 }
             }
             else if (methodDeclaration.ExpressionBody != null)
             {
-                if (methodDeclaration.ExpressionBody.Expression is InvocationExpressionSyntax invocation)
+                if (HasBaseExecute(methodDeclaration.ExpressionBody.Expression, methodName))
                 {
-                    if (IsBaseExecuteInvocation(invocation, methodName))
-                    {
-                        return;
-                    }
-                }
-                else if (methodDeclaration.ExpressionBody.Expression is AwaitExpressionSyntax awaitExpression)
-                {
-                    if (awaitExpression.Expression is InvocationExpressionSyntax awaitedInvocation)
-                    {
-                        if (IsBaseExecuteInvocation(awaitedInvocation, methodName))
-                        {
-                            return;
-                        }
-                    }
+                    return;
                 }
             }
 
@@ -146,54 +115,37 @@ namespace Codeable.Foundation.Analyzers
         private void AnalyzeNodeForExecuteFunction(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             const string methodName = "ExecuteFunction";
-            if (methodDeclaration.Body != null 
-                && methodDeclaration.Body.Statements.Count == 1)
+            if (methodDeclaration.Body != null)
             {
-                var firstStatement = methodDeclaration.Body.Statements.First();
-                if (firstStatement is ReturnStatementSyntax returnStatement)
+                if (methodDeclaration.Body.Statements.OfType<ReturnStatementSyntax>()
+                                                     .Any(ee => HasBaseExecute(ee.Expression, methodName)))
                 {
-                    if (returnStatement.Expression is InvocationExpressionSyntax invocation)
-                    {
-                        if (IsBaseExecuteInvocation(invocation, methodName))
-                        {
-                            return;
-                        }
-                    }
-                    else if (returnStatement.Expression is AwaitExpressionSyntax awaitExpression
-                        && awaitExpression.Expression is InvocationExpressionSyntax awaitedInvocation)
-                    {
-                        if (IsBaseExecuteInvocation(awaitedInvocation, methodName))
-                        {
-                            return;
-                        }
-                    }
+                    return;
                 }
             }
             else if (methodDeclaration.ExpressionBody != null)
             {
-                if (methodDeclaration.ExpressionBody.Expression is InvocationExpressionSyntax invocation)
+                if (HasBaseExecute(methodDeclaration.ExpressionBody.Expression, methodName))
                 {
-                    if (IsBaseExecuteInvocation(invocation, methodName))
-                    {
-                        return;
-                    }
-                }
-                else if (methodDeclaration.ExpressionBody.Expression is AwaitExpressionSyntax awaitExpression)
-                {
-                    if (awaitExpression.Expression is InvocationExpressionSyntax awaitedInvocation)
-                    {
-                        if (IsBaseExecuteInvocation(awaitedInvocation, methodName))
-                        {
-                            return;
-                        }
-                    }
+                    return;
                 }
             }
 
             context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), methodDeclaration.Identifier.ValueText, methodName));
         }
+        
+        private static bool HasBaseExecute(ExpressionSyntax expression, string methodName)
+        {
+            if (expression is AwaitExpressionSyntax awaitExpression)
+            {
+                expression = awaitExpression.Expression;
+            }
 
-        private bool IsBaseExecuteInvocation(InvocationExpressionSyntax invocation, string methodName)
+            return expression is InvocationExpressionSyntax invocation
+                    && IsBaseExecuteInvocation(invocation, methodName);
+        }
+
+        private static bool IsBaseExecuteInvocation(InvocationExpressionSyntax invocation, string methodName)
         {
             if (invocation.Expression is IdentifierNameSyntax identifier
                 && identifier.Identifier.ValueText.StartsWith(methodName))
@@ -211,7 +163,7 @@ namespace Codeable.Foundation.Analyzers
             return false;
         }
 
-        private bool HasExecuteMethodOrFunction(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        private static bool CouldCallBaseExecute(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             if (methodDeclaration.Parent is ClassDeclarationSyntax clazz)
             {
@@ -230,7 +182,7 @@ namespace Codeable.Foundation.Analyzers
             return false;
         }
 
-        private bool HasExecuteMethodOrExecuteFunction(ClassDeclarationSyntax clazz)
+        private static bool HasExecuteMethodOrExecuteFunction(ClassDeclarationSyntax clazz)
         {
             foreach (var member in clazz.Members)
             {
@@ -245,7 +197,7 @@ namespace Codeable.Foundation.Analyzers
             return false;
         }
 
-        private bool HasExecuteMethodOrExecuteFunction(ITypeSymbol typeSymbol)
+        private static bool HasExecuteMethodOrExecuteFunction(ITypeSymbol typeSymbol)
         {
             if (typeSymbol == null)
             {
@@ -266,7 +218,7 @@ namespace Codeable.Foundation.Analyzers
             return HasExecuteMethodOrExecuteFunction(typeSymbol.BaseType);
         }
 
-        private bool IsAwait(MethodDeclarationSyntax methodDeclaration) 
+        private static bool IsAwait(MethodDeclarationSyntax methodDeclaration) 
                 => methodDeclaration.Modifiers.Any(SyntaxKind.AsyncKeyword);
     }
 }

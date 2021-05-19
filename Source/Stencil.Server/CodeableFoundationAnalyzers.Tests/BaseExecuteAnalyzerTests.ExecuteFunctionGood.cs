@@ -690,5 +690,71 @@ public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, p
 }
 ");
         }
+
+        [Fact]
+        public async Task ExecuteFunction_Only_Statement_With_Local_Function()
+        {
+            await VerifyCS.VerifyAnalyzerAsync(@"
+using System;
+using System.Threading.Tasks;
+class Program : ChokeableClass
+{
+    int Test()
+    {
+        return ExecuteFunction(nameof(Test), delegate() { return Inner(); });
+
+        int Inner()
+        {
+            return 1;
+        }
+    }
+}
+
+class ChokeableClass
+{
+public void ExecuteMethod(string methodName, Action action, params object[] parameters)
+{
+    action();
+}
+public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, params object[] parameters)
+{
+    return func();
+}
+}
+");
+        }
+
+        [Fact]
+        public async Task ExecuteFunction_Only_Statement_With_Local_Function_First()
+        {
+            await VerifyCS.VerifyAnalyzerAsync(@"
+using System;
+using System.Threading.Tasks;
+class Program : ChokeableClass
+{
+    int Test()
+    {
+        int Inner()
+        {
+            return 1;
+        }
+
+        return ExecuteFunction(nameof(Test), delegate() { return Inner(); });
+    }
+}
+
+class ChokeableClass
+{
+public void ExecuteMethod(string methodName, Action action, params object[] parameters)
+{
+    action();
+}
+public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, params object[] parameters)
+{
+    return func();
+}
+}
+");
+        }
     }
 }

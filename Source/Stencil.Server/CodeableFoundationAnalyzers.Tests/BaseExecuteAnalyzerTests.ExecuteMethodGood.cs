@@ -199,5 +199,69 @@ public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, p
 }
 ");
         }
+
+        [Fact]
+        public async Task ExecuteMethod_Only_Statement_With_Local_Function()
+        {
+            await VerifyCS.VerifyAnalyzerAsync(@"
+using System;
+using System.Threading.Tasks;
+class Program : ChokeableClass
+{
+    void Test()
+    {
+        ExecuteMethod(nameof(Test), delegate() { Inner(); });
+
+        void Inner()
+        {
+        }
+    }
+}
+
+class ChokeableClass
+{
+public void ExecuteMethod(string methodName, Action action, params object[] parameters)
+{
+    action();
+}
+public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, params object[] parameters)
+{
+    return func();
+}
+}
+");
+        }
+
+        [Fact]
+        public async Task ExecuteMethod_Only_Statement_With_Local_Function_First()
+        {
+            await VerifyCS.VerifyAnalyzerAsync(@"
+using System;
+using System.Threading.Tasks;
+class Program : ChokeableClass
+{
+    void Test()
+    {
+        void Inner()
+        {
+        }
+
+        ExecuteMethod(nameof(Test), Inner);
+    }
+}
+
+class ChokeableClass
+{
+public void ExecuteMethod(string methodName, Action action, params object[] parameters)
+{
+    action();
+}
+public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, params object[] parameters)
+{
+    return func();
+}
+}
+");
+        }
     }
 }
