@@ -52,6 +52,9 @@ namespace Stencil.Primary.Business.Integration
             base.ExecuteMethod("ProcessAccountInvalidation", delegate ()
             {
                 
+                this.API.Direct.TicketComments.InvalidateForCommenterID(account_id, " changed");
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
             });
         }
         public virtual void ProductInvalidated(Dependency affectedDependencies, Guid product_id)
@@ -165,6 +168,20 @@ namespace Stencil.Primary.Business.Integration
         protected virtual void ProcessCommitInvalidation(Dependency dependencies, Guid commit_id)
         {
             base.ExecuteMethod("ProcessCommitInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void TicketCommentInvalidated(Dependency affectedDependencies, Guid ticket_comment_id)
+        {
+            base.ExecuteMethod("TicketCommentInvalidated", delegate ()
+            {
+                DependencyWorker<TicketComment>.EnqueueRequest(this.IFoundation, affectedDependencies, ticket_comment_id, this.ProcessTicketCommentInvalidation);
+            });
+        }
+        protected virtual void ProcessTicketCommentInvalidation(Dependency dependencies, Guid ticket_comment_id)
+        {
+            base.ExecuteMethod("ProcessTicketCommentInvalidation", delegate ()
             {
                 
             });

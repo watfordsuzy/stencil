@@ -51,6 +51,10 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<IAffectedProductIndex>(); }
         }
+        public ITicketCommentIndex TicketComments
+        {
+            get { return this.IFoundation.Resolve<ITicketCommentIndex>(); }
+        }
         
     }
 }

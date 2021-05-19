@@ -201,6 +201,25 @@
           <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
           <Property Name="sync_log" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="TicketComment">
+          <Key>
+            <PropertyRef Name="ticket_comment_id" />
+          </Key>
+          <Property Name="ticket_comment_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ticket_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="commenter_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="commented_on_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="ticket_comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="created_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="updated_utc" Type="datetimeoffset" Precision="0" Nullable="false" />
+          <Property Name="deleted_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="datetimeoffset" Precision="0" />
+          <Property Name="sync_agent" Type="nvarchar" MaxLength="50" />
+          <Property Name="sync_log" Type="nvarchar(max)" />
+        </EntityType>
         <Association Name="FK_AffectedProduct_Product_product_id">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
           <End Role="AffectedProduct" Type="Self.AffectedProduct" Multiplicity="*" />
@@ -294,6 +313,30 @@
             </Principal>
             <Dependent Role="Ticket">
               <PropertyRef Name="reported_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketComment_Account_commenter_id">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="TicketComment" Type="Self.TicketComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="TicketComment">
+              <PropertyRef Name="commenter_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketComment_Ticket_ticket_id">
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="1" />
+          <End Role="TicketComment" Type="Self.TicketComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ticket_id" />
+            </Principal>
+            <Dependent Role="TicketComment">
+              <PropertyRef Name="ticket_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -443,6 +486,26 @@
           <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
           <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="spTicketComment_HydrateSyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spTicketComment_HydrateSyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ticket_comment_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_hydrate_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spTicketComment_SyncGetInvalid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allowableSecondsToProcessIndex" Type="int" Mode="In" />
+          <Parameter Name="sync_agent" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spTicketComment_SyncUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ticket_comment_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="sync_success" Type="bit" Mode="In" />
+          <Parameter Name="sync_success_utc" Type="datetimeoffset" Mode="In" />
+          <Parameter Name="sync_log" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="StencilDataSqlStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AffectedProduct" EntityType="Self.AffectedProduct" Schema="dbo" store:Type="Tables" />
@@ -454,6 +517,7 @@
           <EntitySet Name="ProductVersion" EntityType="Self.ProductVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductVersionPlatform" EntityType="Self.ProductVersionPlatform" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TicketComment" EntityType="Self.TicketComment" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_AffectedProduct_Product_product_id" Association="Self.FK_AffectedProduct_Product_product_id">
             <End Role="Product" EntitySet="Product" />
             <End Role="AffectedProduct" EntitySet="AffectedProduct" />
@@ -485,6 +549,14 @@
           <AssociationSet Name="FK_Ticket_Account_reported_by_id" Association="Self.FK_Ticket_Account_reported_by_id">
             <End Role="Account" EntitySet="Account" />
             <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketComment_Account_commenter_id" Association="Self.FK_TicketComment_Account_commenter_id">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="TicketComment" EntitySet="TicketComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketComment_Ticket_ticket_id" Association="Self.FK_TicketComment_Ticket_ticket_id">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="TicketComment" EntitySet="TicketComment" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -680,6 +752,35 @@
             <Parameter Name="sync_log" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="dbCommits" EntityType="Stencil.Data.Sql.dbCommit" />
+          <EntitySet Name="dbTicketComments" EntityType="Stencil.Data.Sql.dbTicketComment" />
+          <AssociationSet Name="FK_TicketComment_Account_commenter_id" Association="Stencil.Data.Sql.FK_TicketComment_Account_commenter_id">
+            <End Role="dbAccount" EntitySet="dbAccounts" />
+            <End Role="TicketComment" EntitySet="dbTicketComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TicketComment_Ticket_ticket_id" Association="Stencil.Data.Sql.FK_TicketComment_Ticket_ticket_id">
+            <End Role="dbTicket" EntitySet="dbTickets" />
+            <End Role="TicketComment" EntitySet="dbTicketComments" />
+          </AssociationSet>
+          <FunctionImport Name="spTicketComment_HydrateSyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicketComment_HydrateSyncUpdate">
+            <Parameter Name="ticket_comment_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_hydrate_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicketComment_SyncGetInvalid" ReturnType="Collection(Guid)">
+            <Parameter Name="allowableSecondsToProcessIndex" Mode="In" Type="Int32" />
+            <Parameter Name="sync_agent" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spTicketComment_SyncUpdate">
+            <Parameter Name="ticket_comment_id" Mode="In" Type="Guid" />
+            <Parameter Name="sync_success" Mode="In" Type="Boolean" />
+            <Parameter Name="sync_success_utc" Mode="In" Type="DateTimeOffset" />
+            <Parameter Name="sync_log" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="dbAccount">
           <Key>
@@ -714,6 +815,7 @@
           <NavigationProperty Name="Products" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="dbAccount" ToRole="Product" />
           <NavigationProperty Name="AssignedTickets" Relationship="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id" FromRole="dbAccount" ToRole="Ticket" />
           <NavigationProperty Name="ReportedTickets" Relationship="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id" FromRole="dbAccount" ToRole="Ticket" />
+          <NavigationProperty Name="TicketComments" Relationship="Stencil.Data.Sql.FK_TicketComment_Account_commenter_id" FromRole="dbAccount" ToRole="TicketComment" />
         </EntityType>
         <EntityType Name="dbGlobalSetting">
           <Key>
@@ -799,7 +901,7 @@
           <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
           <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Account" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="Product" ToRole="dbAccount" />
+          <NavigationProperty Name="ProductOwner" Relationship="Stencil.Data.Sql.FK_Product_Account_product_owner_id" FromRole="Product" ToRole="dbAccount" />
           <NavigationProperty Name="ProductVersions" Relationship="Stencil.Data.Sql.FK_ProductVersion_Product_product_id" FromRole="Product" ToRole="ProductVersion" />
           <NavigationProperty Name="AffectedProducts" Relationship="Stencil.Data.Sql.FK_AffectedProduct_Product_product_id" FromRole="dbProduct" ToRole="AffectedProduct" />
         </EntityType>
@@ -873,6 +975,7 @@
           <NavigationProperty Name="AssignedTo" Relationship="Stencil.Data.Sql.FK_Ticket_Account_assigned_to_id" FromRole="Ticket" ToRole="dbAccount" />
           <NavigationProperty Name="ReportedBy" Relationship="Stencil.Data.Sql.FK_Ticket_Account_reported_by_id" FromRole="Ticket" ToRole="dbAccount" />
           <NavigationProperty Name="AffectedProducts" Relationship="Stencil.Data.Sql.FK_AffectedProduct_Ticket_ticket_id" FromRole="dbTicket" ToRole="AffectedProduct" />
+          <NavigationProperty Name="TicketComments" Relationship="Stencil.Data.Sql.FK_TicketComment_Ticket_ticket_id" FromRole="dbTicket" ToRole="TicketComment" />
         </EntityType>
         <Association Name="FK_Ticket_Account_assigned_to_id">
           <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="0..1" />
@@ -997,6 +1100,51 @@
           <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
           <Property Name="commit_id" Type="Guid" Nullable="false" />
         </EntityType>
+        <EntityType Name="dbTicketComment">
+          <Key>
+            <PropertyRef Name="ticket_comment_id" />
+          </Key>
+          <Property Name="ticket_comment_id" Type="Guid" Nullable="false" />
+          <Property Name="ticket_id" Type="Guid" Nullable="false" />
+          <Property Name="commenter_id" Type="Guid" Nullable="false" />
+          <Property Name="commented_on_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="ticket_comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="updated_utc" Type="DateTimeOffset" Nullable="false" Precision="0" />
+          <Property Name="deleted_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_hydrate_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_success_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_invalid_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_attempt_utc" Type="DateTimeOffset" Precision="0" />
+          <Property Name="sync_agent" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sync_log" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Commenter" Relationship="Stencil.Data.Sql.FK_TicketComment_Account_commenter_id" FromRole="TicketComment" ToRole="dbAccount" />
+          <NavigationProperty Name="Ticket" Relationship="Stencil.Data.Sql.FK_TicketComment_Ticket_ticket_id" FromRole="TicketComment" ToRole="dbTicket" />
+        </EntityType>
+        <Association Name="FK_TicketComment_Account_commenter_id">
+          <End Type="Stencil.Data.Sql.dbAccount" Role="dbAccount" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbTicketComment" Role="TicketComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="TicketComment">
+              <PropertyRef Name="commenter_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TicketComment_Ticket_ticket_id">
+          <End Type="Stencil.Data.Sql.dbTicket" Role="dbTicket" Multiplicity="1" />
+          <End Type="Stencil.Data.Sql.dbTicketComment" Role="TicketComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dbTicket">
+              <PropertyRef Name="ticket_id" />
+            </Principal>
+            <Dependent Role="TicketComment">
+              <PropertyRef Name="ticket_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1257,6 +1405,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="dbTicketComments">
+            <EntityTypeMapping TypeName="Stencil.Data.Sql.dbTicketComment">
+              <MappingFragment StoreEntitySet="TicketComment">
+                <ScalarProperty Name="sync_log" ColumnName="sync_log" />
+                <ScalarProperty Name="sync_agent" ColumnName="sync_agent" />
+                <ScalarProperty Name="sync_attempt_utc" ColumnName="sync_attempt_utc" />
+                <ScalarProperty Name="sync_invalid_utc" ColumnName="sync_invalid_utc" />
+                <ScalarProperty Name="sync_success_utc" ColumnName="sync_success_utc" />
+                <ScalarProperty Name="sync_hydrate_utc" ColumnName="sync_hydrate_utc" />
+                <ScalarProperty Name="deleted_utc" ColumnName="deleted_utc" />
+                <ScalarProperty Name="updated_utc" ColumnName="updated_utc" />
+                <ScalarProperty Name="created_utc" ColumnName="created_utc" />
+                <ScalarProperty Name="ticket_comment" ColumnName="ticket_comment" />
+                <ScalarProperty Name="commented_on_utc" ColumnName="commented_on_utc" />
+                <ScalarProperty Name="commenter_id" ColumnName="commenter_id" />
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="ticket_comment_id" ColumnName="ticket_comment_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spTicketComment_HydrateSyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spTicketComment_HydrateSyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spTicketComment_HydrateSyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicketComment_HydrateSyncUpdate" />
+          <FunctionImportMapping FunctionImportName="spTicketComment_SyncGetInvalid" FunctionName="Stencil.Data.Sql.Store.spTicketComment_SyncGetInvalid" />
+          <FunctionImportMapping FunctionImportName="spTicketComment_SyncUpdate" FunctionName="Stencil.Data.Sql.Store.spTicketComment_SyncUpdate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

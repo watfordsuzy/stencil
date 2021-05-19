@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\ProductVersionPlatformEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\TicketCommentEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\Core\TicketEndpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\EndpointBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Endpoints\ServerEndpoint.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\UpdateRequiredInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SDKModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Ticket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TicketComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TicketStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TicketType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PagingInfo.cs" />

@@ -142,6 +142,7 @@
     <Compile Include="Business\Direct\Implementation\ProductVersionPlatformBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\TicketBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\TicketBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketCommentBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IPlatformBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductVersionBusiness_Crud.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Business\Direct\ITicketBusiness.cs" />
     <Compile Include="Business\Direct\ITicketBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IProductBusiness.cs" />
+    <Compile Include="Business\Direct\ITicketCommentBusiness_Crud.cs" />
     <Compile Include="Business\Direct\_DirectExtensions.cs" />
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />
     <Compile Include="Business\Index\Factory\IStencilElasticClientFactory.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="Business\Index\Implementation\ProductIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\ProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\ProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\TicketCommentIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\TicketIndex.cs" />
     <Compile Include="Business\Index\Implementation\TicketIndex_Core.cs" />
     <Compile Include="Business\Index\IndexResult.cs" />
@@ -179,6 +182,7 @@
     <Compile Include="Business\Index\IProductIndex_Core.cs" />
     <Compile Include="Business\Index\IProductVersionIndex_Core.cs" />
     <Compile Include="Business\Index\IProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\ITicketCommentIndex_Core.cs" />
     <Compile Include="Business\Index\ITicketIndex.cs" />
     <Compile Include="Business\Index\ITicketIndex_Core.cs" />
     <Compile Include="Business\Index\_IndexExtensions.cs" />
@@ -198,6 +202,8 @@
     <Compile Include="Business\Synchronization\Implementation\ProductVersionPlatformSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\ProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\SynchronizerBase.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketCommentSynchronizer.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketCommentSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer.cs" />
     <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\IPlatformSynchronizer_Core.cs" />
@@ -205,6 +211,7 @@
     <Compile Include="Business\Synchronization\IProductVersionPlatformSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\IProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\ISynchronizer.cs" />
+    <Compile Include="Business\Synchronization\ITicketCommentSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\ITicketSynchronizer_Core.cs" />
     <Compile Include="Daemons\Agents.cs" />
     <Compile Include="Daemons\NonReentrantDaemon.cs" />

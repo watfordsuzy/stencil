@@ -23,6 +23,9 @@
         <AssociationConnector Association="Stencil.Data.Sql.FK_AffectedProduct_Product_product_id" />
         <AssociationConnector Association="Stencil.Data.Sql.FK_AffectedProduct_Ticket_ticket_id" />
         <EntityTypeShape EntityType="Stencil.Data.Sql.dbCommit" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Stencil.Data.Sql.dbTicketComment" Width="1.5" PointX="8.25" PointY="10.75" />
+        <AssociationConnector Association="Stencil.Data.Sql.FK_TicketComment_Account_commenter_id" />
+        <AssociationConnector Association="Stencil.Data.Sql.FK_TicketComment_Ticket_ticket_id" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

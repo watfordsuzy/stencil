@@ -18,6 +18,7 @@ namespace Stencil.Data.Sql
         public dbTicket()
         {
             this.AffectedProducts = new HashSet<dbAffectedProduct>();
+            this.TicketComments = new HashSet<dbTicketComment>();
         }
     
         public System.Guid ticket_id { get; set; }
@@ -43,5 +44,7 @@ namespace Stencil.Data.Sql
         public virtual dbAccount ReportedBy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dbAffectedProduct> AffectedProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dbTicketComment> TicketComments { get; set; }
     }
 }

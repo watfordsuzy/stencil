@@ -12,19 +12,13 @@ namespace Stencil.Data.Sql
     using System;
     using System.Collections.Generic;
     
-    public partial class dbProduct
+    public partial class dbTicketComment
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dbProduct()
-        {
-            this.ProductVersions = new HashSet<dbProductVersion>();
-            this.AffectedProducts = new HashSet<dbAffectedProduct>();
-        }
-    
-        public System.Guid product_id { get; set; }
-        public string product_name { get; set; }
-        public System.Guid product_owner_id { get; set; }
-        public string product_description { get; set; }
+        public System.Guid ticket_comment_id { get; set; }
+        public System.Guid ticket_id { get; set; }
+        public System.Guid commenter_id { get; set; }
+        public System.DateTimeOffset commented_on_utc { get; set; }
+        public string ticket_comment { get; set; }
         public System.DateTimeOffset created_utc { get; set; }
         public System.DateTimeOffset updated_utc { get; set; }
         public Nullable<System.DateTimeOffset> deleted_utc { get; set; }
@@ -35,10 +29,7 @@ namespace Stencil.Data.Sql
         public string sync_agent { get; set; }
         public string sync_log { get; set; }
     
-        public virtual dbAccount ProductOwner { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dbProductVersion> ProductVersions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dbAffectedProduct> AffectedProducts { get; set; }
+        public virtual dbAccount Commenter { get; set; }
+        public virtual dbTicket Ticket { get; set; }
     }
 }

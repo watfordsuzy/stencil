@@ -106,6 +106,9 @@
     <Compile Include="dbTicket.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbTicketComment.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\DatabaseExtensions.cs" />
     <Compile Include="IStencilContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

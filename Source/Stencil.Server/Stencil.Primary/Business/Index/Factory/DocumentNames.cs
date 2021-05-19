@@ -1,3 +1,5 @@
+using Nest;
+using Stencil.SDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +24,6 @@ namespace Stencil.Primary.Business.Index
 
         public static readonly string AffectedProduct = "affectedproducts";
         
+        public static readonly string TicketComment = "ticketcomments";
     }
 }

@@ -68,6 +68,8 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<AffectedProduct, dbAffectedProduct>();
             am.Mapper.CreateMap<dbCommit, Commit>();
             am.Mapper.CreateMap<Commit, dbCommit>();
+            am.Mapper.CreateMap<dbTicketComment, TicketComment>();
+            am.Mapper.CreateMap<TicketComment, dbTicketComment>();
             am.Mapper.CreateMap<dbAsset, Asset>();
             am.Mapper.CreateMap<Asset, dbAsset>();
             
@@ -111,6 +113,9 @@ namespace Stencil.Primary.Mapping
             
             am.Mapper.CreateMap<Domain.Commit, SDK.Models.Commit>();
             am.Mapper.CreateMap<SDK.Models.Commit, Domain.Commit>();
+            
+            am.Mapper.CreateMap<Domain.TicketComment, SDK.Models.TicketComment>();
+            am.Mapper.CreateMap<SDK.Models.TicketComment, Domain.TicketComment>();
             
             am.Mapper.CreateMap<Domain.Asset, SDK.Models.Asset>();
             am.Mapper.CreateMap<SDK.Models.Asset, Domain.Asset>();

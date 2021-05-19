@@ -317,6 +317,39 @@ namespace Stencil.Primary
         
         
         
+        public static dbTicketComment ToDbModel(this TicketComment entity, dbTicketComment destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new dbTicketComment(); }
+                return am.Mapper.Map<TicketComment, dbTicketComment>(entity, destination);
+            }
+            return null;
+        }
+        public static TicketComment ToDomainModel(this dbTicketComment entity, TicketComment destination = null)
+        {
+            if (entity != null)
+            {
+                if (destination == null) { destination = new TicketComment(); }
+                return am.Mapper.Map<dbTicketComment, TicketComment>(entity, destination);
+            }
+            return null;
+        }
+        public static List<TicketComment> ToDomainModel(this IEnumerable<dbTicketComment> entities)
+        {
+            List<TicketComment> result = new List<TicketComment>();
+            if (entities != null)
+            {
+                foreach (var item in entities)
+                {
+                    result.Add(item.ToDomainModel());
+                }
+            }
+            return result;
+        }
+        
+        
+        
         public static dbAsset ToDbModel(this Asset entity, dbAsset destination = null)
         {
             if (entity != null)

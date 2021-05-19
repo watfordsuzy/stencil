@@ -287,6 +287,42 @@ namespace Stencil.Primary.Business.Index
                     )
                 )
             
+                .Map<sdk.TicketComment>(DocumentNames.TicketComment, p => p
+                    .AutoMap()
+                    .Properties(props => props
+                        .String(s => s
+                            .Name(n => n.ticket_comment_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.ticket_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(s => s
+                            .Name(n => n.commenter_id)
+                            .Index(FieldIndexOption.NotAnalyzed)
+                        ).String(m => m
+                            .Name(t => t.account_name)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.account_name)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.account_name.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        ).String(m => m
+                            .Name(t => t.account_email)
+                            .Fields(f => f
+                                    .String(s => s.Name(n => n.account_email)
+                                    .Index(FieldIndexOption.Analyzed))
+                                    .String(s => s
+                                        .Name(n => n.account_email.Suffix("sort"))
+                                        .Analyzer("case_insensitive"))
+                                    
+                            )
+                        )
+                    )
+                )
+            
             );
         }
     }

@@ -153,6 +153,7 @@
     <Compile Include="Controllers\ProductVersionPlatformController.cs" />
     <Compile Include="Controllers\ProductVersionPlatformController_Crud.cs" />
     <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\TicketCommentController_Crud.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\TicketController_Crud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

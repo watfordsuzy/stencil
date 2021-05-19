@@ -12,6 +12,12 @@
 
 GO
 
+ALTER TABLE [dbo].[TicketComment] DROP  [FK_TicketComment_Ticket_ticket_id]
+
+ALTER TABLE [dbo].[TicketComment] DROP  [FK_TicketComment_Account_commenter_id]
+
+GO
+
 GO
 
 ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Ticket_ticket_id]
@@ -65,6 +71,9 @@ GO
 -- <Tables> --------------------------------------------------------------------
 
 DROP TABLE [dbo].[Asset]
+GO
+
+DROP TABLE [dbo].[TicketComment]
 GO
 
 DROP TABLE [dbo].[Commit]
@@ -199,6 +208,21 @@ DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncUpdate]
 GO
 
 DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spTicketComment_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_HydrateSyncGetInvalid]
 GO
 
 

@@ -25,6 +25,7 @@ namespace Stencil.SDK
         public TicketEndpoint Ticket;
         public AffectedProductEndpoint AffectedProduct;
         public CommitEndpoint Commit;
+        public TicketCommentEndpoint TicketComment;
         public AssetEndpoint Asset;
         
 
@@ -39,6 +40,7 @@ namespace Stencil.SDK
             this.Ticket = new TicketEndpoint(this);
             this.AffectedProduct = new AffectedProductEndpoint(this);
             this.Commit = new CommitEndpoint(this);
+            this.TicketComment = new TicketCommentEndpoint(this);
             this.Asset = new AssetEndpoint(this);
             
         }   

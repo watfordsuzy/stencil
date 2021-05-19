@@ -80,6 +80,16 @@
     <field type="DateTime" dbType="datetimeoffset(0)" isNullable="true" friendlyName="Commit Message Decoded At">commit_message_decoded_utc</field>
     <field type="string" dbType="nvarchar(max)" isNullable="true" friendlyName="Commit Message">commit_message</field>
   </item>
+  <!-- Tickets may have zero or more comments -->
+  <item name="TicketComment" friendlyName="Ticket Comment" uiDisplayField="ticket_comment" useIndex="true" indexPriority="70">
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Ticket Comment ID">ticket_comment_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Ticket" foreignKeyField="ticket_id" friendlyName="TicketID">ticket_id</field>
+    <field type="Guid" dbType="uniqueidentifier" isNullable="false" foreignKey="Account" foreignKeyField="account_id" foreignKeyInvalidatesMe="true" friendlyName="CommenterID">commenter_id</field>
+    <field type="DateTime" dbType="datetimeoffset(0)" isNullable="false" friendlyName="Commented On">commented_on_utc</field>
+    <field type="string" dbType="nvarchar(max)" isNullable="false" friendlyName="Ticket Comment">ticket_comment</field>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="CommenterName">account_name</indexfield>
+    <indexfield type="string" isNullable="false" sortable="true" friendlyName="CommenterEMail">account_email</indexfield>
+  </item>
   <item name="Asset" friendlyName="Asset" uiDisplayField="asset_id" trackUpdates="true">
     <field type="Guid" dbType="uniqueidentifier" isNullable="false" friendlyName="Asset ID">asset_id</field>
     <field type="AssetType" dbType="int" isNullable="false" friendlyName="Asset Type">type</field>
