@@ -23,7 +23,7 @@ namespace Codeable.Foundation.Analyzers
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "Usage";
 
-        private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
 
@@ -66,6 +66,13 @@ namespace Codeable.Foundation.Analyzers
                 return;
             }
 
+            // Skip Empty methods
+            if (methodDeclaration.Body != null
+                && !methodDeclaration.Body.Statements.Any())
+            {
+                return;
+            }
+
             if (!HasExecuteMethodOrFunction(context, methodDeclaration))
             {
                 return;
@@ -87,7 +94,8 @@ namespace Codeable.Foundation.Analyzers
 
         private void AnalyzeNodeForExecuteMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration, string methodName)
         {
-            if (methodDeclaration.Body != null && methodDeclaration.Body.Statements.Any())
+            if (methodDeclaration.Body != null 
+                && methodDeclaration.Body.Statements.Count == 1)
             {
                 var firstStatement = methodDeclaration.Body.Statements.First();
                 if (firstStatement is ExpressionStatementSyntax statementSyntax)
@@ -138,7 +146,8 @@ namespace Codeable.Foundation.Analyzers
         private void AnalyzeNodeForExecuteFunction(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             const string methodName = "ExecuteFunction";
-            if (methodDeclaration.Body != null)
+            if (methodDeclaration.Body != null 
+                && methodDeclaration.Body.Statements.Count == 1)
             {
                 var firstStatement = methodDeclaration.Body.Statements.First();
                 if (firstStatement is ReturnStatementSyntax returnStatement)

@@ -12,6 +12,33 @@ namespace CodeableFoundationAnalyzers.Tests
     public partial class BaseExecuteAnalyzerTests
     {
         [Fact]
+        public async Task Empty_Method()
+        {
+            await VerifyCS.VerifyAnalyzerAsync(@"
+using System;
+using System.Threading.Tasks;
+class Program : ChokeableClass
+{
+    void Test()
+    {
+    }
+}
+
+class ChokeableClass
+{
+public void ExecuteMethod(string methodName, Action action, params object[] parameters)
+{
+    action();
+}
+public TResult ExecuteFunction<TResult>(string methodName, Func<TResult> func, params object[] parameters)
+{
+    return func();
+}
+}
+");
+        }
+
+        [Fact]
         public async Task ExecuteMethod_Only_Statement()
         {
             await VerifyCS.VerifyAnalyzerAsync(@"
