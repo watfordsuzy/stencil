@@ -123,7 +123,8 @@ Analysis of STS and the bug has determined the following:
 4. Deploy the v3 STS Data Schema to a new `stencil_demo_v3` ElasticSearch index.
 5. Reindex `stencil_demo` onto `stencil_demo_v3` (mark the current time).
 6. Atomically rotate the `stencil_demo_current` alias to point to `stencil_demo_v3`.
-7. Resynchronize all entities sync'd after the time marked in step 6
+7. Resynchronize all entities sync'd after the time marked in step 6.
+8. Confirm successful deployment of the index fix.
 
 ### 1. Create `stencil_demo_current` alias and point to `stencil_demo`
 The following action will create the new alias:
@@ -214,4 +215,160 @@ PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential '_tas
 ```
 
 - Actor: christopherw@suzy.com
-- Status: In Progress on 2021-05-20T14:13:00-04:00
+- Status: Completed on 2021-05-20T14:15:00-04:00
+
+### 6. Atomically rotate the `stencil_demo_current` alias to point to `stencil_demo_v3`.
+The following action will atomically rotate the alias to point to `stencil_demo_v3`:
+```
+PS> $body = '{"actions":[{"remove":{"index":"stencil_demo","alias":"stencil_demo_current"}},{"add":{"index":"stencil_demo_v3","alias":"stencil_demo_current"}}]}'
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Body:$body -Method POST -Resource '_aliases'
+```
+
+- Actor: christopherw@suzy.com
+- Status: Completed on 2021-05-20T14:17:00-04:00
+
+### 7. Resynchronize all entities sync'd after the time marked in step 6.
+The extent of condition should be analyzed to determine the impact of resynchronization:
+```
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Resource '_cat/count/stencil_demo'
+
+1621534742 18:19:02 8918
+
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Resource '_cat/count/stencil_demo_v3'
+
+1621534750 18:19:10 8872
+```
+
+Using the time marked in step 5, mark all of those entities as requiring synchronization:
+```sql
+DECLARE @SyncAfter datetimeoffset = '2021-05-20T18:11:39.2148968+00:00'
+
+UPDATE [dbo].[Account] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[Product] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[Platform] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[ProductVersion] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[ProductVersionPlatform]
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[Ticket] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[AffectedProduct] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+
+UPDATE [dbo].[TicketComment] 
+   SET [sync_success_utc] = NULL
+     , [sync_hydrate_utc] = NULL
+     , [sync_log] = 'invalidateall'
+ WHERE [sync_success_utc] >= @SyncAfter
+    OR [sync_hydrate_utc] >= @SyncAfter
+```
+The following results were seen:
+```
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(105 rows affected)
+
+(40 rows affected)
+
+(104 rows affected)
+
+Completion time: 2021-05-20T14:25:34.9842823-04:00
+```
+
+The extent of condition should be reanalyzed to determine the result of resynchronization (and when it completes):
+```
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Resource '_cat/count/stencil_demo_v3'
+
+1621535203 18:26:43 8888
+
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Resource '_cat/count/stencil_demo_v3'
+
+1621535230 18:27:10 8918 
+
+PS> .\Invoke-Elastic.ps1 -ElasticHost:$ElasticHost -Credential:$Credential -Resource '_cat/count/stencil_demo_v3'
+
+1621535249 18:27:29 8918
+```
+
+### 8. Confirm successful deployment of the index fix.
+Confirm index availability of a _Ticket Comment_ by _Account_ from before the resynchronization date:
+```sql
+DECLARE @SyncAfter datetimeoffset = '2021-05-20T18:11:39.2148968+00:00'
+
+SELECT TOP(1) [ticket_comment_id], [commenter_id] 
+  FROM [dbo].[TicketComment]
+ WHERE [commented_on_utc] < @SyncAfter
+
+-- ticket_comment_id	commenter_id
+-- 45450A1C-BE1C-4B7B-BCD6-0000CBF83DE8	0AB9F424-DF92-4678-8AB7-68F186E1C497
+``` 
+Using the resulting commenter_id, from a C# interactive prompt:
+```
+> await SDK.TicketComment.GetTicketCommentByCommenterIDAsync(Guid.Parse("5FE1EACA-BA4E-4CE6-833B-15C8BF94235A"))
+ListResult<TicketComment> { items=List<TicketComment>(10) { TicketComment { account_email="account28@...
+```
+
+Confirm index availability of a _Ticket Comment_ by _Account_ from after the resynchronization date:
+```sql
+
+SELECT TOP(1) [ticket_comment_id], [commenter_id] 
+  FROM [dbo].[TicketComment]
+ WHERE [commented_on_utc] >= @SyncAfter
+
+-- ticket_comment_id	commenter_id
+-- 0DCE14F2-2D99-42D0-B8EE-0046367923C5	5FE1EACA-BA4E-4CE6-833B-15C8BF94235A
+```
+
+Using the resulting commenter_id, from a C# interactive prompt:
+```
+> await SDK.TicketComment.GetTicketCommentByCommenterIDAsync(Guid.Parse("5FE1EACA-BA4E-4CE6-833B-15C8BF94235A"))
+ListResult<TicketComment> { items=List<TicketComment>(10) { TicketComment { account_email="account28@...
+```
+
+- Actor: christopherw@suzy.com
+- Status: Completed on 2021-05-20T14:35:00-04:00
