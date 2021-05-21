@@ -11,6 +11,9 @@
     <AssemblyName>StencilSDKDuo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <LangVersion>6</LangVersion>
+    <NoCompilerStandardLib>true</NoCompilerStandardLib>
+    <NoStdLib>true</NoStdLib>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -57,12 +60,12 @@
     <PostBuildEvent>copy "$(TargetDir)StencilSDKDuo.js" "$(ProjectDir)PackageHelper\stencil-sdk@1.0.0\stencil-sdk-duo.js"
 copy  "$(TargetDir)StencilSDKDuo.js" "$(SolutionDir)Stencil.Website\aurelia\jspm_packages\github\stencil\stencil-sdk@1.0.0\stencil-sdk-duo.js"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\DuoCode.1.1.1423.0\build\DuoCode.targets" Condition="Exists('..\packages\DuoCode.1.1.1423.0\build\DuoCode.targets')" />
+  <Import Project="..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets" Condition="Exists('..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\DuoCode.1.1.1423.0\build\DuoCode.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\DuoCode.1.1.1423.0\build\DuoCode.targets'))" />
+    <Error Condition="!Exists('..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

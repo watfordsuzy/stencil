@@ -6,11 +6,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Stencil.Primary.Daemons
 {
-    public abstract class WorkerBase<TRequest> : ChokeableClass, IDaemonTask
+    public abstract class WorkerBase<TRequest> : NonReentrantDaemon
     {
         #region Constructor
 
@@ -37,6 +38,7 @@ namespace Stencil.Primary.Daemons
             worker.EnqueueRequest(request);
             return worker;
         }
+
         /// <summary>
         /// Not Aspect Wrapped
         /// </summary>
@@ -77,8 +79,6 @@ namespace Stencil.Primary.Daemons
 
         #region Protected Properties
 
-        protected virtual bool Executing { get; set; }
-
         protected virtual ConcurrentQueue<TRequest> RequestQueue { get; set; }
 
         #endregion
@@ -98,27 +98,18 @@ namespace Stencil.Primary.Daemons
 
         #region IDaemonTask Members
 
-        public virtual DaemonSynchronizationPolicy SynchronizationPolicy
+        public override DaemonSynchronizationPolicy SynchronizationPolicy
         {
             get { return DaemonSynchronizationPolicy.None; }
         }
-        public virtual string DaemonName { get; private set; }
-        public virtual void Execute(IFoundation iFoundation)
+
+        public override string DaemonName { get; }
+
+        protected override void ExecuteNonReentrant(IFoundation foundation)
         {
-            if (this.Executing) { return; } // safety
-
-            base.ExecuteMethod("Execute", delegate ()
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate ()
             {
-                try
-                {
-                    this.Executing = true;
-
-                    this.ProcessRequests();
-                }
-                finally
-                {
-                    this.Executing = false;
-                }
+                this.ProcessRequests();
             });
         }
 
