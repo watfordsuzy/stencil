@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Stencil.Backing</RootNamespace>
     <AssemblyName>Stencil.Backing</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <Use64BitIISExpress />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,21 +46,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Codeable.Foundation.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Common, Version=4.0.54.15408, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Core, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.39.12205, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -83,13 +80,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -140,6 +137,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -176,6 +174,8 @@
     <Content Include="Plugins\ElasticSync\Stencil.Plugins.ElasticSync.dll" />
     <Content Include="Plugins\Email\PluginConfig.txt" />
     <Content Include="Plugins\Email\Stencil.Plugins.Email.dll" />
+    <Content Include="Plugins\GitHub\PluginConfig.txt" />
+    <Content Include="Plugins\GitHub\Stencil.Plugins.GitHub.dll" />
     <Content Include="Plugins\RestAPI\PluginConfig.txt" />
     <Content Include="Plugins\RestAPI\Stencil.Plugins.RestAPI.dll" />
     <Content Include="Plugins\SystemMonitor\PluginConfig.txt" />
@@ -221,6 +221,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="localAppSettings.config" />
+    <Content Include="localConnectionStrings.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

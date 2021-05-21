@@ -1,0 +1,7 @@
+﻿AssemblyFileName: Stencil.Plugins.GitHub.dll
+SystemName: GitHub
+FriendlyName: Stencil - GitHub
+Description: Listens for GitHub Webhooks and updates tickets
+Version: 1.0 
+Author: christopherw@suzy.com
+Feature: Unknown

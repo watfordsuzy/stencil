@@ -185,12 +185,16 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("GetById", delegate()
             {
+                this.BeforeGet();
+
                 <xsl:if test="@userSpecificData='account_id'">dm.Account currentAccount = this.GetCurrentAccount();
                 </xsl:if>sdk.<xsl:value-of select="@name" /> result = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:if test="string-length(@indexParent) > 0"><xsl:for-each select="field[@indexParent='true']"><xsl:value-of select="text()" />, </xsl:for-each></xsl:if><xsl:value-of select="field[1]"/><xsl:if test="@userSpecificData='account_id'">, currentAccount.account_id</xsl:if>);
                 if (result == null)
                 {
                     return Http404("<xsl:value-of select="@name" />");
                 }
+
+                this.AfterGet(result);
 
                 <xsl:if test="count(field[text()='faction_id'])>0">this.Analytics.TrackFactionAccess(this.GetCurrentAccount(), result.faction_id);</xsl:if>
 
@@ -201,6 +205,10 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(sdk.<xsl:value-of select="@name" /> result);
+        partial void AfterGet(ListResult&lt;sdk.<xsl:value-of select="@name" />&gt; result);
         
         <xsl:if test="count(field[@searchable='true']) > 0 or count(indexfield[@searchable='true']) > 0">
         [HttpGet]
@@ -209,14 +217,24 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("Find", delegate()
             {
+                this.BeforeFind();
+
                 <xsl:if test="count(field[@foreignKeyField='faction_id'])>0">this.Analytics.TrackFactionAccess(this.GetCurrentAccount(), faction_id);
                 </xsl:if>
                 <xsl:if test="@userSpecificData='account_id'">dm.Account currentAccount = this.GetCurrentAccount();</xsl:if>
                 ListResult&lt;sdk.<xsl:value-of select="@name" />&gt; result = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Find(<xsl:if test="@userSpecificData='account_id'">currentAccount.account_id, </xsl:if>skip, take, keyword, order_by, descending<xsl:for-each select="field[@foreignKey]">, <xsl:value-of select="text()"/></xsl:for-each><xsl:for-each select="field[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each><xsl:for-each select="indexfield[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each>);
                 result.success = true;
+
+                this.AfterFind(result);
+
                 return base.Http200(result);
             });
-        }</xsl:if>
+        }
+        
+        partial void BeforeFind();
+        partial void AfterFind(ListResult&lt;sdk.<xsl:value-of select="@name" />&gt; result);
+        
+        </xsl:if>
         
         <xsl:for-each select="field[@foreignKey]">
         <xsl:variable name="foreignKey"><xsl:value-of select="@foreignKey"/></xsl:variable>
@@ -226,7 +244,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("GetBy<xsl:value-of select="@friendlyName" />", delegate ()
             {
-                
+                this.BeforeGet();
+
                 <xsl:if test="not(@foreignKeyField='faction_id') and ../../item[@name=$foreignKey]/field/text()='faction_id'">Guid? faction_id = null;
                 dm.<xsl:value-of select="$foreignKey"/> reference<xsl:value-of select="$foreignKey"/> = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="$foreignKey"/></xsl:call-template>.GetById(<xsl:value-of select="@foreignKeyField"/>);
                 if(reference<xsl:value-of select="$foreignKey"/> != null)
@@ -237,6 +256,9 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 <xsl:if test="../@userSpecificData='account_id'">dm.Account currentAccount = this.GetCurrentAccount();</xsl:if>
                 ListResult&lt;sdk.<xsl:value-of select="../@name"/>&gt; result = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="../@name"/></xsl:call-template>.GetBy<xsl:value-of select="@friendlyName" />(<xsl:value-of select="@foreignKeyField"/>, skip, take, order_by, descending<xsl:if test="string-length(../@pagingWindow)>0">, before_<xsl:value-of select="../@pagingWindow" /></xsl:if><xsl:if test="../@userSpecificData='account_id'">, currentAccount.account_id</xsl:if><xsl:for-each select="../field[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each><xsl:for-each select="../indexfield[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each>);
                 result.success = true;
+
+                this.AfterGet(result);
+
                 return base.Http200(result);
             });
         }
@@ -249,6 +271,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("GetById", delegate()
             {
+                this.BeforeGet();
+
                 dm.<xsl:value-of select="@name" /> result = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:value-of select="field[1]"/>);
                 if (result == null)
                 {
@@ -257,6 +281,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
 
                 <xsl:if test="count(field[text()='faction_id'])>0">this.Analytics.TrackFactionAccess(this.GetCurrentAccount(), result.faction_id);</xsl:if>
 
+                this.AfterGet(result);
+
                 return base.Http200(new ItemResult&lt;sdk.<xsl:value-of select="@name" />&gt;()
                 {
                     success = true,
@@ -264,6 +290,10 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(dm.<xsl:value-of select="@name" /> result);
+        partial void AfterGet(List&lt;dm.<xsl:value-of select="@name" />&gt; result);
         
         <xsl:if test="count(field[@searchable='true']) > 0 or count(indexfield[@searchable='true']) > 0">[HttpGet]
         [Route("")]
@@ -271,7 +301,7 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("Find", delegate()
             {
-
+                this.BeforeFind();
 
                 int takePlus = take;
                 if (take != int.MaxValue)
@@ -280,12 +310,19 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 }
 
                 List&lt;dm.<xsl:value-of select="@name" />&gt; result = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Find(skip, takePlus, keyword, order_by, descending<xsl:for-each select="field[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each><xsl:for-each select="indexfield[string-length(@searchToggle)>0]">, <xsl:value-of select="text()"/></xsl:for-each>);
+
+                this.AfterFind(result);
+
                 return base.Http200(result.ToSteppedListResult(skip, take));
 
             });
         }
         
+        partial void BeforeFind();
+        partial void AfterFind(List&lt;dm.<xsl:value-of select="@name" />&gt; result);
+        
         </xsl:if>
+
         <xsl:variable name="removePattern"><xsl:value-of select="@removePattern"/></xsl:variable>
         <xsl:for-each select="field[@foreignKey]">[HttpGet]
         [Route("by_<xsl:call-template name="ToLower"><xsl:with-param name="inputString" select="@friendlyName"/></xsl:call-template>/{<xsl:value-of select="@foreignKeyField"/>}")]
@@ -293,7 +330,11 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction&lt;object&gt;("GetBy<xsl:value-of select="@friendlyName" />", delegate ()
             {
+                this.BeforeGet();
+
                 List&lt;dm.<xsl:value-of select="../@name"/>&gt; result = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="../@name"/></xsl:call-template>.GetBy<xsl:value-of select="@friendlyName" />(<xsl:value-of select="@foreignKeyField"/><xsl:if test="$removePattern='true'">, include_removed</xsl:if>);
+
+                this.AfterGet(result);
 
                 return base.Http200(new ListResult&lt;sdk.<xsl:value-of select="../@name"/>&gt;()
                 {
@@ -317,11 +358,13 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(<xsl:value-of select="$name_lowered"/>, "<xsl:value-of select="@name" />");
 
-                dm.<xsl:value-of select="@name" /> insert = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
+                this.BeforeInsert(<xsl:value-of select="$name_lowered"/>);
 
-                
+                dm.<xsl:value-of select="@name" /> insert = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
+              
                 insert = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Insert(insert);
                 
+                this.AfterInsert(<xsl:value-of select="$name_lowered"/>, insert);
 
                 <xsl:choose><xsl:when test="@useIndex='true'">
                 sdk.<xsl:value-of select="@name" /> result = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:if test="string-length(@indexParent) > 0"><xsl:for-each select="field[@indexParent='true']">insert.<xsl:value-of select="text()" />, </xsl:for-each></xsl:if>insert.<xsl:value-of select="field[1]"/>);</xsl:when><xsl:otherwise>
@@ -338,6 +381,8 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
+        partial void AfterInsert(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, dm.<xsl:value-of select="@name" /> inserted);
 
         [HttpPut]
         [Route("{<xsl:value-of select="field[1]"/>}")]
@@ -349,10 +394,14 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(<xsl:value-of select="field[1]"/>, <xsl:value-of select="$name_lowered"/>.<xsl:value-of select="field[1]"/>, "<xsl:value-of select="@name" />");
 
                 <xsl:value-of select="$name_lowered"/>.<xsl:value-of select="field[1]"/> = <xsl:value-of select="field[1]"/>;
+
+                this.BeforeUpdate(<xsl:value-of select="$name_lowered"/>);
+
                 dm.<xsl:value-of select="@name" /> update = <xsl:value-of select="$name_lowered"/>.ToDomainModel();
 
-
                 update = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Update(update);
+
+                this.AfterUpdate(<xsl:value-of select="$name_lowered"/>, update);
                 
                 <xsl:choose><xsl:when test="@useIndex='true'">
                 sdk.<xsl:value-of select="@name" /> existing = this.API.Index.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:if test="string-length(@indexParent) > 0"><xsl:for-each select="field[@indexParent='true']">update.<xsl:value-of select="text()" />, </xsl:for-each></xsl:if>update.<xsl:value-of select="field[1]"/>);
@@ -368,6 +417,9 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
             });
 
         }
+
+        partial void BeforeUpdate(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>);
+        partial void AfterUpdate(sdk.<xsl:value-of select="@name" /><xsl:text> </xsl:text><xsl:value-of select="$name_lowered"/>, dm.<xsl:value-of select="@name" /> updated);
 
         <xsl:for-each select="field[string-length(@priorityGroupBy)>0]">
         [HttpPost]
@@ -396,17 +448,24 @@ namespace <xsl:value-of select="../@projectName"/>.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.<xsl:value-of select="@name" /> delete = this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.GetById(<xsl:value-of select="field[1]"/>);
+                if (delete == null)
+                {
+                    return base.Http404(@"<xsl:value-of select="@name" />");
+                }
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.<xsl:call-template name="Pluralize"><xsl:with-param name="inputString" select="@name"/></xsl:call-template>.Delete(<xsl:value-of select="field[1]"/>);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = <xsl:value-of select="field[1]"/>.ToString()
                 });
             });
         }
+
+        partial void BeforeDelete(dm.<xsl:value-of select="@name" /> delete);
 
     }
 }

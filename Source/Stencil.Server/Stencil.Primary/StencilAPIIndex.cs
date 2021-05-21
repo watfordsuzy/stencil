@@ -27,6 +27,34 @@ namespace Stencil.Primary
         {
             get { return this.IFoundation.Resolve<IAccountIndex>(); }
         }
+        public IProductIndex Products
+        {
+            get { return this.IFoundation.Resolve<IProductIndex>(); }
+        }
+        public IPlatformIndex Platforms
+        {
+            get { return this.IFoundation.Resolve<IPlatformIndex>(); }
+        }
+        public IProductVersionIndex ProductVersions
+        {
+            get { return this.IFoundation.Resolve<IProductVersionIndex>(); }
+        }
+        public IProductVersionPlatformIndex ProductVersionPlatforms
+        {
+            get { return this.IFoundation.Resolve<IProductVersionPlatformIndex>(); }
+        }
+        public ITicketIndex Tickets
+        {
+            get { return this.IFoundation.Resolve<ITicketIndex>(); }
+        }
+        public IAffectedProductIndex AffectedProducts
+        {
+            get { return this.IFoundation.Resolve<IAffectedProductIndex>(); }
+        }
+        public ITicketCommentIndex TicketComments
+        {
+            get { return this.IFoundation.Resolve<ITicketCommentIndex>(); }
+        }
         
     }
 }

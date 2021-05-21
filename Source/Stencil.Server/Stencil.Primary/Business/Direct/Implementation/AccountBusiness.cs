@@ -230,7 +230,10 @@ namespace Stencil.Primary.Business.Direct.Implementation
         {
             return base.ExecuteFunction("GeneratePasswordHash", delegate ()
             {
-                return new SHA256Managed().HashAsString(salt + password);
+                using (var hasher = new SHA256Managed())
+                {
+                    return hasher.HashAsString(salt + password);
+                }
             });
         }
 

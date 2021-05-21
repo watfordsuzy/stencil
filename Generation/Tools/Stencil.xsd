@@ -49,6 +49,9 @@
                         <xs:documentation xml:lang="en">The computation mechanism when computing fields. Currently supports: Null, NotNull, Count, Extra</xs:documentation>
                       </xs:annotation>
                     </xs:attribute>
+                    <xs:attribute name="sortable" type="xs:string" use="optional" >
+                      <xs:annotation><xs:documentation xml:lang="en">Sets whether this field will generate a special sortable index suffix in ElasticSearch that supports sorting. ie: field_name.sort </xs:documentation></xs:annotation>
+                    </xs:attribute>
                   </xs:complexType>
                 </xs:element>
 								<xs:element minOccurs="1" maxOccurs="unbounded" name="field">

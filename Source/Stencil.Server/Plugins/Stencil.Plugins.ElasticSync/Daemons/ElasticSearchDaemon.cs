@@ -1,5 +1,4 @@
 ﻿using Codeable.Foundation.Common;
-using Codeable.Foundation.Common.Aspect;
 using Codeable.Foundation.Common.Daemons;
 using Codeable.Foundation.Core.Caching;
 using Codeable.Foundation.Core.System;
@@ -12,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Stencil.Plugins.ElasticSync.Daemons
 {
@@ -55,11 +53,11 @@ namespace Stencil.Plugins.ElasticSync.Daemons
             get { return string.Format(DAEMON_NAME_FORMAT, this.AgentName); }
         }
 
-        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation, CancellationToken token)
         {
             base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate ()
             {
-                this.PerformProcessSync(string.Empty);
+                this.PerformProcessSync(string.Empty, token);
             });
         }
 
@@ -67,7 +65,7 @@ namespace Stencil.Plugins.ElasticSync.Daemons
 
         #region Protected Methods
 
-        protected virtual void PerformProcessSync(string specificTable)
+        protected virtual void PerformProcessSync(string specificTable, CancellationToken token)
         {
             base.ExecuteMethod("PerformProcessSync", delegate ()
             {
@@ -108,12 +106,22 @@ namespace Stencil.Plugins.ElasticSync.Daemons
                 // process them by bulk-priority
                 while (synchronizersToRun.Count > 0)
                 {
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     int priority = synchronizersToRun[0].Priority;
                     List<ISynchronizer> itemsWithPriority = synchronizersToRun.Where(x => x.Priority == priority).ToList();
                     List<Task> tasks = new List<Task>();
 
                     foreach (var synchronizer in itemsWithPriority)
                     {
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
                         synchronizersToRun.Remove(synchronizer);
 
                         tasks.Add(Task.Run(delegate ()
@@ -138,11 +146,11 @@ namespace Stencil.Plugins.ElasticSync.Daemons
                                 base.IFoundation.LogError(ex, "PerformProcessSync" + synchronizer.GetType().ToString());
                                 base.IFoundation.LogWarning(string.Format("ElasticSearchDaemon.{0} Error", synchronizer.ToString()));
                             }
-                        }));
+                        }, token));
                     }
 
                     base.IFoundation.LogWarning(string.Format("ElasticSearchDaemon.Waiting"));
-                    Task.WaitAll(tasks.ToArray());
+                    Task.WaitAll(tasks.ToArray(), token);
                     base.IFoundation.LogWarning(string.Format("ElasticSearchDaemon.Done"));
                 }
             });

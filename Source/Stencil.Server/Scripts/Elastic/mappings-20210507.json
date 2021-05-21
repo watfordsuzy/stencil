@@ -1,0 +1,335 @@
+{
+  "mappings": {
+    "accounts": {
+      "properties": {
+        "account_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "email": {
+          "type": "string",
+          "fields": {
+            "email": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "password": {
+          "type": "string"
+        },
+        "password_salt": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "api_key": {
+          "type": "string"
+        },
+        "api_secret": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string",
+          "fields": {
+            "first_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "last_name": {
+          "type": "string",
+          "fields": {
+            "last_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "entitlements": {
+          "type": "string"
+        },
+        "password_reset_token": {
+          "type": "string"
+        },
+        "password_reset_utc": {
+          "type": "date"
+        },
+        "push_ios": {
+          "type": "string"
+        },
+        "push_google": {
+          "type": "string"
+        },
+        "push_microsoft": {
+          "type": "string"
+        },
+        "last_login_utc": {
+          "type": "string",
+          "fields": {
+            "last_login_utc": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "last_login_platform": {
+          "type": "string",
+          "fields": {
+            "last_login_platform": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        }
+      }
+    },
+    "products": {
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "product_name": {
+          "type": "string",
+          "fields": {
+            "product_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "product_owner_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "product_description": {
+          "type": "string"
+        },
+        "version_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "platforms": {
+      "properties": {
+        "platform_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "platform_name": {
+          "type": "string",
+          "fields": {
+            "platform_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "bitness": {
+          "type": "integer"
+        }
+      }
+    },
+    "productversions": {
+      "properties": {
+        "product_version_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "product_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "version": {
+          "type": "string",
+          "fields": {
+            "version": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "release_date_utc": {
+          "type": "string",
+          "fields": {
+            "release_date_utc": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "end_of_life_date_utc": {
+          "type": "string",
+          "fields": {
+            "end_of_life_date_utc": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "product_name": {
+          "type": "string",
+          "fields": {
+            "product_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        }
+      }
+    },
+    "productversionplatforms": {
+      "properties": {
+        "product_version_platform_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "product_version_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "platform_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "product_version": {
+          "type": "string",
+          "fields": {
+            "product_version": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "platform_name": {
+          "type": "string",
+          "fields": {
+            "platform_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        }
+      }
+    },
+    "tickets": {
+      "properties": {
+        "ticket_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "reported_by_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "assigned_to_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "ticket_type": {
+          "type": "integer"
+        },
+        "ticket_status": {
+          "type": "integer"
+        },
+        "opened_on_utc": {
+          "type": "string",
+          "fields": {
+            "opened_on_utc": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "closed_on_utc": {
+          "type": "string",
+          "fields": {
+            "closed_on_utc": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "ticket_title": {
+          "type": "string",
+          "fields": {
+            "ticket_title": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "sort": {
+              "type": "string",
+              "analyzer": "case_insensitive"
+            }
+          }
+        },
+        "ticket_description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

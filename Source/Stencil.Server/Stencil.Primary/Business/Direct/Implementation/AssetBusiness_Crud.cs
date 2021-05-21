@@ -92,6 +92,9 @@ namespace Stencil.Primary.Business.Direct.Implementation
                         Asset previous = found.ToDomainModel();
                         
                         found = updateAsset.ToDbModel(found);
+
+                        this.BeforeUpdatePersisted(found, previous);
+
                         
                         db.SaveChanges();
                         
@@ -166,6 +169,7 @@ namespace Stencil.Primary.Business.Direct.Implementation
         partial void PerformIntercept(InterceptArgs<Asset> args);
         partial void PreProcess(Asset asset, bool forInsert);
         partial void AfterInsertPersisted(StencilContext db, dbAsset asset);
+        partial void BeforeUpdatePersisted(dbAsset asset, Asset previous);
         partial void AfterUpdatePersisted(StencilContext db, dbAsset asset, Asset previous);
         partial void AfterDeletePersisted(StencilContext db, dbAsset asset);
         

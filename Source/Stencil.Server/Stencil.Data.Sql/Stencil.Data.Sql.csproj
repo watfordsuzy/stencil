@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Stencil.Data.Sql</RootNamespace>
     <AssemblyName>Stencil.Data.Sql</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,21 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Codeable.Foundation.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Common, Version=4.0.54.15408, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Core, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.39.12205, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -82,10 +79,34 @@
     <Compile Include="dbAccount.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbAffectedProduct.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbAsset.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbCommit.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbGlobalSetting.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbPlatform.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbProduct.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbProductVersion.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbProductVersionPlatform.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbTicket.cs">
+      <DependentUpon>StencilModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbTicketComment.cs">
       <DependentUpon>StencilModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Extensions\DatabaseExtensions.cs" />
@@ -124,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="localConnectionStrings.config" />
     <None Include="packages.config" />
     <None Include="StencilModel.edmx.diagram">
       <DependentUpon>StencilModel.edmx</DependentUpon>

@@ -37,6 +37,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 dm.GlobalSetting result = this.API.Direct.GlobalSettings.GetById(global_setting_id);
                 if (result == null)
                 {
@@ -45,6 +47,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 
 
+                this.AfterGet(result);
+
                 return base.Http200(new ItemResult<sdk.GlobalSetting>()
                 {
                     success = true,
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(dm.GlobalSetting result);
+        partial void AfterGet(List<dm.GlobalSetting> result);
         
         [HttpGet]
         [Route("")]
@@ -59,7 +67,7 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("Find", delegate()
             {
-
+                this.BeforeFind();
 
                 int takePlus = take;
                 if (take != int.MaxValue)
@@ -68,10 +76,16 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 }
 
                 List<dm.GlobalSetting> result = this.API.Direct.GlobalSettings.Find(skip, takePlus, keyword, order_by, descending);
+
+                this.AfterFind(result);
+
                 return base.Http200(result.ToSteppedListResult(skip, take));
 
             });
         }
+        
+        partial void BeforeFind();
+        partial void AfterFind(List<dm.GlobalSetting> result);
         
         
         
@@ -86,11 +100,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(globalsetting, "GlobalSetting");
 
-                dm.GlobalSetting insert = globalsetting.ToDomainModel();
+                this.BeforeInsert(globalsetting);
 
-                
+                dm.GlobalSetting insert = globalsetting.ToDomainModel();
+              
                 insert = this.API.Direct.GlobalSettings.Insert(insert);
                 
+                this.AfterInsert(globalsetting, insert);
 
                 
                 sdk.GlobalSetting result = insert.ToSDKModel();
@@ -106,6 +122,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(sdk.GlobalSetting globalsetting);
+        partial void AfterInsert(sdk.GlobalSetting globalsetting, dm.GlobalSetting inserted);
 
         [HttpPut]
         [Route("{global_setting_id}")]
@@ -117,10 +135,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(global_setting_id, globalsetting.global_setting_id, "GlobalSetting");
 
                 globalsetting.global_setting_id = global_setting_id;
+
+                this.BeforeUpdate(globalsetting);
+
                 dm.GlobalSetting update = globalsetting.ToDomainModel();
 
-
                 update = this.API.Direct.GlobalSettings.Update(update);
+
+                this.AfterUpdate(globalsetting, update);
                 
                 
                 sdk.GlobalSetting existing = this.API.Direct.GlobalSettings.GetById(update.global_setting_id).ToSDKModel();
@@ -135,6 +157,9 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(sdk.GlobalSetting globalsetting);
+        partial void AfterUpdate(sdk.GlobalSetting globalsetting, dm.GlobalSetting updated);
+
         
 
         [HttpDelete]
@@ -144,17 +169,24 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.GlobalSetting delete = this.API.Direct.GlobalSettings.GetById(global_setting_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"GlobalSetting");
+                }
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.GlobalSettings.Delete(global_setting_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = global_setting_id.ToString()
                 });
             });
         }
+
+        partial void BeforeDelete(dm.GlobalSetting delete);
 
     }
 }

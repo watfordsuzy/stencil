@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Stencil.Primary</RootNamespace>
     <AssemblyName>Stencil.Primary</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,21 +35,17 @@
       <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Codeable.Foundation.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Common, Version=4.0.54.15408, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Core, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.39.12204, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Common.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Common, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.39.12205, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Codeable.Foundation.4.0.39\lib\Codeable.Foundation.Web.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Codeable.Foundation.Web.Core, Version=4.0.54.15409, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codeable.Foundation.4.0.54\lib\Codeable.Foundation.Web.Core.dll</HintPath>
     </Reference>
     <Reference Include="Elasticsearch.Net, Version=2.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\Elasticsearch.Net.2.3.3\lib\net45\Elasticsearch.Net.dll</HintPath>
@@ -109,10 +106,13 @@
     <Compile Include="Business\Direct\IAccountBusiness_Crud.cs">
       <DependentUpon>IAccountBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\IAffectedProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IAssetBusiness.cs" />
     <Compile Include="Business\Direct\IAssetBusiness_Crud.cs">
       <DependentUpon>IAssetBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\ICommitBusiness.cs" />
+    <Compile Include="Business\Direct\ICommitBusiness_Crud.cs" />
     <Compile Include="Business\Direct\IGlobalSettingBusiness.cs" />
     <Compile Include="Business\Direct\IGlobalSettingBusiness_Crud.cs">
       <DependentUpon>IGlobalSettingBusiness.cs</DependentUpon>
@@ -121,36 +121,72 @@
     <Compile Include="Business\Direct\Implementation\AccountBusiness_Crud.cs">
       <DependentUpon>AccountBusiness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Direct\Implementation\AffectedProductBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\AssetBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\AssetBusiness_Crud.cs">
       <DependentUpon>AssetBusiness.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Direct\Implementation\BusinessBase.cs" />
     <Compile Include="Business\Direct\Implementation\BusinessBaseHealth.cs" />
+    <Compile Include="Business\Direct\Implementation\CommitBusiness.cs" />
+    <Compile Include="Business\Direct\Implementation\CommitBusiness_Crud.cs" />
     <Compile Include="Business\Direct\Implementation\GlobalSettingBusiness.cs" />
     <Compile Include="Business\Direct\Implementation\GlobalSettingBusiness_Crud.cs">
       <DependentUpon>GlobalSettingBusiness.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Direct\Implementation\InterceptArgs.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductBusiness.cs" />
+    <Compile Include="Business\Direct\Implementation\PlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductVersionBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\ProductVersionPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketBusiness.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketCommentBusiness.cs" />
+    <Compile Include="Business\Direct\Implementation\TicketCommentBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductVersionBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductVersionPlatformBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\ITicketBusiness.cs" />
+    <Compile Include="Business\Direct\ITicketBusiness_Crud.cs" />
+    <Compile Include="Business\Direct\IProductBusiness.cs" />
+    <Compile Include="Business\Direct\ITicketCommentBusiness.cs" />
+    <Compile Include="Business\Direct\ITicketCommentBusiness_Crud.cs" />
     <Compile Include="Business\Direct\_DirectExtensions.cs" />
     <Compile Include="Business\Index\Factory\DocumentNames.cs" />
     <Compile Include="Business\Index\Factory\IStencilElasticClientFactory.cs" />
     <Compile Include="Business\Index\Factory\StencilElasticClientFactory.cs" />
-    <Compile Include="Business\Index\Factory\StencilElasticClientFactory_Core.cs">
-      <DependentUpon>StencilElasticClientFactory.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Business\Index\Factory\StencilElasticIndexFactory.cs" />
+    <Compile Include="Business\Index\Factory\StencilElasticIndexFactory.Generated.cs" />
     <Compile Include="Business\Index\IAccountIndex.cs" />
     <Compile Include="Business\Index\IAccountIndex_Core.cs">
       <DependentUpon>IAccountIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Index\IAffectedProductIndex_Core.cs" />
     <Compile Include="Business\Index\IIndexer.cs" />
     <Compile Include="Business\Index\Implementation\AccountIndex.cs" />
     <Compile Include="Business\Index\Implementation\AccountIndex_Core.cs">
       <DependentUpon>AccountIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Index\Implementation\AffectedProductIndex_Core.cs" />
     <Compile Include="Business\Index\Implementation\IndexerBase.cs" />
     <Compile Include="Business\Index\Implementation\IndexerBaseHealth.cs" />
+    <Compile Include="Business\Index\Implementation\PlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\ProductIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\ProductVersionIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\ProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\TicketCommentIndex_Core.cs" />
+    <Compile Include="Business\Index\Implementation\TicketIndex.cs" />
+    <Compile Include="Business\Index\Implementation\TicketIndex_Core.cs" />
     <Compile Include="Business\Index\IndexResult.cs" />
+    <Compile Include="Business\Index\IPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\IProductIndex_Core.cs" />
+    <Compile Include="Business\Index\IProductVersionIndex_Core.cs" />
+    <Compile Include="Business\Index\IProductVersionPlatformIndex_Core.cs" />
+    <Compile Include="Business\Index\ITicketCommentIndex_Core.cs" />
+    <Compile Include="Business\Index\ITicketIndex.cs" />
+    <Compile Include="Business\Index\ITicketIndex_Core.cs" />
     <Compile Include="Business\Index\_IndexExtensions.cs" />
     <Compile Include="Business\Integration\DependencyCoordinator_Core.cs">
       <DependentUpon>DependencyCoordinator.cs</DependentUpon>
@@ -160,9 +196,25 @@
     <Compile Include="Business\Integration\DependencyCoordinator.cs" />
     <Compile Include="Business\Synchronization\Availability.cs" />
     <Compile Include="Business\Synchronization\IAccountSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IAffectedProductSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\AccountSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\AffectedProductSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\PlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\ProductSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\ProductVersionPlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\ProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\Implementation\SynchronizerBase.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketCommentSynchronizer.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketCommentSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer.cs" />
+    <Compile Include="Business\Synchronization\Implementation\TicketSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IPlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IProductSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IProductVersionPlatformSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\IProductVersionSynchronizer_Core.cs" />
     <Compile Include="Business\Synchronization\ISynchronizer.cs" />
+    <Compile Include="Business\Synchronization\ITicketCommentSynchronizer_Core.cs" />
+    <Compile Include="Business\Synchronization\ITicketSynchronizer_Core.cs" />
     <Compile Include="Daemons\Agents.cs" />
     <Compile Include="Daemons\NonReentrantDaemon.cs" />
     <Compile Include="Daemons\WorkerBase.cs" />
@@ -207,6 +259,8 @@
     <Compile Include="StencilAPIIndex.cs" />
     <Compile Include="StencilAPIIntegration.cs" />
     <Compile Include="Workers\AccountLoggedInWorker.cs" />
+    <Compile Include="Workers\AssignProductOwnerWorker.cs" />
+    <Compile Include="Workers\Models\AssignProductOwnerRequest.cs" />
     <Compile Include="Workers\Models\LoggedInRequest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +269,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\CodeableFoundationAnalyzers\CodeableFoundationAnalyzers.csproj">
+      <Project>{cae2d5d8-1956-47b9-8c39-8a290d4d064e}</Project>
+      <Name>CodeableFoundationAnalyzers</Name>
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\Stencil.Common\Stencil.Common.csproj">
       <Project>{c2ee0d22-4be4-4dde-9f19-997644057d0d}</Project>
       <Name>Stencil.Common</Name>

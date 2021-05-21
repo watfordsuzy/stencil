@@ -12,6 +12,42 @@
 
 GO
 
+ALTER TABLE [dbo].[TicketComment] DROP  [FK_TicketComment_Ticket_ticket_id]
+
+ALTER TABLE [dbo].[TicketComment] DROP  [FK_TicketComment_Account_commenter_id]
+
+GO
+
+GO
+
+ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Ticket_ticket_id]
+
+ALTER TABLE [dbo].[AffectedProduct] DROP  [FK_AffectedProduct_Product_product_id]
+
+GO
+
+ALTER TABLE [dbo].[Ticket] DROP  [FK_Ticket_Account_reported_by_id]
+
+ALTER TABLE [dbo].[Ticket] DROP  [FK_Ticket_Account_assigned_to_id]
+
+GO
+
+ALTER TABLE [dbo].[ProductVersionPlatform] DROP  [FK_ProductVersionPlatform_ProductVersion_product_version_id]
+
+ALTER TABLE [dbo].[ProductVersionPlatform] DROP  [FK_ProductVersionPlatform_Platform_platform_id]
+
+GO
+
+ALTER TABLE [dbo].[ProductVersion] DROP  [FK_ProductVersion_Product_product_id]
+
+GO
+
+GO
+
+ALTER TABLE [dbo].[Product] DROP  [FK_Product_Account_product_owner_id]
+
+GO
+
 GO
 
 GO
@@ -37,6 +73,30 @@ GO
 DROP TABLE [dbo].[Asset]
 GO
 
+DROP TABLE [dbo].[TicketComment]
+GO
+
+DROP TABLE [dbo].[Commit]
+GO
+
+DROP TABLE [dbo].[AffectedProduct]
+GO
+
+DROP TABLE [dbo].[Ticket]
+GO
+
+DROP TABLE [dbo].[ProductVersionPlatform]
+GO
+
+DROP TABLE [dbo].[ProductVersion]
+GO
+
+DROP TABLE [dbo].[Platform]
+GO
+
+DROP TABLE [dbo].[Product]
+GO
+
 DROP TABLE [dbo].[Account]
 GO
 
@@ -58,6 +118,111 @@ DROP PROCEDURE [dbo].[spAccount_HydrateSyncUpdate]
 GO
 
 DROP PROCEDURE [dbo].[spAccount_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProduct_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProduct_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spPlatform_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spPlatform_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProductVersion_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersion_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spProductVersionPlatform_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spTicket_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicket_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spTicket_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicket_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spAffectedProduct_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spAffectedProduct_HydrateSyncGetInvalid]
+GO
+
+
+
+
+DROP PROCEDURE [dbo].[spTicketComment_SyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_SyncGetInvalid]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_HydrateSyncUpdate]
+GO
+
+DROP PROCEDURE [dbo].[spTicketComment_HydrateSyncGetInvalid]
 GO
 
 

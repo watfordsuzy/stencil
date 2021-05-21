@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="localAppSettings.config" />
+    <None Remove="localConnectionStrings.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="localAppSettings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="localConnectionStrings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Codeable.Foundation" Version="4.0.54" />
+    <PackageReference Include="NEST" Version="2.3.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
+    <PackageReference Include="Simple.Migrations" Version="0.9.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stencil.Common\Stencil.Common.csproj" />
+    <ProjectReference Include="..\Stencil.Primary\Stencil.Primary.csproj" />
+  </ItemGroup>
+
+</Project>

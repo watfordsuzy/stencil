@@ -1,5 +1,4 @@
-﻿using Stencil.Domain;
-using Stencil.Primary.Mapping;
+﻿using Stencil.Primary.Mapping;
 using Stencil.SDK;
 using Stencil.SDK.Models.Requests;
 using Stencil.SDK.Models.Responses;
@@ -7,9 +6,13 @@ using Stencil.Web.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using dm = Stencil.Domain;
+using sdk = Stencil.SDK.Models;
 
 namespace Stencil.Plugins.RestAPI.Controllers
 {
@@ -21,12 +24,9 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction("Self", delegate ()
             {
-                Account currentAccount = this.GetCurrentAccount();
+                dm.Account currentAccount = this.GetCurrentAccount();
 
-                Account account = null;
-
-                AccountInfo data = account.ToInfoModel();
-
+                AccountInfo data = currentAccount.ToInfoModel();
 
                 ItemResult<AccountInfo> result = new ItemResult<AccountInfo>()
                 {
@@ -44,7 +44,11 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return await base.ExecuteFunctionAsync<object>("RegisterPushTokenAsync", async delegate ()
             {
-                Account currentAccount = this.GetCurrentAccount();
+                dm.Account currentAccount = this.GetCurrentAccount();
+                if (currentAccount == null)
+                {
+                    this.ThrowUnauthorized();
+                }
 
                 switch (request.platform)
                 {
@@ -59,6 +63,46 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 }
 
                 return base.Http200(new ActionResult() { success = true });
+            });
+        }
+
+        partial void BeforeGet()
+        {
+            base.ExecuteMethod(nameof(BeforeGet), delegate ()
+            {
+                this.ValidateAdmin();
+            });
+        }
+
+        partial void BeforeFind()
+        {
+            base.ExecuteMethod(nameof(BeforeFind), delegate ()
+            {
+                this.ValidateAdmin();
+            });
+        }
+
+        partial void BeforeInsert(sdk.Account insert)
+        {
+            base.ExecuteMethod(nameof(BeforeInsert), delegate ()
+            {
+                this.ValidateAdmin();
+            });
+        }
+
+        partial void BeforeUpdate(sdk.Account insert)
+        {
+            base.ExecuteMethod(nameof(BeforeUpdate), delegate ()
+            {
+                this.ValidateAdmin();
+            });
+        }
+
+        partial void BeforeDelete(dm.Account delete)
+        {
+            base.ExecuteMethod(nameof(BeforeDelete), delegate ()
+            {
+                this.ValidateAdmin();
             });
         }
     }

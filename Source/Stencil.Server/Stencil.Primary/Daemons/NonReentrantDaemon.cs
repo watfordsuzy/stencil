@@ -3,11 +3,7 @@ using Codeable.Foundation.Common.Aspect;
 using Codeable.Foundation.Common.Daemons;
 using Codeable.Foundation.Common.System;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Stencil.Primary.Daemons
 {
@@ -17,6 +13,7 @@ namespace Stencil.Primary.Daemons
         /// Used to disable reentrancy.
         /// </summary>
         private long _executing = 0;
+        private bool disposedValue;
 
         protected NonReentrantDaemon(IFoundation foundation)
             : base(foundation)
@@ -40,7 +37,8 @@ namespace Stencil.Primary.Daemons
         /// </remarks>
         protected bool IsExecuting => Interlocked.Read(ref _executing) != 0;
 
-        public void Execute(IFoundation foundation)
+#pragma warning disable CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
+        public void Execute(IFoundation foundation, CancellationToken token)
         {
             if (0 != Interlocked.CompareExchange(ref _executing, 1, 0))
             {
@@ -53,7 +51,7 @@ namespace Stencil.Primary.Daemons
                     nameof(Execute), 
                     delegate() 
                     {
-                        this.ExecuteNonReentrant(foundation);
+                        this.ExecuteNonReentrant(foundation, token);
                     });
             }
             finally
@@ -61,7 +59,28 @@ namespace Stencil.Primary.Daemons
                 Interlocked.Exchange(ref _executing, 0);
             }
         }
+#pragma warning restore CallBaseExecute // Call base.ExecuteMethod or base.ExecuteFunction when available
 
-        protected abstract void ExecuteNonReentrant(IFoundation foundation);
+        protected abstract void ExecuteNonReentrant(IFoundation foundation, CancellationToken token);
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

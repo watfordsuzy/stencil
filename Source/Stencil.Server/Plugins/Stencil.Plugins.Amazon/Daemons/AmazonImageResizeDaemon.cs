@@ -25,6 +25,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Web;
 
 namespace Stencil.Plugins.Amazon.Daemons
@@ -139,23 +140,36 @@ namespace Stencil.Plugins.Amazon.Daemons
             get { return DAEMON_NAME; }
         }
 
-        protected override void ExecuteNonReentrant(IFoundation iFoundation)
+        protected override void ExecuteNonReentrant(IFoundation iFoundation, CancellationToken token)
         {
-            base.ExecuteMethod(nameof(ExecuteNonReentrant), PerformProcessPhotos);
+            base.ExecuteMethod(nameof(ExecuteNonReentrant), delegate() 
+            { 
+                this.PerformProcessPhotos(token); 
+            });
         }
 
         #endregion
 
         #region Protected Methods
 
-        protected virtual void PerformProcessPhotos()
+        protected virtual void PerformProcessPhotos(CancellationToken token)
         {
             base.ExecuteMethod("PerformProcessPhotos", delegate ()
             {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 List<Asset> assetsToProcess = this.API.Direct.Assets.GetPhotosForProcessing(EncoderStatus.not_processed.ToString(), true, this.ResizeAttemptLimit);
 
                 foreach (var item in assetsToProcess)
                 {
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     ProcessPhoto(item);
                 }
 

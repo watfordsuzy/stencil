@@ -37,6 +37,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
         {
             return base.ExecuteFunction<object>("GetById", delegate()
             {
+                this.BeforeGet();
+
                 dm.Asset result = this.API.Direct.Assets.GetById(asset_id);
                 if (result == null)
                 {
@@ -45,6 +47,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
                 
 
+                this.AfterGet(result);
+
                 return base.Http200(new ItemResult<sdk.Asset>()
                 {
                     success = true,
@@ -52,6 +56,10 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 });
             });
         }
+
+        partial void BeforeGet();
+        partial void AfterGet(dm.Asset result);
+        partial void AfterGet(List<dm.Asset> result);
         
         
         
@@ -66,11 +74,13 @@ namespace Stencil.Plugins.RestAPI.Controllers
             {
                 this.ValidateNotNull(asset, "Asset");
 
-                dm.Asset insert = asset.ToDomainModel();
+                this.BeforeInsert(asset);
 
-                
+                dm.Asset insert = asset.ToDomainModel();
+              
                 insert = this.API.Direct.Assets.Insert(insert);
                 
+                this.AfterInsert(asset, insert);
 
                 
                 sdk.Asset result = insert.ToSDKModel();
@@ -86,6 +96,8 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeInsert(sdk.Asset asset);
+        partial void AfterInsert(sdk.Asset asset, dm.Asset inserted);
 
         [HttpPut]
         [Route("{asset_id}")]
@@ -97,10 +109,14 @@ namespace Stencil.Plugins.RestAPI.Controllers
                 this.ValidateRouteMatch(asset_id, asset.asset_id, "Asset");
 
                 asset.asset_id = asset_id;
+
+                this.BeforeUpdate(asset);
+
                 dm.Asset update = asset.ToDomainModel();
 
-
                 update = this.API.Direct.Assets.Update(update);
+
+                this.AfterUpdate(asset, update);
                 
                 
                 sdk.Asset existing = this.API.Direct.Assets.GetById(update.asset_id).ToSDKModel();
@@ -115,6 +131,9 @@ namespace Stencil.Plugins.RestAPI.Controllers
 
         }
 
+        partial void BeforeUpdate(sdk.Asset asset);
+        partial void AfterUpdate(sdk.Asset asset, dm.Asset updated);
+
         
 
         [HttpDelete]
@@ -124,17 +143,24 @@ namespace Stencil.Plugins.RestAPI.Controllers
             return base.ExecuteFunction("Delete", delegate()
             {
                 dm.Asset delete = this.API.Direct.Assets.GetById(asset_id);
+                if (delete == null)
+                {
+                    return base.Http404(@"Asset");
+                }
                 
+                this.BeforeDelete(delete);
                 
                 this.API.Direct.Assets.Delete(asset_id);
 
-                return Http200(new ActionResult()
+                return base.Http200(new ActionResult()
                 {
                     success = true,
                     message = asset_id.ToString()
                 });
             });
         }
+
+        partial void BeforeDelete(dm.Asset delete);
 
     }
 }

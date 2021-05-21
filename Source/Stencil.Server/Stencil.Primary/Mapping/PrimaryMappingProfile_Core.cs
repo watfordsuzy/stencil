@@ -54,6 +54,22 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<GlobalSetting, dbGlobalSetting>();
             am.Mapper.CreateMap<dbAccount, Account>();
             am.Mapper.CreateMap<Account, dbAccount>();
+            am.Mapper.CreateMap<dbProduct, Product>();
+            am.Mapper.CreateMap<Product, dbProduct>();
+            am.Mapper.CreateMap<dbPlatform, Platform>();
+            am.Mapper.CreateMap<Platform, dbPlatform>();
+            am.Mapper.CreateMap<dbProductVersion, ProductVersion>();
+            am.Mapper.CreateMap<ProductVersion, dbProductVersion>();
+            am.Mapper.CreateMap<dbProductVersionPlatform, ProductVersionPlatform>();
+            am.Mapper.CreateMap<ProductVersionPlatform, dbProductVersionPlatform>();
+            am.Mapper.CreateMap<dbTicket, Ticket>();
+            am.Mapper.CreateMap<Ticket, dbTicket>();
+            am.Mapper.CreateMap<dbAffectedProduct, AffectedProduct>();
+            am.Mapper.CreateMap<AffectedProduct, dbAffectedProduct>();
+            am.Mapper.CreateMap<dbCommit, Commit>();
+            am.Mapper.CreateMap<Commit, dbCommit>();
+            am.Mapper.CreateMap<dbTicketComment, TicketComment>();
+            am.Mapper.CreateMap<TicketComment, dbTicketComment>();
             am.Mapper.CreateMap<dbAsset, Asset>();
             am.Mapper.CreateMap<Asset, dbAsset>();
             
@@ -64,12 +80,42 @@ namespace Stencil.Primary.Mapping
             am.Mapper.CreateMap<SDK.Models.AssetType, Domain.AssetType>().ConvertUsing(x => (Domain.AssetType)(int)x);
             am.Mapper.CreateMap<Domain.Dependency, SDK.Models.Dependency>().ConvertUsing(x => (SDK.Models.Dependency)(int)x);
             am.Mapper.CreateMap<SDK.Models.Dependency, Domain.Dependency>().ConvertUsing(x => (Domain.Dependency)(int)x);
+            am.Mapper.CreateMap<Domain.Bitness, SDK.Models.Bitness>().ConvertUsing(x => (SDK.Models.Bitness)(int)x);
+            am.Mapper.CreateMap<SDK.Models.Bitness, Domain.Bitness>().ConvertUsing(x => (Domain.Bitness)(int)x);
+            am.Mapper.CreateMap<Domain.TicketType, SDK.Models.TicketType>().ConvertUsing(x => (SDK.Models.TicketType)(int)x);
+            am.Mapper.CreateMap<SDK.Models.TicketType, Domain.TicketType>().ConvertUsing(x => (Domain.TicketType)(int)x);
+            am.Mapper.CreateMap<Domain.TicketStatus, SDK.Models.TicketStatus>().ConvertUsing(x => (SDK.Models.TicketStatus)(int)x);
+            am.Mapper.CreateMap<SDK.Models.TicketStatus, Domain.TicketStatus>().ConvertUsing(x => (Domain.TicketStatus)(int)x);
             
             am.Mapper.CreateMap<Domain.GlobalSetting, SDK.Models.GlobalSetting>();
             am.Mapper.CreateMap<SDK.Models.GlobalSetting, Domain.GlobalSetting>();
             
             am.Mapper.CreateMap<Domain.Account, SDK.Models.Account>();
             am.Mapper.CreateMap<SDK.Models.Account, Domain.Account>();
+            
+            am.Mapper.CreateMap<Domain.Product, SDK.Models.Product>();
+            am.Mapper.CreateMap<SDK.Models.Product, Domain.Product>();
+            
+            am.Mapper.CreateMap<Domain.Platform, SDK.Models.Platform>();
+            am.Mapper.CreateMap<SDK.Models.Platform, Domain.Platform>();
+            
+            am.Mapper.CreateMap<Domain.ProductVersion, SDK.Models.ProductVersion>();
+            am.Mapper.CreateMap<SDK.Models.ProductVersion, Domain.ProductVersion>();
+            
+            am.Mapper.CreateMap<Domain.ProductVersionPlatform, SDK.Models.ProductVersionPlatform>();
+            am.Mapper.CreateMap<SDK.Models.ProductVersionPlatform, Domain.ProductVersionPlatform>();
+            
+            am.Mapper.CreateMap<Domain.Ticket, SDK.Models.Ticket>();
+            am.Mapper.CreateMap<SDK.Models.Ticket, Domain.Ticket>();
+            
+            am.Mapper.CreateMap<Domain.AffectedProduct, SDK.Models.AffectedProduct>();
+            am.Mapper.CreateMap<SDK.Models.AffectedProduct, Domain.AffectedProduct>();
+            
+            am.Mapper.CreateMap<Domain.Commit, SDK.Models.Commit>();
+            am.Mapper.CreateMap<SDK.Models.Commit, Domain.Commit>();
+            
+            am.Mapper.CreateMap<Domain.TicketComment, SDK.Models.TicketComment>();
+            am.Mapper.CreateMap<SDK.Models.TicketComment, Domain.TicketComment>();
             
             am.Mapper.CreateMap<Domain.Asset, SDK.Models.Asset>();
             am.Mapper.CreateMap<SDK.Models.Asset, Domain.Asset>();

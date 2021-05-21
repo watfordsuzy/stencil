@@ -52,6 +52,138 @@ namespace Stencil.Primary.Business.Integration
             base.ExecuteMethod("ProcessAccountInvalidation", delegate ()
             {
                 
+                this.API.Direct.TicketComments.InvalidateForCommenterID(account_id, " changed");
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
+        public virtual void ProductInvalidated(Dependency affectedDependencies, Guid product_id)
+        {
+            base.ExecuteMethod("ProductInvalidated", delegate ()
+            {
+                DependencyWorker<Product>.EnqueueRequest(this.IFoundation, affectedDependencies, product_id, this.ProcessProductInvalidation);
+            });
+        }
+        protected virtual void ProcessProductInvalidation(Dependency dependencies, Guid product_id)
+        {
+            base.ExecuteMethod("ProcessProductInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void PlatformInvalidated(Dependency affectedDependencies, Guid platform_id)
+        {
+            base.ExecuteMethod("PlatformInvalidated", delegate ()
+            {
+                DependencyWorker<Platform>.EnqueueRequest(this.IFoundation, affectedDependencies, platform_id, this.ProcessPlatformInvalidation);
+            });
+        }
+        protected virtual void ProcessPlatformInvalidation(Dependency dependencies, Guid platform_id)
+        {
+            base.ExecuteMethod("ProcessPlatformInvalidation", delegate ()
+            {
+                
+                this.API.Direct.ProductVersionPlatforms.InvalidateForPlatformID(platform_id, " changed");
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
+        public virtual void ProductVersionInvalidated(Dependency affectedDependencies, Guid product_version_id)
+        {
+            base.ExecuteMethod("ProductVersionInvalidated", delegate ()
+            {
+                DependencyWorker<ProductVersion>.EnqueueRequest(this.IFoundation, affectedDependencies, product_version_id, this.ProcessProductVersionInvalidation);
+            });
+        }
+        protected virtual void ProcessProductVersionInvalidation(Dependency dependencies, Guid product_version_id)
+        {
+            base.ExecuteMethod("ProcessProductVersionInvalidation", delegate ()
+            {
+                
+                this.API.Direct.ProductVersionPlatforms.InvalidateForProductVerisonID(product_version_id, " changed");
+                ProductVersion item = this.API.Direct.ProductVersions.GetById(product_version_id);
+                if (item != null)
+                {
+                    this.API.Direct.Products.Invalidate(item.product_id, "ProductVersion changed");
+                }
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
+        public virtual void ProductVersionPlatformInvalidated(Dependency affectedDependencies, Guid product_version_platform_id)
+        {
+            base.ExecuteMethod("ProductVersionPlatformInvalidated", delegate ()
+            {
+                DependencyWorker<ProductVersionPlatform>.EnqueueRequest(this.IFoundation, affectedDependencies, product_version_platform_id, this.ProcessProductVersionPlatformInvalidation);
+            });
+        }
+        protected virtual void ProcessProductVersionPlatformInvalidation(Dependency dependencies, Guid product_version_platform_id)
+        {
+            base.ExecuteMethod("ProcessProductVersionPlatformInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void TicketInvalidated(Dependency affectedDependencies, Guid ticket_id)
+        {
+            base.ExecuteMethod("TicketInvalidated", delegate ()
+            {
+                DependencyWorker<Ticket>.EnqueueRequest(this.IFoundation, affectedDependencies, ticket_id, this.ProcessTicketInvalidation);
+            });
+        }
+        protected virtual void ProcessTicketInvalidation(Dependency dependencies, Guid ticket_id)
+        {
+            base.ExecuteMethod("ProcessTicketInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void AffectedProductInvalidated(Dependency affectedDependencies, Guid affected_product_id)
+        {
+            base.ExecuteMethod("AffectedProductInvalidated", delegate ()
+            {
+                DependencyWorker<AffectedProduct>.EnqueueRequest(this.IFoundation, affectedDependencies, affected_product_id, this.ProcessAffectedProductInvalidation);
+            });
+        }
+        protected virtual void ProcessAffectedProductInvalidation(Dependency dependencies, Guid affected_product_id)
+        {
+            base.ExecuteMethod("ProcessAffectedProductInvalidation", delegate ()
+            {
+                AffectedProduct item = this.API.Direct.AffectedProducts.GetById(affected_product_id);
+                if (item != null)
+                {
+                    this.API.Direct.Tickets.Invalidate(item.ticket_id, "AffectedProduct changed");
+                }
+                
+                this.API.Integration.Synchronization.AgitateSyncDaemon();
+            });
+        }
+        public virtual void CommitInvalidated(Dependency affectedDependencies, Guid commit_id)
+        {
+            base.ExecuteMethod("CommitInvalidated", delegate ()
+            {
+                DependencyWorker<Commit>.EnqueueRequest(this.IFoundation, affectedDependencies, commit_id, this.ProcessCommitInvalidation);
+            });
+        }
+        protected virtual void ProcessCommitInvalidation(Dependency dependencies, Guid commit_id)
+        {
+            base.ExecuteMethod("ProcessCommitInvalidation", delegate ()
+            {
+                
+            });
+        }
+        public virtual void TicketCommentInvalidated(Dependency affectedDependencies, Guid ticket_comment_id)
+        {
+            base.ExecuteMethod("TicketCommentInvalidated", delegate ()
+            {
+                DependencyWorker<TicketComment>.EnqueueRequest(this.IFoundation, affectedDependencies, ticket_comment_id, this.ProcessTicketCommentInvalidation);
+            });
+        }
+        protected virtual void ProcessTicketCommentInvalidation(Dependency dependencies, Guid ticket_comment_id)
+        {
+            base.ExecuteMethod("ProcessTicketCommentInvalidation", delegate ()
+            {
+                
             });
         }
         public virtual void AssetInvalidated(Dependency affectedDependencies, Guid asset_id)

@@ -29,15 +29,37 @@ namespace Stencil.Primary.Foundation
         {
             foundation.Container.RegisterType<IGlobalSettingBusiness, GlobalSettingBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAccountBusiness, AccountBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductBusiness, ProductBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformBusiness, PlatformBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionBusiness, ProductVersionBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionPlatformBusiness, ProductVersionPlatformBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketBusiness, TicketBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductBusiness, AffectedProductBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ICommitBusiness, CommitBusiness>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketCommentBusiness, TicketCommentBusiness>(new HttpRequestLifetimeManager());
             foundation.Container.RegisterType<IAssetBusiness, AssetBusiness>(new HttpRequestLifetimeManager());
             
             
             //Indexes
             foundation.Container.RegisterType<IAccountIndex, AccountIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductIndex, ProductIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformIndex, PlatformIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionIndex, ProductVersionIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionPlatformIndex, ProductVersionPlatformIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketIndex, TicketIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductIndex, AffectedProductIndex>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketCommentIndex, TicketCommentIndex>(new HttpRequestLifetimeManager());
             
             
             //Synchronizers
             foundation.Container.RegisterType<IAccountSynchronizer, AccountSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductSynchronizer, ProductSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IPlatformSynchronizer, PlatformSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionSynchronizer, ProductVersionSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IProductVersionPlatformSynchronizer, ProductVersionPlatformSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketSynchronizer, TicketSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<IAffectedProductSynchronizer, AffectedProductSynchronizer>(new HttpRequestLifetimeManager());
+            foundation.Container.RegisterType<ITicketCommentSynchronizer, TicketCommentSynchronizer>(new HttpRequestLifetimeManager());
             
         }
     }
