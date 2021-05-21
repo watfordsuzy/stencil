@@ -29,6 +29,12 @@ jobs:
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      
+    - name: Add Local Configuration Files
+      run: |
+        New-Item -ItemType File Source\Stencil.Server\DbAndIndexMigrator\localAppSettings.config
+        New-Item -ItemType File Source\Stencil.Server\DbAndIndexMigrator\localConnectionStrings.config
+        New-Item -ItemType File Source\Stencil.Server\ElasticMappingGenerator\localAppSettings.config
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
