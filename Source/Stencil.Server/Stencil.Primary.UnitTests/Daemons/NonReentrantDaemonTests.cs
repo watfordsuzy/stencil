@@ -20,20 +20,13 @@ namespace Stencil.Primary.Daemons
             using var cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(5));
 
-            long taskCount = 0;
             var task0 = Task.Run(() =>
             {
-                Interlocked.Increment(ref taskCount);
-                daemon0.Execute(_foundation.Object, cts.Token);
-            });
-            var task1 = Task.Run(() =>
-            {
-                Interlocked.Increment(ref taskCount);
                 daemon0.Execute(_foundation.Object, cts.Token);
             });
 
             //
-            // Wait for the two tasks to actually start
+            // Wait for the task to actually start
             //
             // CAW: we need to do this for the test, because of a race
             //      condition introduced spawning tasks.
@@ -43,16 +36,19 @@ namespace Stencil.Primary.Daemons
             //      on its own Wait and Task.WhenAll will never complete
             //      before the cancellation token throws.
             //
-            while (2 != Interlocked.Read(ref taskCount))
+            while (!daemon0.IsExecutingCore)
             {
                 await Task.Yield();
             }
 
-            // Allow only one of the daemons to continue (if they are unexpectedly reentrant)
+            // Execute a second daemon
+            daemon0.Execute(_foundation.Object, cts.Token);
+
+            // Allow the daemons to continue (if they are unexpectedly reentrant)
             daemon0.Go();
 
             // In the "happy" path this will always succeed within the cancellation time
-            await Task.WhenAll(task0, task1);
+            await task0;
 
             // Ensure only one Increment ocurred, e.g. the method was not reentrant
             Assert.Equal(initialValue + 1, daemon0.Value);
